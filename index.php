@@ -68,8 +68,50 @@
 
 
 <body>
+  
+<!--Navbar Anfang-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">IU-Mindmaze</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.php">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Solo</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Multiplayer</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Konto
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="#">Statistik</a></li>
+              <li><a class="dropdown-item" href="#">Fragen</a></li>
+              <li><a class="dropdown-item" href="#">Passwort ändern</a></li>
+            </ul>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Abmelden</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+<!--Navbar Ende-->
+
   <div class="container">
+    
     <div class="row">
+      
       <div class="col">
         <img src="img/iu_de.svg" width="120" height="120" />
       </div>
@@ -78,6 +120,7 @@
       </div>
 
     </div>
+    
     <div class="row justify-content-center">
       <div class="col-6">
         <h1>Los geht's</h1>
