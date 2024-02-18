@@ -82,11 +82,13 @@
           <li class="nav-item">
             <a class="nav-link" href="index.php">Home</a>
           </li>
+          <!-- href auf singleplayer.html hinzugefügt Gerald -->
           <li class="nav-item">
-            <a class="nav-link" href="#">Solo</a>
+            <a class="nav-link" href="./src/html-php-view/singleplayer.html">Solo</a>
           </li>
+            <!-- href auf lobby.html hinzugefügt Gerald -->
           <li class="nav-item">
-            <a class="nav-link" href="#">Multiplayer</a>
+            <a class="nav-link" href="./src/html-php-view/lobby.html">Multiplayer</a>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"

@@ -18,7 +18,6 @@ let messageInput = document.getElementById('messageInput') //Inputfeld für die 
 let chat = document.getElementById('chat') //chat div hier wird der chat verlauf angezeigt
 let sendbutton = document.getElementById('sendbutton') //button zum absenden einer Chatnachricht
 let joinbutton = document.getElementById('Joingame') //Dient zum aufrufen der Seite mit den offenen Spielen
-let joingamebutton = document.getElementById('joingamebutton') //Mit diesem Button kann man einem Spiel beitreten
 let newgamebutton = document.getElementById('newgamebutton') //Mit diesem Button kann man ein neues Spiel erstellen
 let joingamecontainer = document.getElementById('joingamecontainer') //Container der Seite mit offenen spielen
 let gamelist = document.getElementById('gamelist') //Liste mit den offenen spielen
@@ -34,100 +33,19 @@ let gameserver="../server/game-server.php"// lokaler gameserver
 let questionserver= "../server/question-server.php"// lokaler question server
 //let websocketserver="ws://13.49.243.225:8081"//websocket server auf aws server 
 let websocketserver="ws://127.0.0.1:8081" // lokaler websocketserver
+ let spielname= localStorage.getItem("spielname"); //wird zum löschen des spiels gebraucht
+ room = localStorage.getItem("gamenameübergabe");
 
 
-//Seite für das erstellen oder beitreten zu einem spiel anzeigen
-joinbutton.addEventListener('click', joingamepage)
-//Ausblenden des Spielbeitreten buttons einblenden der Seite mit den Spielen loadGames wird aufgerufen zum laden aus der DB
-function joingamepage() {
-    joingamebutton.disabled=true;
-    joingamecontainer.classList.remove('d-none')
-    joinbutton.classList.add('d-none')
-    loadGames()
-}
-//Funktion zum laden der offenen Spiele  aus der Datenbank
-function loadGames() {
-    //leeren der gamelist
-    while (gamelist.firstChild) {
-        gamelist.removeChild(gamelist.lastChild)
-    }
-    //Mit fetch API wird aus game-server.php die gamelist geholt
-    fetch(gameserver, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        //diese action wird im server abgefragt
-        body: 'action=getGameList',
-    }) //empfangene Daten in gamesarray speichern
-        .then((response) => response.json())
-        .then((data) => {
-            gamesarray = data
-            //Für jedes game im gamesarray wird ein button erstellt
-            gamesarray.forEach((game) => {
-                let button = document.createElement('button')
-                button.classList.add('list-group-item') //bootstrap klasse
-                button.classList.add('list-group-item-action') //bootstrap klasse
-                button.innerHTML = game.name
-                // bei click auf den Button wird das gewählte spiel in die room variable gespeichert
-                //das wird gebraucht um die spieler zum richtigen Raum/Spiel zuzuweisen
-                button.addEventListener('click', roomselect)
-                //anhängen der buttons an die gamelist
-                document.getElementById('gamelist').appendChild(button)
-            })
-        })
+// Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
+//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
+const socket = new WebSocket(websocketserver) 
 
-        .catch((error) => {
-            console.error('Error:', error)
-        })
+socket.onopen = (event) => {
+    console.log('WebSocket connection opened:', event)
+    joingame();
 }
 
-//neues spiel erstellen
-newgamebutton.addEventListener('click', addnewgame)
-
-//Hier wird wieder die fetch API genutzt 
-function addnewgame() {
-    let game = gamenameInput.value
-    let vorhanden = gamesarray.find(function(spiel){
-        return game == spiel.name;
-    })
-    if(vorhanden){
-        alert("Spiel bereits vorhanden neuen Namen wählen")
-    }else{ 
-    //Dieser String wird übergeben action und gamename werden im Server abgefragt anschließend wird mit loadGames die liste neu geladen
-    ;(actionstring = 'action=addGame&gamename=' + game),
-    fetch(gameserver, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: actionstring,
-    }).then(loadGames)
-}
-}
-//Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird
-function deletegame() {
-    let game=room;//aktuell ausgewähltes Spiel verwenden
-    actionstring = 'action=deleteGame&gamename=' + game
-    fetch(gameserver, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: actionstring,
-    }).then(loadGames)
-}
-
-
-//Einlesen welches Spiel aus der Liste gewählt wurde Room weil die Sitzung als Websocket raum ausgeführt ist
-function roomselect(e) {
-    let selectedgame = e.target
-    room = selectedgame.innerHTML
-    joingamebutton.disabled=false;
-}
-
-
-    joingamebutton.addEventListener('click', joingame)
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
 function joingame() {
@@ -136,6 +54,7 @@ function joingame() {
     joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
 }
+
 
 //Buttons in Array verwalten so kann man foreach schleifen nutzen
 const Answerbuttons = [
@@ -196,20 +115,10 @@ function next() {
     }
 }
 
-// Funktion zum mixen der Antworten muss noch entschieden werden ob es im multiplayer eingesetzt werden kann
-function shuffleFisherYates(array) {
-    let i = array.length
-    while (i--) {
-        const ri = Math.floor(Math.random() * i)
-        ;[array[i], array[ri]] = [array[ri], array[i]]
-    }
-    return array
-}
+
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons 
 function zuweisen() {
-    //aufruf mix funktion
-    //mixedanswers = shuffleFisherYates(questions[questioncounter].answers)
     mixedanswers = questions[questioncounter].answers
     for (let i = 0; i < 4; i++) {
         explanation.innerHTML = questions[questioncounter].explanation
@@ -289,13 +198,6 @@ function antworten(e) {
         }
         answered = true
     }
-}
-// Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
-//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
-const socket = new WebSocket(websocketserver) 
-
-socket.onopen = (event) => {
-    console.log('WebSocket connection opened:', event)
 }
 
 //Rücksetzen button pressed sonst Endlosschleife
@@ -393,7 +295,17 @@ function subscribeToRoom(room) {
     const subscribeMessage = JSON.stringify({ type: 'subscribe', room })
     socket.send(subscribeMessage)
 }
-
+//Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird
+function deletegame() {
+    actionstring = 'action=deleteGame&gamename=' + spielname
+    fetch(gameserver, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: actionstring,
+    })
+}
 //############ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#AL
 // default questions
 // let questions = [

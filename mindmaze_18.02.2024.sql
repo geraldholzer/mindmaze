@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Feb 2024 um 21:00
+-- Erstellungszeit: 18. Feb 2024 um 17:55
 -- Server-Version: 10.4.32-MariaDB
 -- PHP-Version: 8.2.12
 
@@ -49,6 +49,13 @@ CREATE TABLE `benutzer` (
   `Email` varchar(100) DEFAULT NULL,
   `Passwort` varchar(5000) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `benutzer`
+--
+
+INSERT INTO `benutzer` (`BenutzerID`, `StudiengangID`, `ZugriffsrechteID`, `Vorname`, `Nachname`, `Email`, `Passwort`) VALUES
+(1, 1, 1, 'Gerald', 'Holzer', 'test@fakemail.com', '1234');
 
 -- --------------------------------------------------------
 
@@ -101,6 +108,13 @@ CREATE TABLE `kurse` (
   `Beschreibung` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Daten für Tabelle `kurse`
+--
+
+INSERT INTO `kurse` (`KursID`, `BenutzerID`, `Beschreibung`) VALUES
+(2, 1, 'IT-Recht');
+
 -- --------------------------------------------------------
 
 --
@@ -113,8 +127,20 @@ CREATE TABLE `spiele` (
   `BenutzerIDSpieler1` int(12) DEFAULT NULL,
   `BenutzerIDSpieler2` int(12) DEFAULT NULL,
   `SitzungAktiv` tinyint(1) DEFAULT NULL,
-  `BenutzerFragen` tinyint(1) DEFAULT NULL
+  `BenutzerFragen` tinyint(1) DEFAULT NULL,
+  `KursID` int(11) DEFAULT NULL,
+  `Spielname` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `spiele`
+--
+
+INSERT INTO `spiele` (`SpieleID`, `SpielmodiID`, `BenutzerIDSpieler1`, `BenutzerIDSpieler2`, `SitzungAktiv`, `BenutzerFragen`, `KursID`, `Spielname`) VALUES
+(6, 1, NULL, NULL, NULL, NULL, 2, 'game'),
+(7, 1, NULL, NULL, NULL, NULL, 2, 'meinspiel'),
+(12, 1, NULL, NULL, NULL, NULL, 2, 'fddd'),
+(13, 1, NULL, NULL, NULL, NULL, 2, 'neues Spiel');
 
 -- --------------------------------------------------------
 
@@ -126,6 +152,14 @@ CREATE TABLE `spielmodi` (
   `SpielmodiID` int(12) NOT NULL,
   `Beschreibung` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `spielmodi`
+--
+
+INSERT INTO `spielmodi` (`SpielmodiID`, `Beschreibung`) VALUES
+(1, 'Kooperativ'),
+(2, 'Versus');
 
 -- --------------------------------------------------------
 
@@ -169,6 +203,13 @@ CREATE TABLE `studiengang` (
   `Beschreibung` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Daten für Tabelle `studiengang`
+--
+
+INSERT INTO `studiengang` (`StudiengangID`, `Beschreibung`) VALUES
+(1, 'Informatik');
+
 -- --------------------------------------------------------
 
 --
@@ -191,6 +232,13 @@ CREATE TABLE `zugriffsrechte` (
   `ZugriffsrechteID` int(12) NOT NULL,
   `Beschreibung` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `zugriffsrechte`
+--
+
+INSERT INTO `zugriffsrechte` (`ZugriffsrechteID`, `Beschreibung`) VALUES
+(1, 'Administrator');
 
 --
 -- Indizes der exportierten Tabellen
@@ -239,7 +287,8 @@ ALTER TABLE `spiele`
   ADD PRIMARY KEY (`SpieleID`),
   ADD KEY `FK_spiele_spielmodi` (`SpielmodiID`),
   ADD KEY `FK_spiele_benutzer1` (`BenutzerIDSpieler1`),
-  ADD KEY `FK_spiele_benutzer2` (`BenutzerIDSpieler2`);
+  ADD KEY `FK_spiele_benutzer2` (`BenutzerIDSpieler2`),
+  ADD KEY `FKKursID` (`KursID`);
 
 --
 -- Indizes für die Tabelle `spielmodi`
@@ -301,7 +350,7 @@ ALTER TABLE `antworten`
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `fragen`
@@ -319,19 +368,19 @@ ALTER TABLE `fragentyp`
 -- AUTO_INCREMENT für Tabelle `kurse`
 --
 ALTER TABLE `kurse`
-  MODIFY `KursID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `KursID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT für Tabelle `spiele`
 --
 ALTER TABLE `spiele`
-  MODIFY `SpieleID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `SpieleID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT für Tabelle `spielmodi`
 --
 ALTER TABLE `spielmodi`
-  MODIFY `SpielmodiID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `SpielmodiID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT für Tabelle `spielrunden`
@@ -349,7 +398,7 @@ ALTER TABLE `statistik`
 -- AUTO_INCREMENT für Tabelle `studiengang`
 --
 ALTER TABLE `studiengang`
-  MODIFY `StudiengangID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `StudiengangID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT für Tabelle `studiengangkurse`
@@ -361,7 +410,7 @@ ALTER TABLE `studiengangkurse`
 -- AUTO_INCREMENT für Tabelle `zugriffsrechte`
 --
 ALTER TABLE `zugriffsrechte`
-  MODIFY `ZugriffsrechteID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `ZugriffsrechteID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints der exportierten Tabellen
@@ -397,6 +446,7 @@ ALTER TABLE `kurse`
 -- Constraints der Tabelle `spiele`
 --
 ALTER TABLE `spiele`
+  ADD CONSTRAINT `FKKursID` FOREIGN KEY (`KursID`) REFERENCES `kurse` (`KursID`),
   ADD CONSTRAINT `FK_spiele_benutzer1` FOREIGN KEY (`BenutzerIDSpieler1`) REFERENCES `benutzer` (`BenutzerID`),
   ADD CONSTRAINT `FK_spiele_benutzer2` FOREIGN KEY (`BenutzerIDSpieler2`) REFERENCES `benutzer` (`BenutzerID`),
   ADD CONSTRAINT `FK_spiele_spielmodi` FOREIGN KEY (`SpielmodiID`) REFERENCES `spielmodi` (`SpielmodiID`);
