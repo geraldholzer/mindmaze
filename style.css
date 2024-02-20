@@ -1,0 +1,81 @@
+body {
+    background-color: #E6E6E6;
+  }
+
+h1.heading-modus {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 2.5em;
+  }
+
+  h2.heading-question {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 2em;
+  }
+
+  h2.heading-hello {
+    font-family: "Inter", sans-serif;
+    font-weight: normal;
+    font-size: 2em;
+  }
+
+  h3.heading-choice {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 1em;
+    color: #9257DD;
+  }
+  
+  .standard-text-qa {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 1.5;
+  }
+  
+  .standard-text-input {
+    font-family: "Inter", sans-serif;
+    font-size: 22px;
+    line-height: 1.5;
+  }
+
+  .standard-text-general {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  
+  
+  .button-long {
+    background-color: #9257DD;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    padding: 7.5px 100px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .button-long:hover {
+    background-color: #7749C1;
+  }
+  
+  .button-short {
+    background-color: #9257DD;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    padding: 7.5px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  .button-short:hover {
+    background-color: #7749C1;
+  }
+  
