@@ -46,6 +46,13 @@ h1.heading-modus {
     line-height: 1.5;
   }
   
+  .standard-text-purple {
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #9257DD;
+  }
   
   .button-long {
     background-color: #9257DD;
