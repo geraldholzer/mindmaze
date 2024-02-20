@@ -80,7 +80,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="index.php">Home</a>
+            <a class="nav-link" href="./index.php">Home</a>
           </li>
           <!-- href auf singleplayer.html hinzugefügt Gerald -->
           <li class="nav-item">
@@ -109,6 +109,7 @@
     </div>
   </nav>
 <!--Navbar Ende-->
+
 
   <div class="container">
     
