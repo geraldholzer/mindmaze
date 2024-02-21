@@ -1,14 +1,5 @@
 <?php
 
-if(isset($_POST['action'])){
-    $action=$_POST['action'];
-}
-
-
-if ($action==="fragenladen"){
-fragenAusgeben();
-}
-
 class answer{
     public $answer;
     public $correct;
@@ -33,37 +24,85 @@ class question{
     }
     
 }
+// Verbindung zur MySQL-Datenbank herstellen
+$servername="localhost";
+$username="root";
+$pw="";
+$db="mindmaze";
+$conn= new mysqli($servername,$username,$pw,$db);
+
+// Überprüfen, ob die Verbindung erfolgreich war
+if ($conn->connect_error) {
+   echo("Verbindung fehlgeschlagen: " . $conn->connect_error);
+}
 
 
-function fragenAusgeben() {
-$questions= array(
-    new question("Welches Land liegt in Europa","Die Anderen Länder liegen in Amerika",array(
-        new answer("Frankreich",true,),
-        new answer("Argentinien",false),
-        new answer("Brasilien",false),
-        new answer("USA",false),
-    )),
-    new question("welche Farbe hat Schnee","Kann unter Umständen auch gelb sein",array(
-        new answer("weiß",true),
-        new answer("rot",false),
-        new answer("blau",false),
-        new answer("grün",false),
-    )),
-    new question("Was ist grün und innen hohl","Klar doch",array(
-        new answer("Schnittlauch",true),
-        new answer("Tür",false),
-        new answer("Fenster",false),
-        new answer("Bagger",false,))
 
-    ));
 
+if(isset($_POST['action'])){
+    $action=$_POST['action'];
+}
+if(isset($_POST['answerid'])){
+    $answerid=$_POST['answerid'];
+}
+if(isset($_POST['questionid'])){
+    $questionid=$_POST['questionid'];
+}
+
+
+if ($action==="fragenladen"){
+fragenAusgeben($conn);
+}elseif($action==="answercheck"){
+    answercheck($answerid,$questionid,$conn);
+}
+
+function answercheck($answerid,$questionid,$conn){
+    $stmt = $conn->prepare("Select Korrekt From antworten WHERE AntwortID =? AND FragenID=? ");
+    $stmt->bind_param("ss",$answerid,$questionid);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    echo $row['Korrekt'];
+    $stmt->close();
+}
+
+function fragenAusgeben($conn) {
+
+    $stmt=$conn->prepare("SELECT * From fragen join antworten on (fragen.FragenID = antworten.FragenID);");
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    $questions = array();
+
+    while ($row = $result->fetch_assoc()) {
+        // FragenID als Schlüssel verwenden
+        $fragenID = $row['FragenID'];
     
-        $myJSON = json_encode($questions);
+        // Wenn die FragenID noch nicht im Array existiert, ein leeres Array für Antworten erstellen
+        if (!isset($questions[$fragenID])) {
+            $questions[$fragenID] = array(
+                'questiontext' => $row['FrageText'],
+                "explanation"=>$row["InfoText"],
+                "questionid"=> $row["FragenID"],
+                'answers' => array()
+            );
+        }
     
-        echo $myJSON;
+        // Antwort zur entsprechenden Frage hinzufügen
+        $questions[$fragenID]['answers'][] = array(
+            "answer"=>$row['Text'],
+            "answerid"=>$row['AntwortID'],
+
+        );
     }
+    
+    $stmt->close();
+    
+    $questionsJSON = json_encode($questions);
+    
+    echo $questionsJSON;
+}
 
-// $myJSON = json_encode($questions);
 
-// echo $myJSON;
 ?>
+

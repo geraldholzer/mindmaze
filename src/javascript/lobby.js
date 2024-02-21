@@ -40,6 +40,7 @@ function loadKursDropdown() {
     })
         .then((response) => response.json())
         .then((data) => {
+           
             data.forEach((kurs) => {
                 var li = document.createElement('li')
                 var a = document.createElement('a')

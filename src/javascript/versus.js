@@ -1,6 +1,7 @@
 //Elemente aus dem DOM holen
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
+let fragenzahl =3;
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
 let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
 let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
@@ -29,9 +30,9 @@ let answered = false //Verhindert eine Endlosschleife bei den Answerbuttons
 let ready = false // wird wahr wen sich der zweite Spieler dem spiel anschließt
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let gameserver="http://13.49.243.225/game-server.php" //gameserver ip von aws server
-let gameserver = '../server/game-server.php' // lokaler gameserver
+let gameserver="../server/game-server.php"// lokaler gameserver
 //let questionserver= "http://13.49.243.225/question-server.php"//questionserver ip von aws server
-let questionserver = '../server/question-server.php' // lokaler question server
+let questionserver= "../server/question-server.php"// lokaler question server
 //let websocketserver="ws://13.49.243.225:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let opponentpoints = 0
@@ -108,7 +109,7 @@ function startquiz() {
 }
 // bei drücken des Next buttons wird die funktion zuweisen aufgerufen  oder die Fragen sind fertig -> finish
 function next() {
-    if (questioncounter >= questions.length) {
+    if (questioncounter >= fragenzahl) {
         sendfinishflag()
 
     } else {
@@ -122,8 +123,9 @@ function zuweisen() {
     for (let i = 0; i < 4; i++) {
         explanation.innerHTML = questions[questioncounter].explanation
         Question.innerHTML = questions[questioncounter].questiontext
+        Question.dataset.id = questions[questioncounter].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
-        Answerbuttons[i].dataset.correct = mixedanswers[i].correct
+        Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
         Answerbuttons[i].addEventListener('click', antworten)
     }
@@ -195,16 +197,20 @@ function sendfinishflag() {
 }
 
 // Funktion wird bei Antwortauswahl ausgeführt
-function antworten(e) {
+async function antworten(e) {
     //Dieses Ereignis wird an den Mitspieler geschickt und würde dadurch zu einer Endlosschleife führen darum abgesichert mit answered
     if (answered === false) {
+        answered = true
         //welcher button wurde gedrückt
         const selectedbutton = e.target
-        let correctchoice = selectedbutton.dataset.correct
+        let correctchoice = await answercheck(
+            selectedbutton.dataset.answerid,
+            Question.dataset.id
+        )
         //Einblenden der Erklärung
         explanationcontainer.classList.remove('d-none')
         //Ausführen wen die Frage richtig ist
-        if (correctchoice === 'true') {
+        if (correctchoice === 1) {
             selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-success')
             //deaktivieren der Answerbuttons
@@ -215,7 +221,7 @@ function antworten(e) {
                 (NextButton.disabled = false)
             pointscounter++
             //Ausführen falls Antwort falsch war
-        } else if (correctchoice === 'false') {
+        } else if (correctchoice === 0) {
             selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-danger')
             Answerbuttons.forEach((button) => {
@@ -223,9 +229,37 @@ function antworten(e) {
             }),
                 (NextButton.disabled = false)
         }
-        answered = true
+       
+    }
+    
+}
+
+async function answercheck(answerid, questionid) {
+    let actionstring =
+        'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
+
+    try {
+        const response = await fetch(questionserver, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: actionstring,
+        })
+
+        const data = await response.json()
+
+        if (data === 1) {
+            return 1
+        } else {
+            return 0
+        }
+    } catch (error) {
+        console.error('Fehler beim Überprüfen der Antwort:', error)
+        return  44// Rückgabe eines Standardwerts im Fehlerfall
     }
 }
+
 
 // Hier wird eine Nachricht vom Server ausgewertet
 socket.onmessage = (event) => {
