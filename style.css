@@ -86,3 +86,37 @@ h1.heading-modus {
     background-color: #7749C1;
   }
   
+  .textfield-ang-sml {
+    padding: 7.5px 120px;
+    border: 1px solid #ccc;
+    max-width: 120px;
+    font-family: "Inter", sans-serif;
+    font-size: 10px; 
+    background-color: #fff;
+    color: #333; 
+    text-align: center; 
+
+    &:focus {
+      outline: none; 
+    }
+  }
+  
+  .textfield-dropdown {
+    padding: 5px 120px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    max-width: 120px;
+    font-family: "Inter", sans-serif;
+    font-size: 10px; 
+    background-color: #fff;
+    color: #333; 
+    text-align: left; 
+
+
+    &:focus {
+      outline: none; 
+    }
+
+  }
+  
+  
