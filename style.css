@@ -95,10 +95,6 @@ h1.heading-modus {
     background-color: #fff;
     color: #333; 
     text-align: center; 
-
-    &:focus {
-      outline: none; 
-    }
   }
   
   .textfield-dropdown {
@@ -111,12 +107,6 @@ h1.heading-modus {
     background-color: #fff;
     color: #333; 
     text-align: left; 
-
-
-    &:focus {
-      outline: none; 
-    }
-
   }
   
   
