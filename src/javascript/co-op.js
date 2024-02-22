@@ -1,6 +1,7 @@
 //Elemente aus dem DOM holen
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
+let fragenzahl =3;
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
 let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
 let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
@@ -31,21 +32,19 @@ let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für 
 let gameserver="../server/game-server.php"// lokaler gameserver
 //let questionserver= "http://13.49.243.225/question-server.php"//questionserver ip von aws server
 let questionserver= "../server/question-server.php"// lokaler question server
-//let websocketserver="ws://13.49.243.225:8081"//websocket server auf aws server 
-let websocketserver="ws://127.0.0.1:8081" // lokaler websocketserver
- let spielname= localStorage.getItem("spielname"); //wird zum löschen des spiels gebraucht
- room = localStorage.getItem("gamenameübergabe");
-
+//let websocketserver="ws://13.49.243.225:8081"//websocket server auf aws server
+let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
+let spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
+room = localStorage.getItem('gamenameübergabe')
 
 // Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
 //Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
-const socket = new WebSocket(websocketserver) 
+const socket = new WebSocket(websocketserver)
 
 socket.onopen = (event) => {
     console.log('WebSocket connection opened:', event)
-    joingame();
+    joingame()
 }
-
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
 function joingame() {
@@ -54,7 +53,6 @@ function joingame() {
     joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
 }
-
 
 //Buttons in Array verwalten so kann man foreach schleifen nutzen
 const Answerbuttons = [
@@ -67,14 +65,15 @@ const Answerbuttons = [
 //Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
 // Wird mit fetch von PHP geholt
 function laden() {
-  fetch(questionserver, {
+    fetch(questionserver, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         //diese action wird im server abgefragt
         body: 'action=fragenladen',
-    }).then((response) => {
+    })
+        .then((response) => {
             if (!response.ok) {
                 throw new Error(
                     `Network response was not ok: ${response.statusText}`
@@ -99,36 +98,36 @@ StartButton.addEventListener('click', startquiz)
 
 //Hier wird zuerst die laden funktion aufgerufen und anschließend die entsprechenden buttons ein/aus geblendet
 function startquiz() {
-    laden();
+    laden()
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
-    waitforopponent.classList.add("d-none")
+    waitforopponent.classList.add('d-none')
     chatcontainer.classList.remove('d-none')
 }
 // bei drücken des Next buttons wird die funktion zuweisen aufgerufen  oder die Fragen sind fertig -> finish
 function next() {
-    if (questioncounter >= questions.length) {
+    if (questioncounter >= fragenzahl) {
+        
         finish()
     } else {
         zuweisen()
     }
 }
 
-
-
-//Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons 
+//Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
     mixedanswers = questions[questioncounter].answers
     for (let i = 0; i < 4; i++) {
         explanation.innerHTML = questions[questioncounter].explanation
         Question.innerHTML = questions[questioncounter].questiontext
+        Question.dataset.id = questions[questioncounter].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
-        Answerbuttons[i].dataset.correct = mixedanswers[i].correct
+        Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
         Answerbuttons[i].addEventListener('click', antworten)
     }
-    //inkrementieren des questioncounter 
+    //inkrementieren des questioncounter
     questioncounter++
     //reset um wieder alles richtig einzublenden und die richtigen buttons freizugeben
     reset()
@@ -168,16 +167,20 @@ function finish() {
 }
 
 // Funktion wird bei Antwortauswahl ausgeführt
-function antworten(e) {
+async function antworten(e) {
     //Dieses Ereignis wird an den Mitspieler geschickt und würde dadurch zu einer Endlosschleife führen darum abgesichert mit answered
     if (answered === false) {
+        answered = true
         //welcher button wurde gedrückt
         const selectedbutton = e.target
-        let correctchoice = selectedbutton.dataset.correct
+        let correctchoice = await answercheck(
+            selectedbutton.dataset.answerid,
+            Question.dataset.id
+        )
         //Einblenden der Erklärung
         explanationcontainer.classList.remove('d-none')
         //Ausführen wen die Frage richtig ist
-        if (correctchoice === 'true') {
+        if (correctchoice === 1) {
             selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-success')
             //deaktivieren der Answerbuttons
@@ -188,7 +191,7 @@ function antworten(e) {
                 (NextButton.disabled = false)
             pointscounter++
             //Ausführen falls Antwort falsch war
-        } else if (correctchoice === 'false') {
+        } else if (correctchoice === 0) {
             selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-danger')
             Answerbuttons.forEach((button) => {
@@ -196,7 +199,34 @@ function antworten(e) {
             }),
                 (NextButton.disabled = false)
         }
-        answered = true
+       
+    }
+    
+}
+
+async function answercheck(answerid, questionid) {
+    let actionstring =
+        'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
+
+    try {
+        const response = await fetch(questionserver, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: actionstring,
+        })
+
+        const data = await response.json()
+
+        if (data === 1) {
+            return 1
+        } else {
+            return 0
+        }
+    } catch (error) {
+        console.error('Fehler beim Überprüfen der Antwort:', error)
+        return  44// Rückgabe eines Standardwerts im Fehlerfall
     }
 }
 
@@ -206,11 +236,11 @@ let buttonpressed = false
 socket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     //Nextfunktion aufrufen wenn Mitspieler Next gedrückt hat
-    if (data.message== 'nextbuttonclick') {
+    if (data.message == 'nextbuttonclick') {
         next()
-    } 
+    }
     //Sobald vom Mitspieler ein Answerbutton gedrückt wurde kommt die entsprechende Message
-    //Hier wird dann mit dispatch event das click Event des eigenen Buttons simuliert 
+    //Hier wird dann mit dispatch event das click Event des eigenen Buttons simuliert
     //So wird immer bei beiden Clients der Button gedrückt
     else if (data.message == 'Answerbutton1clicked') {
         if (!buttonpressed) {
@@ -238,8 +268,8 @@ socket.onmessage = (event) => {
         }
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
     } else if (data.message == 'ready') {
-        startquiz();
-        deletegame();
+        startquiz()
+        deletegame()
     } else {
         chat.innerHTML += data.message + '</br>'
     }
@@ -256,8 +286,8 @@ function sendMessage() {
     const message = messageInput.value
     //Ausgeben in eigenem Verlauf
     chat.innerHTML += 'Du:' + message + '</br>'
-    //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann 
-    //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum  
+    //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann
+    //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum
     const message1 = JSON.stringify({ type: 'message', room, message })
     socket.send(message1)
 }

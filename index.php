@@ -16,6 +16,8 @@
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 
+  <link rel="stylesheet" type="text/css" href="style.css">
+
 </head>
 
 <script>
@@ -31,38 +33,6 @@
 
 
 <style>
-  .hidden {
-    display: none;
-  }
-
-  .btn {
-
-    font-family: Roboto, sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    color: #fff;
-    background-color: #000000;
-    padding: 10px 30px;
-    border: solid #000000 0px;
-    box-shadow: none;
-    border-radius: 16px;
-    transition: 240ms;
-    transform: translateY(0);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .btn:hover {
-
-    transition: 240ms;
-    padding: 10px 30px;
-    transform: translateY(-0px);
-    background-color: #21333b;
-    color: #ffffff;
-    border: solid 0px #062b4f;
-  }
 
 </style>
 
@@ -128,12 +98,12 @@
       <div class="col-6">
         <h1>Los geht's</h1>
         <h3 class="mt-5">Willkommen bei MindMaze</h3>
-        <button onclick="showSection('frmLogin')" class="btn col-12 mt-3">Anmelden</button>
+        <button onclick="showSection('frmLogin')" class="button-long col-12 mt-3">Anmelden</button>
         <br>
 
 
         <!--Login Formular!-->
-        <form class="hidden" id="frmLogin" action="home.php" method="post">
+        <form class="hidden mb-3" id="frmLogin" action="home.php" method="post">
           <div class="row justify-content-center">
             <div class="col-8">
 
@@ -148,14 +118,14 @@
               </div>
 
               <div class=row>
-                <input class="mt-4 btn" type="submit" value="Login">
+                <input class="button-short mt-4" type="submit" value="Login">
               </div>
 
             </div>
           </div>
         </form>
 
-        <span>Noch nicht dabei? <span><a href="signIn.php">Hier </a> <span>registrieren</span>
+        <div class="pt-5 standard-text-input">Noch nicht dabei? <a href="signIn.php">Hier </a> registrieren</div>
         <!--Register Formular!
         <h3 class="mt-5">Noch nicht dabei?</h3>
         <button onclick="showSection('frmRegister')" class="btn col-12 mt-3">Jetzt Registrieren</button>

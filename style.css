@@ -1,3 +1,12 @@
+
+.hidden {
+/*Eingefügt von SH
+22.02.2024
+Die Klasse .hidden wird verwendet, um Sektionen auf der Seite zu Beginn auszublenden
+*/
+  display: none;
+}
+
 body {
     background-color: #E6E6E6;
   }

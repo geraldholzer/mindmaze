@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
-
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <script>
@@ -29,42 +29,6 @@
   }
 </script>
 
-
-<style>
-  .hidden {
-    display: none;
-  }
-
-  .btn {
-
-    font-family: Roboto, sans-serif;
-    font-weight: 800;
-    font-size: 18px;
-    color: #fff;
-    background-color: #000000;
-    padding: 10px 30px;
-    border: solid #000000 0px;
-    box-shadow: none;
-    border-radius: 16px;
-    transition: 240ms;
-    transform: translateY(0);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    cursor: pointer;
-  }
-
-  .btn:hover {
-
-    transition: 240ms;
-    padding: 10px 30px;
-    transform: translateY(-0px);
-    background-color: #21333b;
-    color: #ffffff;
-    border: solid 0px #062b4f;
-  }
-
-</style>
 
 
 <body>
@@ -129,11 +93,20 @@
 
         
         <!--Register Formular!-->
-        <button onclick="showSection('frmRegister')" class="btn col-12 mt-3">Jetzt Registrieren</button>
+        <button onclick="showSection('frmRegister')" class="button-long col-12 mt-3">Jetzt Registrieren</button>
         <br>
         <form class="hidden" id="frmRegister" action="register.php" method="post">
           <div class="row justify-content-center">
             <div class="col-8">
+            <div class=row>
+                <label for="txtFirstNameRegister">Vorname</label>
+                <input id="txtFirstNameRegister" type="text" name="txtFirstNameRegister">
+              </div>
+
+              <div class=row>
+                <label for="txtLastNameRegister">Nachname</label>
+                <input id="txtLastNameRegister" type="text" name="txtLastNameRegister">
+              </div>
 
               <div class=row>
                 <label for="txtNameRegister">Benutzername</label>
@@ -151,7 +124,7 @@
               </div>
 
               <div class=row>
-                <input class="mt-4 btn" type="submit" value="Registrieren">
+                <input class="mt-4 button-short" type="submit" value="Registrieren">
               </div>
 
             </div>
