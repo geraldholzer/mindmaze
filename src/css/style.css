@@ -118,6 +118,8 @@ h1.heading-modus {
     text-align: left; 
   }
   
+  /*Klassen um Navbar an Design anzupassen von  TS*/
+  
   .custom-navbar {
     background-color: #9257DD !important; /* Hintergrundfarbe lila */
   }
