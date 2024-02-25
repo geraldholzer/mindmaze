@@ -16,7 +16,8 @@
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="src/css/style.css">
+    <link rel="stylesheet" href="src/css/main.css">
 
 </head>
 
@@ -39,51 +40,11 @@
 
 <body>
   
-<!--Navbar Anfang-->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="#">IU-Mindmaze</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="./index.php">Home</a>
-          </li>
-          <!-- href auf singleplayer.html hinzugefügt Gerald -->
-          <li class="nav-item">
-            <a class="nav-link" href="./src/html-php-view/singleplayer.html">Solo</a>
-          </li>
-            <!-- href auf lobby.html hinzugefügt Gerald -->
-          <li class="nav-item">
-            <a class="nav-link" href="./src/html-php-view/lobby.html">Multiplayer</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Konto
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Statistik</a></li>
-              <li><a class="dropdown-item" href="#">Fragen</a></li>
-              <li><a class="dropdown-item" href="#">Passwort ändern</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Abmelden</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-<!--Navbar Ende-->
 
 
   <div class="container">
     
-    <div class="row">
+    <div class="row mt-2">
       
       <div class="col">
         <img src="img/iu_de.svg" width="120" height="120" />
@@ -103,7 +64,7 @@
 
 
         <!--Login Formular!-->
-        <form class="hidden mb-3" id="frmLogin" action="home.php" method="post">
+        <form class="hidden mb-3" id="frmLogin" action="src\html-php-view\home.php" method="post">
           <div class="row justify-content-center">
             <div class="col-8">
 
@@ -125,7 +86,7 @@
           </div>
         </form>
 
-        <div class="pt-5 standard-text-input">Noch nicht dabei? <a href="signIn.php">Hier </a> registrieren</div>
+        <div class="pt-5 standard-text-input">Noch nicht dabei? <a href="src\html-php-view\signIn.php">Hier </a> registrieren</div>
         <!--Register Formular!
         <h3 class="mt-5">Noch nicht dabei?</h3>
         <button onclick="showSection('frmRegister')" class="btn col-12 mt-3">Jetzt Registrieren</button>

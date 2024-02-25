@@ -1,13 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main.css">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
 </head>
 <body>
-
 <?php
 
 //Noch umzusetzen: Prüfen ob POST Variablen set sind + Umleitung auf Startseite
@@ -104,7 +106,7 @@
 
         //Automatische Weiterleitung auf die Startseite
         echo '<div id="countdown">Die Weiterleitung erfolgt in 10 Sekunden...</div>';
-        echo "<span>Oder klicke </span> <a href='index.php'>hier</a>";
+        echo "<span>Oder klicke </span> <a href='../../index.php'>hier</a>";
         echo 
         '<script>
             var seconds = 10;
