@@ -118,4 +118,55 @@ h1.heading-modus {
     text-align: left; 
   }
   
+  /*Klassen um Navbar an Design anzupassen von  TS*/
   
+  .custom-navbar {
+    background-color: #9257DD !important; /* Hintergrundfarbe lila */
+  }
+  
+  .custom-navbar .navbar-brand {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 1.5em;
+    color: white; /* Schriftfarbe Weiß */
+  }
+  
+  .custom-navbar .navbar-nav .nav-link {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 1em;
+    color: white; /* Schriftfarbe Weiß */
+  }
+  
+  .custom-navbar .navbar-nav .nav-link:hover {
+    color: #f0f0f0; /* Farbe des Links beim Überfahren */
+  }
+  
+  .custom-navbar .navbar-toggler-icon {
+    background-color: white; /* Farbe des Navbar-Toggler-Icons */
+  }
+  
+  .custom-navbar .navbar-toggler {
+    border-color: white; /* Farbe des Navbar-Toggler-Rahmens */
+  }
+
+  .custom-navbar .dropdown-menu {
+    background-color: #9257DD; /* Hintergrundfarbe des Dropdown-Menüs */
+  }
+
+  .custom-navbar .dropdown-menu a {
+    color: white; /* Schriftfarbe der Dropdown-Elemente */
+  }
+
+  .custom-navbar .dropdown-menu a:hover {
+    background-color: #7749C1; /* Hintergrundfarbe der Dropdown-Elemente beim Überfahren */
+  }
+
+  .custom-navbar .dropdown-menu {
+  font-family: "Inter", sans-serif; /* Schriftart des Dropdown-Menüs */
+  font-size: 1em; /* Schriftgröße des Dropdown-Menüs */
+  }
+
+  .custom-navbar .dropdown-toggle::after {
+  border-top-color: white; /* Farbe des Dropdown-Pfeils */
+  }

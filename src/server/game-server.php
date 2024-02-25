@@ -1,6 +1,8 @@
 <?php
 
 // Verbindung zur MySQL-Datenbank herstellen
+
+//$servername="13.53.246.106";
 $servername="localhost";
 $username="root";
 $pw="";

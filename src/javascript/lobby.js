@@ -9,9 +9,9 @@ let modus = '' //Spielmodus
 let kurs = '' //Gewählter Kurs
 let gamesarray = [] // Hier werden die offenen Spiele die aus der Datenbank geholt wurden gespeichert
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
-//let gameserver="http://13.49.243.225/game-server.php" //gameserver ip von aws server
+//let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
-//let gameserver="http://13.49.243.225/game-server.php" //gameserver ip von aws server
+//let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
 let gameserver = '../server/game-server.php' // lokaler gameserver
 
 //Seite für das erstellen oder beitreten zu einem spiel anzeigen

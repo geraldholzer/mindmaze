@@ -14,7 +14,7 @@ let resultpage = document.getElementById('result')
 let resuttext = document.getElementById('resulttext')
 let explanation = document.getElementById('explanation')
 let explanationcontainer = document.getElementById('explanationcontainer')
-//let questionserver= "http://13.49.243.225/question-server.php"// aws ip question-server
+//let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver= "../server/question-server.php"// lokaler question server
 //Buttons in Array verwalten
 const Answerbuttons = [
