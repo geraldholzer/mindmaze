@@ -108,7 +108,7 @@ h1.heading-modus {
   
 
   /*DROPDOWN*/
-  
+
   .select {
     position: relative;
     display: inline-block;
@@ -135,7 +135,7 @@ h1.heading-modus {
         .select select:hover,
         .select select:focus {
             color: #000000;
-            background: #cc;
+            background: #ccc;
         }
         .select select:disabled {
             opacity: 0.5;
