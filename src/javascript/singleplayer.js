@@ -14,8 +14,14 @@ let resultpage = document.getElementById('result')
 let resuttext = document.getElementById('resulttext')
 let explanation = document.getElementById('explanation')
 let explanationcontainer = document.getElementById('explanationcontainer')
+let kurs="";
+let kursdropdown=document.getElementById("kursdropdown")
+let fragendropdown=document.getElementById("fragendropdown")
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver= "../server/question-server.php"// lokaler question server
+//let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
+let gameserver = '../server/game-server.php' // lokaler gameserver
+
 //Buttons in Array verwalten
 const Answerbuttons = [
     AnswerButton1,
@@ -23,6 +29,62 @@ const Answerbuttons = [
     AnswerButton3,
     AnswerButton4,
 ]
+
+//Funktion zum holen der verfügbaren kurse und laden in das Dropdownfeld
+function loadKursDropdown() {
+    let kursdropdown = document.getElementById('kursliste')
+    while (kursdropdown.firstChild) {
+        kursdropdown.removeChild(kursdropdown.lastChild)
+    }
+    fetch(gameserver, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=getKursDropdown',
+    })
+        .then((response) => response.json())
+        .then((data) => {
+           
+            data.forEach((kurs) => {
+                var li = document.createElement('li')
+                var a = document.createElement('a')
+                a.setAttribute('class', 'dropdown-item')
+                a.setAttribute('href', '#')
+                a.textContent = kurs
+
+                // Link zum Listenelement hinzufügen
+                li.appendChild(a)
+                kursdropdown.appendChild(li)
+            })
+        })
+}
+
+loadKursDropdown();
+
+//Wert auslesen aus dropdownfeld und in Variable speichern
+document
+    .getElementById('kursliste')
+    .addEventListener('click', function (event) {
+        if (event.target.classList.contains('dropdown-item')) {
+            var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
+            document.getElementById('kursDropdownButton').innerHTML =
+                selectedValue
+            kurs = selectedValue
+        }
+    })
+//Wert auslesen aus dropdownfeld und in Variable speichern
+document
+    .getElementById('fragenzahl')
+    .addEventListener('click', function (event) {
+        if (event.target.classList.contains('dropdown-item')) {
+            var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
+            document.getElementById('fragenDropdownButton').innerHTML =
+                selectedValue
+            fragenzahl = event.target.dataset.fragen;
+        }
+    })
 
 //Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
 // Wird mit fetch von PHP geholt
@@ -33,7 +95,7 @@ function laden() {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         //diese action wird im server abgefragt
-        body: 'action=fragenladen',
+        body: 'action=fragenladen&'+"fragenzahl="+ fragenzahl+"&kurs="+kurs
     })
         .then((response) => {
             if (!response.ok) {
@@ -64,6 +126,8 @@ function startquiz() {
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
+    kursdropdown.classList.add('d-none')
+    fragendropdown.classList.add('d-none')
 }
 // bei drücken des Next buttons wird die funktion zuweisen aufgerufen auser die fragen sind fertig dan finish
 function next() {
@@ -86,11 +150,11 @@ function shuffleFisherYates(array) {
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
-    mixedanswers = questions[questioncounter].answers
+    mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
-        explanation.innerHTML = questions[questioncounter].explanation
-        Question.innerHTML = questions[questioncounter].questiontext
-        Question.dataset.id = questions[questioncounter].questionid
+        explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
+        Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
+        Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl

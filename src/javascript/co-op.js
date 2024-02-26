@@ -1,7 +1,6 @@
 //Elemente aus dem DOM holen
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
-let fragenzahl =3;
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
 let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
 let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
@@ -29,14 +28,15 @@ let answered = false //Verhindert eine Endlosschleife bei den Answerbuttons
 let ready = false // wird wahr wen sich der zweite Spieler dem spiel anschließt
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
-let gameserver="../server/game-server.php"// lokaler gameserver
+let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
-let questionserver= "../server/question-server.php"// lokaler question server
+let questionserver = '../server/question-server.php' // lokaler question server
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
 room = localStorage.getItem('gamenameübergabe')
-
+let fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
+let kurs = localStorage.getItem("kurs");// Auslesen des Kurses
 // Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
 //Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
 const socket = new WebSocket(websocketserver)
@@ -48,7 +48,7 @@ socket.onopen = (event) => {
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
 function joingame() {
-    subscribeToRoom(room)
+    subscribeToRoom(room,fragenzahl,kurs)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
@@ -64,32 +64,32 @@ const Answerbuttons = [
 
 //Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
 // Wird mit fetch von PHP geholt
-function laden() {
-    fetch(questionserver, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        //diese action wird im server abgefragt
-        body: 'action=fragenladen',
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                    `Network response was not ok: ${response.statusText}`
-                )
-            }
-            return response.json() // JSON-Daten aus der Antwort extrahieren
-        })
-        .then((data) => {
-            //Array daten zuweisen
-            questions = data
-        })
-        .then(zuweisen)
-        .catch((error) => {
-            console.error('Fehler beim Abrufen der Daten:', error)
-        })
-}
+// function laden() {
+//     fetch(questionserver, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//         //diese action wird im server abgefragt
+//         body: 'action=fragenladen',
+//     })
+//         .then((response) => {
+//             if (!response.ok) {
+//                 throw new Error(
+//                     `Network response was not ok: ${response.statusText}`
+//                 )
+//             }
+//             return response.json() // JSON-Daten aus der Antwort extrahieren
+//         })
+//         .then((data) => {
+//             //Array daten zuweisen
+//             questions = data
+//         })
+//         .then(zuweisen)
+//         .catch((error) => {
+//             console.error('Fehler beim Abrufen der Daten:', error)
+//         })
+// }
 
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
@@ -98,7 +98,7 @@ StartButton.addEventListener('click', startquiz)
 
 //Hier wird zuerst die laden funktion aufgerufen und anschließend die entsprechenden buttons ein/aus geblendet
 function startquiz() {
-    laden()
+    zuweisen()
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
@@ -108,7 +108,6 @@ function startquiz() {
 // bei drücken des Next buttons wird die funktion zuweisen aufgerufen  oder die Fragen sind fertig -> finish
 function next() {
     if (questioncounter >= fragenzahl) {
-        
         finish()
     } else {
         zuweisen()
@@ -117,11 +116,11 @@ function next() {
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
-    mixedanswers = questions[questioncounter].answers
+    mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
-        explanation.innerHTML = questions[questioncounter].explanation
-        Question.innerHTML = questions[questioncounter].questiontext
-        Question.dataset.id = questions[questioncounter].questionid
+        explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
+        Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
+        Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
@@ -199,9 +198,7 @@ async function antworten(e) {
             }),
                 (NextButton.disabled = false)
         }
-       
     }
-    
 }
 
 async function answercheck(answerid, questionid) {
@@ -226,7 +223,7 @@ async function answercheck(answerid, questionid) {
         }
     } catch (error) {
         console.error('Fehler beim Überprüfen der Antwort:', error)
-        return  44// Rückgabe eines Standardwerts im Fehlerfall
+        return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
 }
 
@@ -268,8 +265,16 @@ socket.onmessage = (event) => {
         }
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
     } else if (data.message == 'ready') {
-        startquiz()
+        //startquiz()
         deletegame()
+    } else if (data.type === 'questions') {
+        console.log(typeof data)
+        questions = data
+        questions = JSON.parse(data.questions)
+        console.log(questions)
+        console.log(questions[Object.keys(questions)[1]])
+
+        startquiz()
     } else {
         chat.innerHTML += data.message + '</br>'
     }
@@ -320,9 +325,9 @@ Answerbuttons[3].addEventListener('click', function () {
     socket.send(message1)
 })
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room) {
+function subscribeToRoom(room,fragenzahl,kurs) {
     // Subscribe to the room
-    const subscribeMessage = JSON.stringify({ type: 'subscribe', room })
+    const subscribeMessage = JSON.stringify({ type: 'subscribe', room ,fragenzahl,kurs})
     socket.send(subscribeMessage)
 }
 //Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird
