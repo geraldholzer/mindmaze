@@ -1,5 +1,4 @@
 <?php
-
 class answer{
     public $answer;
     public $correct;
@@ -37,8 +36,9 @@ if ($conn->connect_error) {
    echo("Verbindung fehlgeschlagen: " . $conn->connect_error);
 }
 
-
-
+if(isset($_POST['fragenzahl'])){
+    $fragenzahl=$_POST['fragenzahl'];
+}
 
 if(isset($_POST['action'])){
     $action=$_POST['action'];
@@ -48,11 +48,22 @@ if(isset($_POST['answerid'])){
 }
 if(isset($_POST['questionid'])){
     $questionid=$_POST['questionid'];
+} $kursID=0;
+// Hier wird die passende  kursID aus der Datenbank geholt da in der Auswahl im Dropdown Feld nur die Beschreibung steht
+//Gespeichert wird das Ergebnis in der variable $kursID diese wird zum erstellen eines neuen Spiels benötigt 
+if(isset($_POST['kurs'])){
+   
+    $kurs=$_POST['kurs'];
+    $stmt = $conn->prepare('SELECT KursID FROM kurse WHERE Beschreibung = ?');
+    $stmt->bind_param('s', $kurs); // 's' steht für einen String-Parameter
+    $stmt->execute();
+    $stmt->bind_result($kursID);
+    $stmt->fetch();
+    $stmt->close();
 }
 
-
 if ($action==="fragenladen"){
-fragenAusgeben($conn);
+fragenAusgeben($conn,$fragenzahl,$kursID);
 }elseif($action==="answercheck"){
     answercheck($answerid,$questionid,$conn);
 }
@@ -67,9 +78,19 @@ function answercheck($answerid,$questionid,$conn){
     $stmt->close();
 }
 
-function fragenAusgeben($conn) {
+function fragenAusgeben($conn,$fragenzahl,$kursID) {
 
-    $stmt=$conn->prepare("SELECT * From fragen join antworten on (fragen.FragenID = antworten.FragenID);");
+// Zufällig 5 Fragen aus der Datenbank laden und in eine temporäre Tabelle einfügen
+
+$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? ORDER BY RAND() LIMIT ?");
+$stmt1->bind_param("is",$kursID,$fragenzahl);
+$stmt1->execute();
+
+
+    $stmt=$conn->prepare("SELECT * FROM temp_fragen JOIN antworten ON temp_fragen.FragenID = antworten.FragenID"
+ );
+
+    // $stmt->bind_param("s",$fragenzahl);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -98,7 +119,7 @@ function fragenAusgeben($conn) {
     }
     
     $stmt->close();
-    
+    $conn->query("DROP TEMPORARY TABLE IF EXISTS temp_fragen");
     $questionsJSON = json_encode($questions);
     
     echo $questionsJSON;

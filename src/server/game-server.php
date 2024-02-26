@@ -18,6 +18,10 @@ if(isset ($_POST["action"])){
     $action = $_POST['action'];
 }
 
+if(isset ($_POST["fragenzahl"])){
+    $fragenzahl = $_POST['fragenzahl'];
+}
+
 if(isset($_POST['gamename'])){
     $gamename=$_POST['gamename'];
 }
@@ -46,10 +50,10 @@ if(isset($_POST['kurs'])){
 
 // Abfrage welche Aktion vom Client gefordert wird
 if ($action === 'deleteGame') {
-    $gameName = $_POST['gameName'];
+    $gameName = $_POST['gamename'];
     deleteGame($gamename, $conn);
 } else if ($action === 'addGame') {
-    addGame($gamename,$kursID,$modusID, $conn);
+    addGame($gamename,$kursID,$modusID,$fragenzahl, $conn);
 } else if ($action === 'getGameList') {
     sendGamelist($conn);
 } else if ($action === 'getKursDropdown') {
@@ -59,10 +63,10 @@ else if ($action === 'getModusDropdown') {
     sendModusDropdown($conn);
 }
 //Hier wird ein neues Spiel erstellt und in die Tabelle spiele geschrieben
-function addGame($name,$kursID,$modusID, $conn) {
+function addGame($name,$kursID,$modusID,$fragenzahl, $conn) {
     $started = time();
-    $stmt = $conn->prepare('INSERT INTO spiele (Spielname,KursID,SpielmodiID) VALUES (?,?,?)');
-    $stmt->bind_param('sii', $name,$kursID,$modusID);
+    $stmt = $conn->prepare('INSERT INTO spiele (Spielname,KursID,SpielmodiID,BenutzerFragen) VALUES (?,?,?,?)');
+    $stmt->bind_param('siii', $name,$kursID,$modusID,$fragenzahl);
     $stmt->execute();
     $stmt->close();
 }
@@ -86,7 +90,8 @@ function sendGamelist($conn) {
         $gamesArray[] = array(
             'name' => $row['Spielname'],
             'modus' => $row['modus'],
-            'kurs' => $row['kurs']
+            'kurs' => $row['kurs'],
+            "fragenzahl" =>$row['BenutzerFragen'],
         );
     }
 

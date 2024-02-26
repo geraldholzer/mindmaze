@@ -91,13 +91,24 @@
                     <ul class="dropdown-menu" id="kursliste" aria-labelledby="kursDropdownButton">
                     </ul>
                   </div>
+                   <!-- fragen Dropdown -->
+                   <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="fragenDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                      Anzahl Fragen
+                    </button>
+                    <ul class="dropdown-menu" id="fragenzahl" aria-labelledby="kursDropdownButton">
+                      <li><a class = "dropdown-item" href="#" data-fragen="5">5 Fragen</a></li>
+                      <li><a class = "dropdown-item" href="#"data-fragen="10">10 Fragen</a></li>
+                      <li><a class = "dropdown-item" href="#"data-fragen="15">15 Fragen</a></li>
+                    </ul>
+                  </div>
                   <!-- Button zum erstellen eines neuen Spiels -->
                   <div class="input-group-append">
                     <button class="btn btn-primary" type="button" id="newgamebutton">erstellen</button>
                   </div>
                 </div>  
                 <!-- Liste mit offenen spielen diese werden als buttons in dieses div eingefügt -->
-                <table  id="gamelist">
+                <table id="gamelist">
                 </table>
               </div>
             </div>
