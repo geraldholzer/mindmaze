@@ -51,10 +51,11 @@
                         <li><a class="dropdown-item" href="#">Profil</a></li>
                         <li><a class="dropdown-item" href="#">Statistik</a></li>
                         <li><a class="dropdown-item" href="#">Fragen</a></li>
+                        
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Abmelden</a>
+                    <a class="nav-link" href="../server/logout.php">Abmelden</a>
                 </li>
             </ul>
         </div>
@@ -64,7 +65,7 @@
 <body>
     <?php
     session_start();
-    if ($_SESSION['permission'] != 3) {
+    if ($_SESSION['ZugriffsrechteID'] != 3) {
         echo "<h3>Du scheinst nicht über die notwendigen Zugriffsrechte zu verfügen!</h3>";
         die();
     }
@@ -82,8 +83,8 @@
         }
 
         // Aktualisiere die Zugriffsrechte für jeden Benutzer
-        foreach ($_POST['zugriffsrechte'] as $benutzerID => $zugriffsrechte) {
-            $sql = "UPDATE benutzer SET zugriffsrechte = $zugriffsrechte WHERE benutzer_ID = $benutzerID";
+        foreach ($_POST['ZugriffsrechteID'] as $benutzerID => $zugriffsrechte) {
+            $sql = "UPDATE benutzer SET ZugriffsrechteID = $zugriffsrechte WHERE BenutzerID = $benutzerID";
             $con->query($sql);
         }
         echo "<p>Zugriffsrechte wurden erfolgreich aktualisiert!</p>";
@@ -93,13 +94,15 @@
         <div class="row">
             <div class="col-1"> </div>
             <div class="col-10">
-                <form method="post">
-                    <table border='1'>
+                <h1 class="mt-3">Benutzer</h1>
+                <form class="mt-3" method="post">
+                    <table class='table table-striped'>
                         <tr>
                             <th>ID</th>
-                            <th>Benutzername</th>
-                            <th>Email</th>
-                            <th>Neue Zugriffsrechte</th>
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            <th>E-mail</th>
+                            <th>Zugriffsrechte</th>
                         </tr>
 
                         <?php
@@ -117,24 +120,27 @@
                         $sql = "SELECT * FROM benutzer";
                         $result = $con->query($sql);
 
+
+
                         // Zeige die Benutzer und ihre aktuellen Zugriffsrechte an
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
-                            echo "<td>" . $row["benutzer_ID"] . "</td>";
-                            echo "<td>" . $row["name"] . "</td>";
-                            echo "<td>" . $row["mail"] . "</td>";
+                            echo "<td>" . $row["BenutzerID"] . "</td>";
+                            echo "<td>" . $row["Vorname"] . "</td>";
+                            echo "<td>" . $row["Nachname"] . "</td>";
+                            echo "<td>" . $row["Email"] . "</td>";
                             echo "<td>";
-                            echo "<select name='zugriffsrechte[" . $row["benutzer_ID"] . "]'>";
-                            echo "<option value='1' " . ($row["zugriffsrechte"] == 1 ? "selected" : "") . ">Nutzer</option>";
-                            echo "<option value='2' " . ($row["zugriffsrechte"] == 2 ? "selected" : "") . ">Tutor</option>";
-                            echo "<option value='3' " . ($row["zugriffsrechte"] == 3 ? "selected" : "") . ">Admin</option>";
+                            echo "<select name='ZugriffsrechteID[" . $row["BenutzerID"] . "]'>";
+                            echo "<option value='1' " . ($row["ZugriffsrechteID"] == 1 ? "selected" : "") . ">Nutzer</option>";
+                            echo "<option value='2' " . ($row["ZugriffsrechteID"] == 2 ? "selected" : "") . ">Tutor</option>";
+                            echo "<option value='3' " . ($row["ZugriffsrechteID"] == 3 ? "selected" : "") . ">Admin</option>";
                             echo "</select>";
                             echo "</td>";
                             echo "</tr>";
                         }
                         ?>
                     </table>
-                    <button class="button-short" type="submit">Aktualisieren</button>
+                    <button class="button-short" type="submit">Änderungen bestätigen</button>
                 </form>
             </div>
             <div class="col-1"> </div>

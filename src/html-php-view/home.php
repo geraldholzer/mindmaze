@@ -106,6 +106,8 @@
   <!-- Sticky top damit navi immer oben bleibt -->
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container">
+
+
       <a class="navbar-brand">IU-Mindmaze</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -131,10 +133,14 @@
               <li><a class="dropdown-item" href="#">Profil</a></li>
               <li><a class="dropdown-item" href="#">Statistik</a></li>
               <li><a class="dropdown-item" href="#">Fragen</a></li>
+              <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
+                echo '<li><a class="dropdown-item" href="userManagement.php">Benutzerverwaltung</a></li>';
+              } ?>
+
             </ul>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Abmelden</a>
+            <a class="nav-link" href="../server/logout.php">Abmelden</a>
           </li>
         </ul>
       </div>
@@ -142,9 +148,10 @@
   </nav>
 
   <div class="container d-flex justify-content-center mt-4">
-    <h1> Willkommen
+
+    <h2> Willkommen
       <?php echo $_SESSION['Vorname'] ?>
-      <h2>
+    </h2>
 
   </div>
 
@@ -152,6 +159,20 @@
 
   <div class="container">
     <div class="row d-flex align-items-stretch justify-content-left">
+
+      <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
+        echo '<div class="col-md-4 col-sm-6">
+          <div class="card m-5" style="width: 300px; height: 400px;">
+            <img class="card-img-top" src="../../img\collector-3930337_1280.jpg" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Benutzerverwaltung</h5>
+              <p class="card-text">Zugriffsrechte anpassen</p>
+              <a href="userManagement.php" class="btn btn-primary">Los!</a>
+            </div>
+          </div>
+        </div>';
+      } ?>
+
       <div class="col-md-4 col-sm-6">
         <div class="card m-5" style="width: 300px; height: 400px;">
           <img class="card-img-top" src="../../img/wooden-toys-2606733_1280.jpg" alt="Card image cap">
@@ -202,6 +223,11 @@
           </div>
         </div>
       </div>
+
+
+
+
+
     </div>
   </div>
 
