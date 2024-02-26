@@ -15,7 +15,8 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="../css/style.css">
+    <link rel="stylesheet" href="../css/main.css">
 </head>
 
 <script>
@@ -35,12 +36,14 @@
 
 
   <div class="container">
-    <div class="row">
+    <div class="row mt-2 ">
       <div class="col">
-        <img src="img/iu_de.svg" width="120" height="120" />
+        <img src="../../img/iu_de.svg" width="120" height="120" />
       </div>
       <div class="col d-flex justify-content-end">
-        <img src="img/Logo.svg" width="120" height="120" />
+        <a href="../../index.php">
+          <img src="../../img/Logo.svg" width="120" height="120" />
+</a>
       </div>
 
     </div>
