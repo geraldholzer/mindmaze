@@ -17,8 +17,8 @@
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 
-    <link rel="stylesheet" type="text/css" href="../css/style.css">
-    <link rel="stylesheet" href="../css/main.css">
+  <link rel="stylesheet" type="text/css" href="../css/style.css">
+  <link rel="stylesheet" href="../css/main.css">
 
 </head>
 
@@ -33,8 +33,9 @@
   $enterHome = false; //über diese Variable wird später geprüft, ob die Startseite aufgebaut wird. Zu Beginn ist sie false und kann im Verlauf der Prüfungen true werden
   $loginCheck = false; //über diese Variable wird geprüft, ob ein Abgleich von Passwort und E-Mail erfolgen soll (Login-Check)
   
-  if (isset($_SESSION['mail']) && !empty($_SESSION['mail'])) {
+  if (isset($_SESSION['Email']) && !empty($_SESSION['Email'])) {
     //Wenn die Session Variablen gesetzt sind, handelt es sich um einen Refresh bzw. erneuten Seitenaufruf nach einem erfolgreichem Login. In diesem Fall wird kein erneuter Login-Check durchgeführt
+    //Um die Sicherheit zu erhöhen, könnte ggf. nochmal die SESSION Email und das SESSION PW verglichen werden
     $enterHome = true;
   }
 
@@ -62,7 +63,7 @@
     }
 
     //Durchführen der SQL Abfrage
-    $sql = "SELECT * FROM benutzer WHERE mail = ?";
+    $sql = "SELECT * FROM benutzer WHERE Email = ?";
     $stmt = $con->prepare($sql);
     $stmt->bind_param("s", $_POST['txtMailLogin']);
     $stmt->execute();
@@ -71,11 +72,14 @@
     $result = $stmt->get_result();
     $row = $result->fetch_assoc();
     if ($row) {
-      if (password_verify($_POST['txtPasswordLogin'], $row['passwort'])) {
+      if (password_verify($_POST['txtPasswordLogin'], $row['Passwort'])) {
         //Wenn Passwort korrekt => Belege die Session-Variablen und setze $enterHome auf true
-        $_SESSION['username'] = $row['name'];
-        $_SESSION['mail'] = htmlspecialchars($_POST["txtMailLogin"]);
-        $_SESSION['password'] = htmlspecialchars($_POST["txtPasswordLogin"]);
+        $_SESSION['Vorname'] = $row['Vorname'];
+        $_SESSION['Nachname'] = $row['Nachname'];
+        $_SESSION['Email'] = htmlspecialchars($_POST["txtMailLogin"]);
+        $_SESSION['Passwort'] = htmlspecialchars($_POST["txtPasswordLogin"]);
+        $_SESSION['ZugriffsrechteID'] = $row['ZugriffsrechteID'];
+        $_SESSION['StudiengangID'] = $row['StudiengangID'];
         $enterHome = true;
       } else {
         echo "<p>Das Passwort ist nicht korrekt!</p>";
@@ -98,7 +102,7 @@
   ?>
 
 
- <!--Navbar Anfang-->
+  <!--Navbar Anfang-->
   <!-- Sticky top damit navi immer oben bleibt -->
   <nav class="navbar navbar-expand-lg custom-navbar">
     <div class="container">
@@ -138,66 +142,68 @@
   </nav>
 
   <div class="container d-flex justify-content-center mt-4">
-    <h1> Willkommen <?php echo $_SESSION['username'] ?> <h2>
+    <h1> Willkommen
+      <?php echo $_SESSION['Vorname'] ?>
+      <h2>
 
   </div>
 
   </div>
 
   <div class="container">
-  <div class="row d-flex align-items-stretch justify-content-left">
-    <div class="col-md-4 col-sm-6">
-      <div class="card m-5" style="width: 300px; height: 400px;">
-        <img class="card-img-top" src="../../img/wooden-toys-2606733_1280.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Einzelspieler</h5>
-          <p class="card-text">Lerne für dich alleine</p>
-          <a href="#" class="btn btn-primary">Los!</a>
+    <div class="row d-flex align-items-stretch justify-content-left">
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img/wooden-toys-2606733_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Einzelspieler</h5>
+            <p class="card-text">Lerne für dich alleine</p>
+            <a href="#" class="btn btn-primary">Los!</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4 col-sm-6">
-      <div class="card m-5" style="width: 300px; height: 400px;">
-        <img class="card-img-top" src="../../img/people-2569234_1280.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Supportive Mode</h5>
-          <p class="card-text">Lerne zusammen mit einem Partner und korrigiert euch gegenseitig</p>
-          <a href="#" class="btn btn-primary">Los!</a>
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img/people-2569234_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Supportive Mode</h5>
+            <p class="card-text">Lerne zusammen mit einem Partner und korrigiert euch gegenseitig</p>
+            <a href="#" class="btn btn-primary">Los!</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4 col-sm-6">
-      <div class="card m-5" style="width: 300px; height: 400px;">
-        <img class="card-img-top" src="../../img\checkmate-1511866_1280.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Versus</h5>
-          <p class="card-text">Trete gegen einen Gegner an und vergleicht euer Wissen in einem Quiz</p>
-          <a href="#" class="btn btn-primary">Los!</a>
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img\checkmate-1511866_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Versus</h5>
+            <p class="card-text">Trete gegen einen Gegner an und vergleicht euer Wissen in einem Quiz</p>
+            <a href="#" class="btn btn-primary">Los!</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4 col-sm-6">
-      <div class="card m-5" style="width: 300px; height: 400px;">
-        <img class="card-img-top" src="../../img\sunset-1807524_1280.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Team</h5>
-          <p class="card-text">Testet euer Wissen als Team</p>
-          <a href="#" class="btn btn-primary">Los!</a>
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img\sunset-1807524_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Team</h5>
+            <p class="card-text">Testet euer Wissen als Team</p>
+            <a href="#" class="btn btn-primary">Los!</a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-4 col-sm-6">
-      <div class="card m-5" style="width: 300px; height: 400px;">
-        <img class="card-img-top" src="../../img\mannequin-1169852_1280.jpg" alt="Card image cap">
-        <div class="card-body">
-          <h5 class="card-title">Profil</h5>
-          <p class="card-text">Ändere deine Benutzereinstellungen</p>
-          <a href="#" class="btn btn-primary">Los!</a>
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img\mannequin-1169852_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Profil</h5>
+            <p class="card-text">Ändere deine Benutzereinstellungen</p>
+            <a href="#" class="btn btn-primary">Los!</a>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 
 
 
