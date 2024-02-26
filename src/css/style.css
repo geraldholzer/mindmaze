@@ -210,3 +210,43 @@ h1.heading-modus {
   .custom-navbar .dropdown-toggle::after {
   border-top-color: white; /* Farbe des Dropdown-Pfeils */
   }
+
+ /*TABLE FÜR LOBBY*/
+ .tableLobby {
+  overflow: auto;
+  width:80%;
+  margin: 0 auto;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+}
+
+.tableLobby table {
+  border: 1px solid #dededf;
+  height: 100%;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  border-spacing: 1px;
+  text-align: left;
+  font-family: "Inter";
+
+}
+
+.tableLobby caption {
+  caption-side: top;
+  text-align: left;
+}
+
+.tableLobby th {
+  border: 1px solid #dededf;
+  background-color: #9257DD;
+  color: #FFFFFF;
+  padding: 5px;
+}
+
+.tableLobby td {
+  border: 1px solid #dededf;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 5px;
+}
