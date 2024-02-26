@@ -7,6 +7,7 @@ let waitforopponent = document.getElementById('wait') //Zeigt Warte auf Gegner
 let room = '' // die Spielsitzungen werden als WebsocketRäume umgesetzt damit immer nur 2 Spieler gleichzeitig spielen können
 let modus = '' //Spielmodus
 let kurs = '' //Gewählter Kurs
+let fragenzahl ="5" //Anzahl Fragen
 let gamesarray = [] // Hier werden die offenen Spiele die aus der Datenbank geholt wurden gespeichert
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
@@ -115,7 +116,7 @@ function loadGames() {
                 button.innerHTML = 'Beitreten'
                 übergabestring = game.name + game.modus + game.kurs
                 button.addEventListener('click', function () {
-                    joingame(übergabestring, game.modus,game.name)
+                    joingame(übergabestring, game.modus,game.name,game.fragenzahl)
                 })
                 tr.appendChild(name)
                 tr.appendChild(modus)
@@ -149,7 +150,9 @@ function addnewgame() {
             '&modus=' +
             encodeURIComponent(modus) +
             '&kurs=' +
-            encodeURIComponent(kurs)),
+            encodeURIComponent(kurs)+
+            '&fragenzahl=' +
+            encodeURIComponent(fragenzahl)),
             fetch(gameserver, {
                 method: 'POST',
                 headers: {
@@ -173,10 +176,11 @@ function deletegame() {
 }
 
 //Mit dieser function wird der Benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
-function joingame(übergabestring, modus,spielname) {
+function joingame(übergabestring, modus,spielname,fragenzahl) {
     localStorage.setItem('gamenameübergabe', übergabestring)
     localStorage.setItem('spielname', spielname)
-
+    localStorage.setItem('fragenzahl', fragenzahl)
+    localStorage.setItem('kurs', kurs)
     if (modus === 'Kooperativ') {
         window.location.href = 'co-op.html'
     } else if (modus === 'Versus') {
@@ -205,5 +209,16 @@ document
             document.getElementById('kursDropdownButton').innerHTML =
                 selectedValue
             kurs = selectedValue
+        }
+    })
+//Wert auslesen aus dropdownfeld und in Variable speichern
+document
+    .getElementById('fragenzahl')
+    .addEventListener('click', function (event) {
+        if (event.target.classList.contains('dropdown-item')) {
+            var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
+            document.getElementById('fragenDropdownButton').innerHTML =
+                selectedValue
+            fragenzahl = event.target.dataset.fragen;
         }
     })

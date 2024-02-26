@@ -1,5 +1,4 @@
 <?php
-
 class answer{
     public $answer;
     public $correct;
@@ -37,8 +36,9 @@ if ($conn->connect_error) {
    echo("Verbindung fehlgeschlagen: " . $conn->connect_error);
 }
 
-
-
+if(isset($_POST['fragenzahl'])){
+    $fragenzahl=$_POST['fragenzahl'];
+}
 
 if(isset($_POST['action'])){
     $action=$_POST['action'];
@@ -52,7 +52,7 @@ if(isset($_POST['questionid'])){
 
 
 if ($action==="fragenladen"){
-fragenAusgeben($conn);
+fragenAusgeben($conn,$fragenzahl);
 }elseif($action==="answercheck"){
     answercheck($answerid,$questionid,$conn);
 }
@@ -67,9 +67,19 @@ function answercheck($answerid,$questionid,$conn){
     $stmt->close();
 }
 
-function fragenAusgeben($conn) {
+function fragenAusgeben($conn,$fragenzahl) {
 
-    $stmt=$conn->prepare("SELECT * From fragen join antworten on (fragen.FragenID = antworten.FragenID);");
+// Zufällig 5 Fragen aus der Datenbank laden und in eine temporäre Tabelle einfügen
+
+$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen ORDER BY RAND() LIMIT ?");
+$stmt1->bind_param("s",$fragenzahl);
+$stmt1->execute();
+
+
+    $stmt=$conn->prepare("SELECT * FROM temp_fragen JOIN antworten ON temp_fragen.FragenID = antworten.FragenID"
+ );
+
+    // $stmt->bind_param("s",$fragenzahl);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -98,7 +108,7 @@ function fragenAusgeben($conn) {
     }
     
     $stmt->close();
-    
+    $conn->query("DROP TEMPORARY TABLE IF EXISTS temp_fragen");
     $questionsJSON = json_encode($questions);
     
     echo $questionsJSON;

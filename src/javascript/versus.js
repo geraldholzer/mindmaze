@@ -36,10 +36,13 @@ let questionserver= "../server/question-server.php"// lokaler question server
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let opponentpoints = 0
-
+let questions = null;
 room = localStorage.getItem("gamenameübergabe");
 let spielname= localStorage.getItem("spielname"); //wird zum löschen des spiels gebraucht
+fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
+let kurs = localStorage.getItem("kurs");// Auslesen des Kurses
 
+console.log("fragen in versus"+fragenzahl)
 // Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
 //Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
 const socket = new WebSocket(websocketserver) 
@@ -51,7 +54,7 @@ socket.onopen = (event) => {
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
 function joingame() {
-    subscribeToRoom(room)
+    subscribeToRoom(room,fragenzahl,kurs)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
@@ -65,34 +68,6 @@ const Answerbuttons = [
     AnswerButton4,
 ]
 
-//Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
-// Wird mit fetch von PHP geholt
-function laden() {
-    fetch(questionserver, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        //diese action wird im server abgefragt
-        body: 'action=fragenladen',
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error(
-                    `Network response was not ok: ${response.statusText}`
-                )
-            }
-            return response.json() // JSON-Daten aus der Antwort extrahieren
-        })
-        .then((data) => {
-            //Array daten zuweisen
-            questions = data
-        })
-        .then(zuweisen)
-        .catch((error) => {
-            console.error('Fehler beim Abrufen der Daten:', error)
-        })
-}
 
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
@@ -101,7 +76,7 @@ StartButton.addEventListener('click', startquiz)
 
 //Hier wird zuerst die laden funktion aufgerufen und anschließend die entsprechenden buttons ein/aus geblendet
 function startquiz() {
-    laden()
+    zuweisen()
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
@@ -119,11 +94,11 @@ function next() {
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
-    mixedanswers = questions[questioncounter].answers
+    mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
-        explanation.innerHTML = questions[questioncounter].explanation
-        Question.innerHTML = questions[questioncounter].questiontext
-        Question.dataset.id = questions[questioncounter].questionid
+        explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
+        Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
+        Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
@@ -268,7 +243,7 @@ socket.onmessage = (event) => {
     if (data.type === 'message') {
         if (data.message === 'ready') {
             deletegame()
-            startquiz()
+            // startquiz()
         }
         //Gegner hat das Spiel beendet Gegner Punkte in opponentpoints speichern
     } else if (data.type === 'finish') {
@@ -276,8 +251,21 @@ socket.onmessage = (event) => {
         // Beide Spieler haben das Spiel beendet
     } else if (data.type === 'gameover') {
         finish()
-    }
+    }else if (data.type === 'questions') {
+        console.log(typeof(data))
+        questions=data;
+        questions = JSON.parse(data.questions);
+        console.log(questions)
+        console.log(questions[Object.keys(questions)[1]])
+        
+        startquiz();
+    
+    
 }
+}
+
+
+
 
 socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event)
@@ -297,9 +285,9 @@ function sendMessage() {
 }
 
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room) {
+function subscribeToRoom(room,fragenzahl,kurs) {
     // Subscribe to the room
-    const subscribeMessage = JSON.stringify({ type: 'subscribe', room })
+    const subscribeMessage = JSON.stringify({ type: 'subscribe', room,fragenzahl,kurs })
     socket.send(subscribeMessage)
 }
 //Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird
@@ -349,3 +337,31 @@ function deletegame() {
 // ]
 
 //default questions
+//Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
+// Wird mit fetch von PHP geholt
+// function laden() {
+//     fetch(questionserver, {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/x-www-form-urlencoded',
+//         },
+//         //diese action wird im server abgefragt
+//         body: 'action=fragenladen&'+"fragenzahl="+ fragenzahl,
+//     })
+//         .then((response) => {
+//             if (!response.ok) {
+//                 throw new Error(
+//                     `Network response was not ok: ${response.statusText}`
+//                 )
+//             }
+//             return response.json() // JSON-Daten aus der Antwort extrahieren
+//         })
+//         .then((data) => {
+//             //Array daten zuweisen
+//             questions = data;
+//             zuweisen()
+//         })
+//         .catch((error) => {
+//             console.error('Fehler beim Abrufen der Daten:', error)
+//         })
+// }

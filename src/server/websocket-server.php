@@ -22,7 +22,68 @@ class MyWebSocketServer implements MessageComponentInterface
         $this->rooms = [];
     }
 
+    function fragenAusgeben($fragenzahl,$kurs) {
+        // Verbindung zur MySQL-Datenbank herstellen
+//$servername="13.53.246.106";
+$servername="localhost";
+$username="root";
+$pw="";
+$db="mindmaze";
+$conn= new mysqli($servername,$username,$pw,$db);
 
+$stmt = $conn->prepare('SELECT KursID FROM kurse WHERE Beschreibung = ?');
+    $stmt->bind_param('s', $kurs); // 's' steht für einen String-Parameter
+    $stmt->execute();
+    $stmt->bind_result($kursID);
+    $stmt->fetch();
+    $stmt->close();
+
+        // Zufällig 5 Fragen aus der Datenbank laden und in eine temporäre Tabelle einfügen
+        
+        $stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? ORDER BY RAND() LIMIT 10");
+        $stmt1->bind_param("s",$kursID);
+        $stmt1->execute();
+        
+        
+            $stmt=$conn->prepare("SELECT * FROM temp_fragen JOIN antworten ON temp_fragen.FragenID = antworten.FragenID"
+         );
+        
+            // $stmt->bind_param("s",$fragenzahl);
+            $stmt->execute();
+            $result = $stmt->get_result();
+        
+            $questions = array();
+        
+            while ($row = $result->fetch_assoc()) {
+                // FragenID als Schlüssel verwenden
+                $fragenID = $row['FragenID'];
+            
+                // Wenn die FragenID noch nicht im Array existiert, ein leeres Array für Antworten erstellen
+                if (!isset($questions[$fragenID])) {
+                    $questions[$fragenID] = array(
+                        'questiontext' => $row['FrageText'],
+                        "explanation"=>$row["InfoText"],
+                        "questionid"=> $row["FragenID"],
+                        'answers' => array()
+                    );
+                }
+            
+                // Antwort zur entsprechenden Frage hinzufügen
+                $questions[$fragenID]['answers'][] = array(
+                    "answer"=>$row['Text'],
+                    "answerid"=>$row['AntwortID'],
+        
+                );
+            }
+            
+            $stmt->close();
+            $conn->query("DROP TEMPORARY TABLE IF EXISTS temp_fragen");
+            $questionsJSON = json_encode($questions);
+            
+            return $questionsJSON;
+        }
+    
+  
 //Bei Anmeldung hinzufügen des clients zur clientliste "clients"
     public function onOpen(ConnectionInterface $conn)
     {
@@ -68,7 +129,7 @@ class MyWebSocketServer implements MessageComponentInterface
         
         switch ($data['type']) {
             case 'subscribe':
-                $this->handleSubscribe($from, $data['room']);
+                $this->handleSubscribe($from, $data['room'],$data['fragenzahl'],$data['kurs']);
                 break;
             case 'message':
                 $this->handleMessage($from, $data['room'], $data['message']);
@@ -79,7 +140,7 @@ class MyWebSocketServer implements MessageComponentInterface
         }
     }
     // Hier wird ein Client zu einem Raum gleichbedeutend mit Spielsitzung hinzugefügt
-    private function handleSubscribe(ConnectionInterface $conn, $room)
+    private function handleSubscribe(ConnectionInterface $conn, $room,$fragenzahl,$kurs)
     {
         // Raum erstellen falls nicht vorhanden 
         if (!isset($this->rooms[$room])) {
@@ -91,6 +152,9 @@ class MyWebSocketServer implements MessageComponentInterface
              $this->rooms[$room]->attach($conn);
              //Ready message dient dazu das Spiel nach dem Eintreffen beider Spieler zu Starten
              if($this->rooms[$room]->count()==2){
+                 $questions = $this->fragenAusgeben($fragenzahl,$kurs);
+           
+                $this->broadcastToRoom($room, json_encode(['type' => 'questions', 'questions' => $questions]), null);
                 $message="ready";
                $this->broadcastToRoom($room,json_encode(['type' => 'message', 'message' => $message]),null);
              }
