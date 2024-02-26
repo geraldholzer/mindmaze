@@ -48,11 +48,22 @@ if(isset($_POST['answerid'])){
 }
 if(isset($_POST['questionid'])){
     $questionid=$_POST['questionid'];
+} $kursID=0;
+// Hier wird die passende  kursID aus der Datenbank geholt da in der Auswahl im Dropdown Feld nur die Beschreibung steht
+//Gespeichert wird das Ergebnis in der variable $kursID diese wird zum erstellen eines neuen Spiels benötigt 
+if(isset($_POST['kurs'])){
+   
+    $kurs=$_POST['kurs'];
+    $stmt = $conn->prepare('SELECT KursID FROM kurse WHERE Beschreibung = ?');
+    $stmt->bind_param('s', $kurs); // 's' steht für einen String-Parameter
+    $stmt->execute();
+    $stmt->bind_result($kursID);
+    $stmt->fetch();
+    $stmt->close();
 }
 
-
 if ($action==="fragenladen"){
-fragenAusgeben($conn,$fragenzahl);
+fragenAusgeben($conn,$fragenzahl,$kursID);
 }elseif($action==="answercheck"){
     answercheck($answerid,$questionid,$conn);
 }
@@ -67,12 +78,12 @@ function answercheck($answerid,$questionid,$conn){
     $stmt->close();
 }
 
-function fragenAusgeben($conn,$fragenzahl) {
+function fragenAusgeben($conn,$fragenzahl,$kursID) {
 
 // Zufällig 5 Fragen aus der Datenbank laden und in eine temporäre Tabelle einfügen
 
-$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen ORDER BY RAND() LIMIT ?");
-$stmt1->bind_param("s",$fragenzahl);
+$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? ORDER BY RAND() LIMIT ?");
+$stmt1->bind_param("is",$kursID,$fragenzahl);
 $stmt1->execute();
 
 

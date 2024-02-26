@@ -6,15 +6,14 @@ let gamelist = document.getElementById('gamelist') //Liste mit den offenen spiel
 let waitforopponent = document.getElementById('wait') //Zeigt Warte auf Gegner
 let room = '' // die Spielsitzungen werden als WebsocketRäume umgesetzt damit immer nur 2 Spieler gleichzeitig spielen können
 let modus = '' //Spielmodus
-let kurs = '' //Gewählter Kurs
-let fragenzahl ="5" //Anzahl Fragen
+let kurs = null//Gewählter Kurs
+let fragenzahl =null//Anzahl Fragen
 let gamesarray = [] // Hier werden die offenen Spiele die aus der Datenbank geholt wurden gespeichert
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 //let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
 let gameserver = '../server/game-server.php' // lokaler gameserver
-
 //Seite für das erstellen oder beitreten zu einem spiel anzeigen
 joinbutton.addEventListener('click', joingamepage)
 //Ausblenden des Spielbeitreten buttons einblenden der Seite mit den Spielen loadGames wird aufgerufen zum laden aus der DB
@@ -25,6 +24,7 @@ function joingamepage() {
     loadModusDropdwon()
     loadKursDropdown()
 }
+
 //Funktion zum holen der verfügbaren kurse und laden in das Dropdownfeld
 function loadKursDropdown() {
     let kursdropdown = document.getElementById('kursliste')
@@ -122,6 +122,7 @@ function loadGames() {
                 tr.appendChild(modus)
                 tr.appendChild(kurs)
                 tr.appendChild(button)
+                document.getElementById('gamelist').classList.add("tableLobby")
                 document.getElementById('gamelist').appendChild(tr)
             })
         })

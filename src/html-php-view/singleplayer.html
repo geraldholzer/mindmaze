@@ -63,27 +63,28 @@
         <div class="card">
           <div class="card-body">       
             <p class="card-text d-none col-10 mx-auto" id="question">Wer bin ich</p>
-            <!-- Fragen Dropdown
-            <div class="dropdown">
-             <button class="btn btn-secondary dropdown-toggle col-11 offset-1  mt-1" type="button" id="fragenDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-               Anzahl Fragen
-             </button>
-             <ul class="dropdown-menu" id="fragenliste"aria-labelledby="fragenDropdownButton">
-              <li><a class="dropdown-item" href="#">5 Fragen</a></li>
-              <li><a class="dropdown-item"href="#">10 Fragen</a></li>
-              <li><a class="dropdown-item"href="#">20 Fragen</a></li>
-             </ul>
-            </div> -->
             <!-- Modul Dropdown -->
-            <!-- <div class="dropdown" >
-             <button class="btn btn-secondary dropdown-toggle  col-11 offset-1  mt-1" type="button" id="kursDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
-               Kurs
-             </button>
-             <ul class="dropdown-menu" id="kursliste" aria-labelledby="kursDropdownButton">
-             </ul>
-            </div> -->
+            <div class="" id="kursdropdown">
+              <button class="btn btn-secondary dropdown-toggle col-11 offset-1  mt-1" type="button" id="kursDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Kurs
+              </button>
+              <ul class="dropdown-menu" id="kursliste" aria-labelledby="kursDropdownButton">
+              </ul>
+            </div>
+            <!-- fragen Dropdown -->
+            <div class="dropdown"id="fragendropdown">
+              <button class="btn btn-secondary dropdown-toggle col-11 offset-1  mt-1" type="button" id="fragenDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+                Anzahl Fragen
+              </button>
+              <ul class="dropdown-menu" id="fragenzahl" aria-labelledby="kursDropdownButton">
+                <li><a class = "dropdown-item" href="#" data-fragen="5">5 Fragen</a></li>
+                <li><a class = "dropdown-item" href="#"data-fragen="10">10 Fragen</a></li>
+                <li><a class = "dropdown-item" href="#"data-fragen="15">15 Fragen</a></li>
+              </ul>
+            </div>
             <!-- Startbutton -->
             <button  type="button" class="btn btn-outline-primary col-11 offset-1  mt-1"id="Start">Quiz starten</button>
+            
             <div class="container-fluid d-none" id="answercontainer">
               <div class="row"> 
                   <button  type="button" class="btn btn-outline-primary col-5  offset-1" id="Answer1">Primary</button>
