@@ -73,11 +73,6 @@
               </div>
 
               <div class=row>
-                <label for="txtNameRegister">Benutzername</label>
-                <input id="txtNameRegister" type="text" name="txtNameRegister">
-              </div>
-
-              <div class=row>
                 <label for="txtMailRegister">E-Mail</label>
                 <input id="txtMailRegister" type="text" name="txtMailRegister">
               </div>

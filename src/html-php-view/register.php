@@ -15,7 +15,7 @@
 //Noch umzusetzen: Prüfen ob POST Variablen set sind + Umleitung auf Startseite
 
         //Prüfen ob die POST-Variablen gesetzt sind
-        if(isset($_POST["txtNameRegister"],$_POST["txtMailRegister"],$_POST["txtPasswordRegister"])==false){    //Prüfen ob alle benötigten POST Variablen gesetzt sind
+        if(isset($_POST["txtFirstNameRegister"],$_POST["txtLastNameRegister"],$_POST["txtMailRegister"],$_POST["txtPasswordRegister"])==false){    //Prüfen ob alle benötigten POST Variablen gesetzt sind
             die("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>");                                   //Ausgeben einer Fehlermeldung
         }
 
@@ -23,13 +23,21 @@
         session_start();
         $validRegistration = true;  //Diese Variable wird anfangs auf true gesetzt. Bei einem Fehler der eingegebenen Werte (Benutzername, Email, Passwort), wird die Variable auf false gesetzt.
         
-        
-        //Überprüfen des eingegebenen Benutzernamens
-        if(empty($_POST["txtNameRegister"])){                                   //Prüfe ob der eingegebene Benutzername leer ist
-            echo("<p>Ungültiger Benutzername!</p>");                            //Ausgeben einer Fehlermeldung
+
+        //Überprüfen des eingegebenen Nachnamens
+        if(empty($_POST["txtLastNameRegister"])){                                   //Prüfe ob der eingegebene Nachname leer ist
+            echo("<p>Ungültiger Nachname!</p>");                            //Ausgeben einer Fehlermeldung
             $validRegistration = false;                                         //Ändern der Validierungsvariable auf false
         }else{
-            $_SESSION['name'] =  htmlspecialchars($_POST["txtNameRegister"]);   //Übernehmen der POST-Variable txtNamRegister in die Session-Variable "name"
+            $_SESSION['Nachname'] =  htmlspecialchars($_POST["txtLastNameRegister"]);   //Übernehmen der POST-Variable txtNamRegister in die Session-Variable "name"
+        }
+
+        //Überprüfen des eingegebenen Vornamens
+        if(empty($_POST["txtFirstNameRegister"])){                                   //Prüfe ob der eingegebene Nachname leer ist
+            echo("<p>Ungültiger Vorname!</p>");                            //Ausgeben einer Fehlermeldung
+            $validRegistration = false;                                         //Ändern der Validierungsvariable auf false
+        }else{
+            $_SESSION['Vorname'] =  htmlspecialchars($_POST["txtFirstNameRegister"]);   //Übernehmen der POST-Variable txtNamRegister in die Session-Variable "name"
         }
 
 
@@ -42,8 +50,8 @@
             $mailPattern = "/([0-9a-zA-Z._\-])+@iu-study\.org$/";               //RegEx Pattern zum validieren der Emailadresse: Hier sollen Zahlen und Buchstaben, sowie Unterstrich, Bindestrich und Punkte erlaubt sein. Das Pattern muss enden mit @iu-study.org
             //(?i)^[a-zA-Z0-9._-]+@(iu-study\.org|iu\.org)$(?-i)
 
-            $_SESSION['mail'] =  htmlspecialchars($_POST["txtMailRegister"]);   //Übernehmen der POST-Variable txtMailRegister in die Session-Variable "mail" 
-            if(!preg_match($mailPattern, $_SESSION['mail'])){                   //Wenn die eingegebene Emailadresse nicht mit dem Pattern übereinstimmt:
+            $_SESSION['Email'] =  htmlspecialchars($_POST["txtMailRegister"]);   //Übernehmen der POST-Variable txtMailRegister in die Session-Variable "mail" 
+            if(!preg_match($mailPattern, $_SESSION['Email'])){                   //Wenn die eingegebene Emailadresse nicht mit dem Pattern übereinstimmt:
                 echo("<p>Ungültige E-Mailadresse!</p>");                        //Ausgeben einer Fehlermeldung
                 $validRegistration = false;                                     //Ändern der Validierungsvariable auf false
             }
@@ -57,7 +65,7 @@
             echo("<p>Ungültiges Passwort!</p>");                                                                        //Ausgeben einer Fehlermeldung
             $validRegistration = false;                                                                                 //Ändern der Validierungsvariable auf false
         }else{
-            $_SESSION['password'] = password_hash(htmlspecialchars($_POST["txtPasswordRegister"]), PASSWORD_DEFAULT);   //Übernehmen des Hash-Wertes der POST-Variable txtPasswordRegister in die Session-Variable "password"
+            $_SESSION['Passwort'] = password_hash(htmlspecialchars($_POST["txtPasswordRegister"]), PASSWORD_DEFAULT);   //Übernehmen des Hash-Wertes der POST-Variable txtPasswordRegister in die Session-Variable "password"
         }
 
         //Auswerten der Validierungsvariable
@@ -77,9 +85,9 @@
 
             
             //Durchführen der SQL Abfrage
-            $sql = "SELECT * FROM benutzer WHERE mail = ?";
+            $sql = "SELECT * FROM benutzer WHERE Email = ?";
             $stmt = $con->prepare($sql);
-            $stmt->bind_param("s", $_SESSION['mail']);
+            $stmt->bind_param("s", $_SESSION['Email']);
             $stmt->execute();
 
             $result = $stmt->get_result();
@@ -87,11 +95,11 @@
 
             
             if ($allResults) {                                                                                              //Prüfen ob $allResults Elemente enthält
-                echo("<p>Es ist bereits ein Benutzer mit unter der E-Mailadresse " . $_SESSION['mail'] . " registriert! </p>");   //Ausgeben einer Fehlermeldung
+                echo("<p>Es ist bereits ein Benutzer mit unter der E-Mailadresse " . $_SESSION['Email'] . " registriert! </p>");   //Ausgeben einer Fehlermeldung
             } 
             else { 
-                $sql = "INSERT INTO benutzer (name, passwort, mail, zugriffsrechte) VALUES ('" . $_SESSION['name'] . 
-                "','" . $_SESSION['password'] . "','" . $_SESSION['mail'] . "', '1')";
+                $sql = "INSERT INTO benutzer (Nachname, Passwort, Vorname, Email, ZugriffsrechteID) VALUES ('" . $_SESSION['Nachname'] . 
+                "','" . $_SESSION['Passwort'] . "','" . $_SESSION['Vorname'] . "','" . $_SESSION['Email'] . "', '1')";
                 $con->query($sql);
                 echo "<p>Vielen Dank, die Benutzerregistrierung war erfolgreich!</p>";
             } 
