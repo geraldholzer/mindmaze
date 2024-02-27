@@ -24,43 +24,8 @@
 
 <!--Navbar Anfang-->
 <!-- Sticky top damit navi immer oben bleibt -->
-<nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container">
-        <a class="navbar-brand">IU-Mindmaze</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="./home.php">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./singleplayer.html">Solo</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="./lobby.html">Multiplayer</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Konto
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#">Profil</a></li>
-                        <li><a class="dropdown-item" href="#">Statistik</a></li>
-                        <li><a class="dropdown-item" href="#">Fragen</a></li>
-                        
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="../server/logout.php">Abmelden</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+
+<?php include ("navbar.php"); ?>
 
 <body>
     <?php
@@ -70,18 +35,18 @@
         die();
     }
 
+    // Verbinde mit der Datenbank
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "mindmaze";
+    $con = new mysqli($servername, $username, $password, $dbname);
+    if ($con->connect_error) {
+        die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
+    }
+
     // Wenn das Formular gesendet wurde
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Verbinde mit der Datenbank
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "mindmaze";
-        $con = new mysqli($servername, $username, $password, $dbname);
-        if ($con->connect_error) {
-            die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
-        }
-
         // Aktualisiere die Zugriffsrechte für jeden Benutzer
         foreach ($_POST['ZugriffsrechteID'] as $benutzerID => $zugriffsrechte) {
             $sql = "UPDATE benutzer SET ZugriffsrechteID = $zugriffsrechte WHERE BenutzerID = $benutzerID";
@@ -89,7 +54,31 @@
         }
         echo "<p>Zugriffsrechte wurden erfolgreich aktualisiert!</p>";
     }
+
+    // Setze die Standardwerte für die Suchfelder
+    $qryVorname = isset($_GET['Vorname']) ? $_GET['Vorname'] : "";
+    $qryNachname = isset($_GET['Nachname']) ? $_GET['Nachname'] : "";
+    $qryEmail = isset($_GET['Email']) ? $_GET['Email'] : "";
+
+    // Baue die WHERE-Bedingung basierend auf den eingereichten Formularwerten auf
+    $whereClause = "WHERE 1"; // Initialisiere die WHERE-Klausel mit 1, um alle Datensätze zu erhalten
+    
+    // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
+    if (!empty($qryVorname)) {
+        $whereClause .= " AND Vorname = '" . $qryVorname . "'";
+    }
+    if (!empty($qryNachname)) {
+        $whereClause .= " AND Nachname = '" . $qryNachname . "'";
+    }
+    if (!empty($qryEmail)) {
+        $whereClause .= " AND Email = '" . $qryEmail . "'";
+    }
+
+    // Führe die SQL-Abfrage mit der WHERE-Klausel aus
+    $sql = "SELECT * FROM benutzer $whereClause";
+    $result = $con->query($sql);
     ?>
+
     <div class="container">
         <div class="row">
             <div class="col-1"> </div>
@@ -106,22 +95,6 @@
                         </tr>
 
                         <?php
-                        // Verbinde mit der Datenbank
-                        $servername = "localhost";
-                        $username = "root";
-                        $password = "";
-                        $dbname = "mindmaze";
-                        $con = new mysqli($servername, $username, $password, $dbname);
-                        if ($con->connect_error) {
-                            die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
-                        }
-
-                        // Lade die Benutzer aus der Datenbank
-                        $sql = "SELECT * FROM benutzer";
-                        $result = $con->query($sql);
-
-
-
                         // Zeige die Benutzer und ihre aktuellen Zugriffsrechte an
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
@@ -141,6 +114,19 @@
                         ?>
                     </table>
                     <button class="button-short" type="submit">Änderungen bestätigen</button>
+                </form>
+
+                <form action="userManagement.php" method="GET">
+                    <label for="Vorname">Vorname:</label><br>
+                    <input type="text" id="Vorname" name="Vorname"><br><br>
+
+                    <label for="Nachname">Nachname:</label><br>
+                    <input type="text" id="Nachname" name="Nachname"><br><br>
+
+                    <label for="Email">E-mail:</label><br>
+                    <input type="text" id="Email" name="Email"><br><br>
+
+                    <input type="submit" value="Absenden">
                 </form>
             </div>
             <div class="col-1"> </div>
