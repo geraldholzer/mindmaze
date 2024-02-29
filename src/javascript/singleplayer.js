@@ -1,4 +1,8 @@
 //Elemente aus dem DOM holen
+let meldebutton=document.getElementById("Meldebutton")
+let meldecontainer=document.getElementById("Meldecontainer")
+let meldungabsendenbutton=document.getElementById("Meldungabsendenbutton")
+let meldungabbrechenbutton=document.getElementById("Meldungabbrechenbutton")
 let questioncounter = 0
 let pointscounter = 0
 let fragenzahl =3;
@@ -125,6 +129,7 @@ function startquiz() {
     laden()
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
+    meldebutton.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
     kursdropdown.classList.add('d-none')
     fragendropdown.classList.add('d-none')
@@ -138,15 +143,6 @@ function next() {
     }
 }
 
-// Funktion zum mixen der Antworten
-function shuffleFisherYates(array) {
-    let i = array.length
-    while (i--) {
-        const ri = Math.floor(Math.random() * i)
-        ;[array[i], array[ri]] = [array[ri], array[i]]
-    }
-    return array
-}
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
@@ -201,6 +197,7 @@ function finish() {
 async function antworten(e) {
     //welcher button wurde gedrückt
     const selectedbutton = e.target
+    //Aufruf der answercheck methode erst wenn eine Rückmeldung kommt geht es in der funktion weiter
     let correctchoice = await answercheck(
         selectedbutton.dataset.answerid,
         Question.dataset.id
@@ -226,7 +223,8 @@ async function antworten(e) {
             (NextButton.disabled = false)
     }
 }
-
+// Funktion zum Auswerten ob die gegebene Antwort stimmt 
+// Es ist eine async function weil auf die auswertung der antwort gewartet wird sonst response immer schon ausgegeben bevor ausgewertet wurde
 async function answercheck(answerid, questionid) {
     let actionstring =
         'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
@@ -241,7 +239,7 @@ async function answercheck(answerid, questionid) {
         })
 
         const data = await response.json()
-
+//Server gibt 1 zurück falls die Antwort richtig war 0 falls falsch
         if (data === 1) {
             return 1
         } else {
@@ -251,4 +249,35 @@ async function answercheck(answerid, questionid) {
         console.error('Fehler beim Überprüfen der Antwort:', error)
         return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
+}
+//Bei Klick auf Meldebutton meldecontainer einblenden
+meldebutton.addEventListener("click",meldecontainereinblenden);
+// Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet 
+// dem abrechenbutton wird die funktionalität zum ausblenden des meldecontainers hinzugefügt
+
+function meldecontainereinblenden(){
+    meldebutton.classList.add("d-none")
+    meldecontainer.classList.remove("d-none");
+    meldungabsendenbutton.addEventListener("click",meldungsenden);
+    meldungabbrechenbutton.addEventListener("click",()=>{
+        meldecontainer.classList.add("d-none");
+        meldebutton.classList.remove("d-none");
+    })
+}
+function meldungsenden(){
+    meldetext=document.getElementById("Meldetext").value;
+    fetch(questionserver, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=fragemelden&'+"questionid="+ Question.dataset.id+"&meldetext="+meldetext
+    }).then(()=>{  
+        meldecontainer.classList.add("d-none");
+        meldebutton.classList.remove("d-none");
+        alert("Frage wurde erfolgreich gemeldet \n Danke für die Mitarbeit")   
+    }
+    )
+      
 }
