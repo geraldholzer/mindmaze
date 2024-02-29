@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 22. Feb 2024 um 22:11
+-- Erstellungszeit: 28. Feb 2024 um 14:46
 -- Server-Version: 10.4.32-MariaDB
 -- PHP-Version: 8.2.12
 
@@ -121,7 +121,8 @@ CREATE TABLE `benutzer` (
 --
 
 INSERT INTO `benutzer` (`BenutzerID`, `StudiengangID`, `ZugriffsrechteID`, `Vorname`, `Nachname`, `Email`, `Passwort`) VALUES
-(1, 1, 1, 'Gerald', 'Holzer', 'test@fakemail.com', '1234');
+(1, 1, 1, 'Gerald', 'Holzer', 'test@fakemail.com', '1234'),
+(2, 1, 1, 'Tim', 'Schneider', 'Tim@iu-study.org', '$2y$10$k1YtY982FRJ9G4ektHFI.Owgu2bwFgRYYW2qLEqQLeqkORSSDHUMq');
 
 -- --------------------------------------------------------
 
@@ -136,29 +137,30 @@ CREATE TABLE `fragen` (
   `FrageText` varchar(255) DEFAULT NULL,
   `InfoText` varchar(255) DEFAULT NULL,
   `Status` tinyint(1) DEFAULT NULL,
-  `Änderungsdatum` date NOT NULL
+  `Änderungsdatum` date NOT NULL,
+  `MeldeGrund` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Daten für Tabelle `fragen`
 --
 
-INSERT INTO `fragen` (`FragenID`, `KursID`, `FragentypID`, `FrageText`, `InfoText`, `Status`, `Änderungsdatum`) VALUES
-(0, 2, 1, 'Wie viele Bücher hat das Bürgerliche Gesetzbuch (BGB)?', 'Nachzulesen im BGB', 1, '2024-02-20'),
-(1, 2, 1, 'Wie viele „Kaufleute“-Begriffe kennt das Handelsgesetzbuch (HGB)?', 'Im HGB nachzulesen', 1, '2024-02-20'),
-(2, 2, 1, 'Ist das Hacking von IT-Systemen immer strafbar?', 'IM STGB nachzulesen', 1, '2024-02-20'),
-(3, 2, 1, 'Was kann nach dem Patentrecht geschützt sein?', 'Details im Patentgesetz', 1, '2024-02-22'),
-(5, 2, 1, 'Wann muss ein Kaufmann einen bei Lieferung sofort erkannten Mangel an einer gelieferten Ware nach dem Gesetz rügen?', 'Nachzulesen im HGB', 1, '2024-02-20'),
-(6, 2, 1, 'Welche der nachfolgend genannten gesetzlichen Vorschriften regelt den Kaufvertrag?', 'Details im BGB', 1, '2024-02-22'),
-(7, 2, 1, 'Welches Recht muss der Käufer bei einem Mangel einer Kaufsache zuerst geltend machen?', 'Details im BGB', 1, '2024-02-22'),
-(8, 2, 1, 'Welche Vertragsart findet auf den Erstellungsvertrag von Software Anwendung?', 'Details im BGB', 1, '2024-02-22'),
-(9, 2, 1, 'Wann muss eine öffentliche Einrichtung das Vergaberecht beachten?', 'Details im BGB', 1, '2024-02-22'),
-(10, 2, 1, 'Wann greift das Kartellrecht ein?', 'Details im BGB', 1, '2024-02-22'),
-(11, 2, 1, 'Was regelt die Lizenz bei der Softwareüberlassung?', 'Details im BGB', 1, '2024-02-22'),
-(12, 2, 1, 'Was sind Allgemeine Geschäftsbedingungen (AGB)?', 'Details im BGB', 1, '2024-02-22'),
-(13, 2, 1, 'Was kann die Folge sein, wenn Allgemeine Geschäftsbedingungen (AGB) nicht lesbar sind?', 'Details im BGB', 1, '2024-02-22'),
-(14, 2, 1, 'Welcher Anspruch kann zur Durchsetzung von Ansprüchen aus dem Urheberrecht geltend macht werden?', 'Details im BGB', 1, '2024-02-22'),
-(15, 2, 1, 'Was ist der Unterschied zwischen Open Source Software und „normaler“ Software?', 'Details im BGB', 1, '2024-02-22');
+INSERT INTO `fragen` (`FragenID`, `KursID`, `FragentypID`, `FrageText`, `InfoText`, `Status`, `Änderungsdatum`, `MeldeGrund`) VALUES
+(0, 2, 1, 'Wie viele Bücher hat das Bürgerliche Gesetzbuch (BGB)?', 'Nachzulesen im BGB', 1, '2024-02-20', NULL),
+(1, 2, 1, 'Wie viele „Kaufleute“-Begriffe kennt das Handelsgesetzbuch (HGB)?', 'Im HGB nachzulesen', 1, '2024-02-20', NULL),
+(2, 2, 1, 'Ist das Hacking von IT-Systemen immer strafbar?', 'IM STGB nachzulesen', 1, '2024-02-20', NULL),
+(3, 2, 1, 'Was kann nach dem Patentrecht geschützt sein?', 'Details im Patentgesetz', 1, '2024-02-22', NULL),
+(5, 2, 1, 'Wann muss ein Kaufmann einen bei Lieferung sofort erkannten Mangel an einer gelieferten Ware nach dem Gesetz rügen?', 'Nachzulesen im HGB', 1, '2024-02-20', NULL),
+(6, 2, 1, 'Welche der nachfolgend genannten gesetzlichen Vorschriften regelt den Kaufvertrag?', 'Details im BGB', 1, '2024-02-22', NULL),
+(7, 2, 1, 'Welches Recht muss der Käufer bei einem Mangel einer Kaufsache zuerst geltend machen?', 'Details im BGB', 1, '2024-02-22', NULL),
+(8, 2, 1, 'Welche Vertragsart findet auf den Erstellungsvertrag von Software Anwendung?', 'Details im BGB', 1, '2024-02-22', NULL),
+(9, 2, 1, 'Wann muss eine öffentliche Einrichtung das Vergaberecht beachten?', 'Details im BGB', 1, '2024-02-22', NULL),
+(10, 2, 1, 'Wann greift das Kartellrecht ein?', 'Details im BGB', 1, '2024-02-22', NULL),
+(11, 2, 1, 'Was regelt die Lizenz bei der Softwareüberlassung?', 'Details im BGB', 1, '2024-02-22', NULL),
+(12, 2, 1, 'Was sind Allgemeine Geschäftsbedingungen (AGB)?', 'Details im BGB', 1, '2024-02-22', NULL),
+(13, 2, 1, 'Was kann die Folge sein, wenn Allgemeine Geschäftsbedingungen (AGB) nicht lesbar sind?', 'Details im BGB', 1, '2024-02-22', NULL),
+(14, 2, 1, 'Welcher Anspruch kann zur Durchsetzung von Ansprüchen aus dem Urheberrecht geltend macht werden?', 'Details im BGB', 1, '2024-02-22', NULL),
+(15, 2, 1, 'Was ist der Unterschied zwischen Open Source Software und „normaler“ Software?', 'Details im BGB', 1, '2024-02-22', NULL);
 
 --
 -- Trigger `fragen`
@@ -243,7 +245,9 @@ CREATE TABLE `spielmodi` (
 
 INSERT INTO `spielmodi` (`SpielmodiID`, `Beschreibung`) VALUES
 (1, 'Kooperativ'),
-(2, 'Versus');
+(2, 'Versus'),
+(3, 'Supportive'),
+(4, 'Einzelspieler');
 
 -- --------------------------------------------------------
 
@@ -275,6 +279,22 @@ CREATE TABLE `statistik` (
   `SpielDatum` date DEFAULT NULL,
   `StatistikID` int(12) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `statistik`
+--
+
+INSERT INTO `statistik` (`BenutzerIDSieger`, `BenutzerIDVerlierer`, `SpielmodiID`, `SpielDatum`, `StatistikID`) VALUES
+(1, 2, 3, '2024-02-28', 31),
+(2, 1, 2, '2024-02-27', 32),
+(1, 2, 3, '2024-02-26', 33),
+(2, 1, 1, '2024-02-25', 34),
+(1, 2, 2, '2024-02-24', 35),
+(2, 1, 1, '2024-02-23', 36),
+(2, 1, 3, '2024-02-22', 37),
+(2, 1, 1, '2024-02-21', 38),
+(1, 2, 3, '2024-02-20', 39),
+(2, 1, 1, '2024-02-19', 40);
 
 -- --------------------------------------------------------
 
@@ -322,7 +342,9 @@ CREATE TABLE `zugriffsrechte` (
 --
 
 INSERT INTO `zugriffsrechte` (`ZugriffsrechteID`, `Beschreibung`) VALUES
-(1, 'Administrator');
+(1, 'Student'),
+(2, 'Tutor'),
+(3, 'Administrator');
 
 --
 -- Indizes der exportierten Tabellen
@@ -396,9 +418,9 @@ ALTER TABLE `spielrunden`
 --
 ALTER TABLE `statistik`
   ADD PRIMARY KEY (`StatistikID`),
-  ADD KEY `FK_benutzer1_benutzer` (`BenutzerIDSieger`),
-  ADD KEY `FK_benutzer2_benutzer` (`BenutzerIDVerlierer`),
-  ADD KEY `FK_statistik_spielmodi` (`SpielmodiID`);
+  ADD KEY `FK_statistik_spielmodi` (`SpielmodiID`),
+  ADD KEY `FK_BenutzerIDSieger` (`BenutzerIDSieger`),
+  ADD KEY `FK_BenutzerIDVerlierer` (`BenutzerIDVerlierer`);
 
 --
 -- Indizes für die Tabelle `studiengang`
@@ -434,7 +456,7 @@ ALTER TABLE `antworten`
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `fragen`
@@ -464,7 +486,7 @@ ALTER TABLE `spiele`
 -- AUTO_INCREMENT für Tabelle `spielmodi`
 --
 ALTER TABLE `spielmodi`
-  MODIFY `SpielmodiID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `SpielmodiID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT für Tabelle `spielrunden`
@@ -476,7 +498,7 @@ ALTER TABLE `spielrunden`
 -- AUTO_INCREMENT für Tabelle `statistik`
 --
 ALTER TABLE `statistik`
-  MODIFY `StatistikID` int(12) NOT NULL AUTO_INCREMENT;
+  MODIFY `StatistikID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT für Tabelle `studiengang`
@@ -494,7 +516,7 @@ ALTER TABLE `studiengangkurse`
 -- AUTO_INCREMENT für Tabelle `zugriffsrechte`
 --
 ALTER TABLE `zugriffsrechte`
-  MODIFY `ZugriffsrechteID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ZugriffsrechteID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Constraints der exportierten Tabellen
@@ -549,10 +571,9 @@ ALTER TABLE `spielrunden`
 -- Constraints der Tabelle `statistik`
 --
 ALTER TABLE `statistik`
-  ADD CONSTRAINT `FK_benutzer1_benutzer` FOREIGN KEY (`BenutzerIDSieger`) REFERENCES `benutzer` (`BenutzerID`),
-  ADD CONSTRAINT `FK_benutzer2_benutzer` FOREIGN KEY (`BenutzerIDVerlierer`) REFERENCES `benutzer` (`BenutzerID`),
-  ADD CONSTRAINT `FK_statistik_spielmodi` FOREIGN KEY (`SpielmodiID`) REFERENCES `spielmodi` (`SpielmodiID`),
-  ADD CONSTRAINT `FK_statistiksieger_spiele` FOREIGN KEY (`BenutzerIDSieger`) REFERENCES `spiele` (`BenutzerIDSpieler1`);
+  ADD CONSTRAINT `FK_BenutzerIDSieger` FOREIGN KEY (`BenutzerIDSieger`) REFERENCES `benutzer` (`BenutzerID`),
+  ADD CONSTRAINT `FK_BenutzerIDVerlierer` FOREIGN KEY (`BenutzerIDVerlierer`) REFERENCES `benutzer` (`BenutzerID`),
+  ADD CONSTRAINT `FK_statistik_spielmodi` FOREIGN KEY (`SpielmodiID`) REFERENCES `spielmodi` (`SpielmodiID`);
 
 --
 -- Constraints der Tabelle `studiengangkurse`
