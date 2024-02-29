@@ -126,7 +126,7 @@
                     <label for="Email">E-mail:</label><br>
                     <input type="text" id="Email" name="Email"><br><br>
 
-                    <input type="submit" value="Absenden">
+                    <input class="button-short" accept=""type="submit" value="Absenden">
                 </form>
             </div>
             <div class="col-1"> </div>
