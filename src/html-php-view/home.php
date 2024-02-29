@@ -80,6 +80,7 @@
         $_SESSION['Passwort'] = htmlspecialchars($_POST["txtPasswordLogin"]);
         $_SESSION['ZugriffsrechteID'] = $row['ZugriffsrechteID'];
         $_SESSION['StudiengangID'] = $row['StudiengangID'];
+        $_SESSION['BenutzerID'] = $row['BenutzerID']; // Hinzugefügt von T.S.
         $enterHome = true;
       } else {
         echo "<p>Das Passwort ist nicht korrekt!</p>";
