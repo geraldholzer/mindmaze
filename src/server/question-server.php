@@ -28,7 +28,9 @@ if(isset($_POST['answerid'])){
 }
 if(isset($_POST['questionid'])){
     $questionid=$_POST['questionid'];
-} $kursID=0;
+} 
+
+$kursID=0;
 
 
 // Hier wird die passende  kursID aus der Datenbank geholt da in der Auswahl im Dropdown Feld nur die Beschreibung steht
@@ -49,7 +51,9 @@ fragenAusgeben($conn,$fragenzahl,$kursID);
 }elseif($action==="answercheck"){
     answercheck($answerid,$questionid,$conn);
 }elseif($action==="fragemelden"){
-    fragemelden($conn,$questionid,$meldetext);}
+    fragemelden($conn,$questionid,$meldetext);
+}elseif($action==="statuscheck"){
+        statuscheck($conn,$questionid);}
 
 
 //Funktion zum Abfragen ob die multiplechoice Antwort stimmt
@@ -62,7 +66,15 @@ function answercheck($answerid,$questionid,$conn){
     echo $row['Korrekt'];
     $stmt->close();
 }
-
+//Funktion zum Abfragen des Status einer Frage 
+function statuscheck($conn,$questionid){
+$stmt = $conn->prepare("SELECT fragen.Status From fragen WHERE fragen.FragenID =?");
+$stmt->bind_param("i",$questionid);
+$stmt->execute();
+$result=$stmt->get_result();
+$status=$result->fetch_assoc();
+echo $status["Status"];
+}
 //Funktion zum ausgeben der Fragen am Beginn des Spiels
 function fragenAusgeben($conn,$fragenzahl,$kursID) {
 
@@ -112,7 +124,7 @@ $stmt1->execute();
 }
 // Fragemeldung in die Spalte MeldeGrund der fragen Tabelle einfügen
 function fragemelden($conn,$fragenID,$meldetext){
-$stmt=$conn->prepare("UPDATE fragen SET MeldeGrund = ? WHERE FragenID = ?" );
+$stmt=$conn->prepare("UPDATE fragen SET MeldeGrund = ?, Status = 0 WHERE FragenID = ?" );
 $stmt->bind_param("si",$meldetext,$fragenID);
 $stmt->execute();
 }
