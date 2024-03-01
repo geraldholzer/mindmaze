@@ -1,11 +1,11 @@
 //Elemente aus dem DOM holen
-let meldebutton=document.getElementById("Meldebutton")
-let meldecontainer=document.getElementById("Meldecontainer")
-let meldungabsendenbutton=document.getElementById("Meldungabsendenbutton")
-let meldungabbrechenbutton=document.getElementById("Meldungabbrechenbutton")
+let meldebutton = document.getElementById('Meldebutton')
+let meldecontainer = document.getElementById('Meldecontainer')
+let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton')
+let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
 let questioncounter = 0
 let pointscounter = 0
-let fragenzahl =3;
+let fragenzahl = 3
 let AnswerButton1 = document.getElementById('Answer1')
 let AnswerButton2 = document.getElementById('Answer2')
 let AnswerButton3 = document.getElementById('Answer3')
@@ -18,11 +18,11 @@ let resultpage = document.getElementById('result')
 let resuttext = document.getElementById('resulttext')
 let explanation = document.getElementById('explanation')
 let explanationcontainer = document.getElementById('explanationcontainer')
-let kurs="";
-let kursdropdown=document.getElementById("kursdropdown")
-let fragendropdown=document.getElementById("fragendropdown")
+let kurs = ''
+let kursdropdown = document.getElementById('kursdropdown')
+let fragendropdown = document.getElementById('fragendropdown')
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
-let questionserver= "../server/question-server.php"// lokaler question server
+let questionserver = '../server/question-server.php' // lokaler question server
 //let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
 let gameserver = '../server/game-server.php' // lokaler gameserver
 
@@ -50,7 +50,6 @@ function loadKursDropdown() {
     })
         .then((response) => response.json())
         .then((data) => {
-           
             data.forEach((kurs) => {
                 var li = document.createElement('li')
                 var a = document.createElement('a')
@@ -65,7 +64,7 @@ function loadKursDropdown() {
         })
 }
 
-loadKursDropdown();
+loadKursDropdown()
 
 //Wert auslesen aus dropdownfeld und in Variable speichern
 document
@@ -86,7 +85,7 @@ document
             var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
             document.getElementById('fragenDropdownButton').innerHTML =
                 selectedValue
-            fragenzahl = event.target.dataset.fragen;
+            fragenzahl = event.target.dataset.fragen
         }
     })
 
@@ -99,7 +98,12 @@ function laden() {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         //diese action wird im server abgefragt
-        body: 'action=fragenladen&'+"fragenzahl="+ fragenzahl+"&kurs="+kurs
+        body:
+            'action=fragenladen&' +
+            'fragenzahl=' +
+            fragenzahl +
+            '&kurs=' +
+            kurs,
     })
         .then((response) => {
             if (!response.ok) {
@@ -143,14 +147,16 @@ function next() {
     }
 }
 
-
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
     mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
-        explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
-        Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
-        Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
+        explanation.innerHTML =
+            questions[Object.keys(questions)[questioncounter]].explanation
+        Question.innerHTML =
+            questions[Object.keys(questions)[questioncounter]].questiontext
+        Question.dataset.id =
+            questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
@@ -165,6 +171,7 @@ function zuweisen() {
 //Funktion zum zurücksetzen der class Attributte für richtige und falsche Antworten und freigeben der Buttons
 function reset() {
     explanationcontainer.classList.add('d-none')
+    meldebutton.classList.remove('d-none')
     Answerbuttons.forEach((button) => {
         button.classList.add('btn-outline-primary')
         button.classList.remove('btn-danger')
@@ -223,7 +230,7 @@ async function antworten(e) {
             (NextButton.disabled = false)
     }
 }
-// Funktion zum Auswerten ob die gegebene Antwort stimmt 
+// Funktion zum Auswerten ob die gegebene Antwort stimmt
 // Es ist eine async function weil auf die auswertung der antwort gewartet wird sonst response immer schon ausgegeben bevor ausgewertet wurde
 async function answercheck(answerid, questionid) {
     let actionstring =
@@ -239,7 +246,7 @@ async function answercheck(answerid, questionid) {
         })
 
         const data = await response.json()
-//Server gibt 1 zurück falls die Antwort richtig war 0 falls falsch
+        //Server gibt 1 zurück falls die Antwort richtig war 0 falls falsch
         if (data === 1) {
             return 1
         } else {
@@ -251,33 +258,69 @@ async function answercheck(answerid, questionid) {
     }
 }
 //Bei Klick auf Meldebutton meldecontainer einblenden
-meldebutton.addEventListener("click",meldecontainereinblenden);
-// Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet 
+meldebutton.addEventListener('click', meldecontainereinblenden)
+// Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet
 // dem abrechenbutton wird die funktionalität zum ausblenden des meldecontainers hinzugefügt
 
-function meldecontainereinblenden(){
-    meldebutton.classList.add("d-none")
-    meldecontainer.classList.remove("d-none");
-    meldungabsendenbutton.addEventListener("click",meldungsenden);
-    meldungabbrechenbutton.addEventListener("click",()=>{
-        meldecontainer.classList.add("d-none");
-        meldebutton.classList.remove("d-none");
+function meldecontainereinblenden() {
+    meldebutton.classList.add('d-none')
+    meldecontainer.classList.remove('d-none')
+    meldungabsendenbutton.addEventListener('click', meldungsenden)
+    meldungabbrechenbutton.addEventListener('click', () => {
+        meldecontainer.classList.add('d-none')
+        meldebutton.classList.remove('d-none')
     })
 }
-function meldungsenden(){
-    meldetext=document.getElementById("Meldetext").value;
-    fetch(questionserver, {
+
+async function statuscheck() {
+    const response = await fetch(questionserver, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        //diese action wird im server abgefragt
-        body: 'action=fragemelden&'+"questionid="+ Question.dataset.id+"&meldetext="+meldetext
-    }).then(()=>{  
-        meldecontainer.classList.add("d-none");
-        meldebutton.classList.remove("d-none");
-        alert("Frage wurde erfolgreich gemeldet \n Danke für die Mitarbeit")   
+        body: 'action=statuscheck&' + 'questionid=' + Question.dataset.id,
+    })
+    const data = await response.text()
+    return data // Assuming the response is the status value
+}
+
+async function meldungsenden() {
+    let status = await statuscheck()
+    console.log('status' + status)
+    if (status === '1') {
+        meldetext = document.getElementById('Meldetext').value
+        fetch(questionserver, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            //diese action wird im server abgefragt
+            body:
+                'action=fragemelden&' +
+                'questionid=' +
+                Question.dataset.id +
+                '&meldetext=' +
+                meldetext,
+        }).then(() => {
+            meldecontainer.classList.add('d-none')
+            meldebutton.classList.add('d-none')
+            document
+                .getElementById('Meldunggesendet')
+                .classList.remove('d-none')
+            document
+                .getElementById('meldunggesendetclose')
+                .addEventListener('click', () => {
+                    document
+                        .getElementById('Meldunggesendet')
+                        .classList.add('d-none')
+                })
+        })
+    } else {
+        meldecontainer.classList.add('d-none')
+        document
+            .getElementById('Meldungnichtgesendet')
+            .classList.remove('d-none')
+            document.getElementById("meldungnichtgesendetclose").addEventListener("click",()=>{
+            document.getElementById("Meldungnichtgesendet").classList.add("d-none")}) 
     }
-    )
-      
 }
