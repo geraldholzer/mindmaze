@@ -5,16 +5,17 @@ function savePasswordToDatabase($password) {
      // Verbindung zur Datenbank herstellen und Abfrage ausführen
      $servername = "localhost";
      $username = "root";
-     $password = "";
+     $dbpassword = "";
      $dbname = "mindmaze";
  
      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
  
+        session_start();
         // Passwort hashen (z. B. mit bcrypt)
         $hashedPassword = password_hash(htmlspecialchars($password), PASSWORD_DEFAULT);
-        $UserID = 1; //noch ändern auf Session-Variable
+        $UserID = $_SESSION['BenutzerID']; 
 
         // Passwort in die Datenbank speichern
         $sql = "UPDATE benutzer SET Passwort=:passwort WHERE BenutzerID=:benID";
@@ -24,14 +25,11 @@ function savePasswordToDatabase($password) {
         $result = $stmt->execute();
 
         if ($result) {
-            $meldung = "Passwort erfolgreich gespeichert!";
+            return true;
         }
         else {
-            $meldung = "Achtung: Passwort konnte nicht gespeichert werden!";
-        }
-
-        //Meldung ausgeben und zurück zur letzten Seite gehen
-        echo "<script>alert('$meldung'); window.history.back();</script>";
+            return false;
+        }        
     } catch(PDOException $e) {
         echo "Fehler: " . $e->getMessage();
     }        
@@ -48,12 +46,13 @@ function getUserDetails() {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $userID = 1; //noch ändern auf Session-Variable
+        session_start();
+        $userID = $_SESSION['BenutzerID'];
 
         // Abfrage vorbereiten
         $stmt = $conn->prepare("SELECT benutzer.*, zugriffsrechte.Beschreibung AS ZugriffsrechteBeschreibung, studiengang.Beschreibung AS StudiengangBeschreibung FROM benutzer 
-                                              INNER JOIN zugriffsrechte ON benutzer.ZugriffsrechteID = zugriffsrechte.ZugriffsrechteID
-                                              INNER JOIN studiengang    ON benutzer.StudiengangID = studiengang.StudiengangID 
+                                              LEFT JOIN zugriffsrechte ON benutzer.ZugriffsrechteID = zugriffsrechte.ZugriffsrechteID
+                                              LEFT JOIN studiengang    ON benutzer.StudiengangID = studiengang.StudiengangID 
                                               WHERE Benutzerid = :id");
         $stmt->bindParam(':id', $userID);
         $stmt->execute();
@@ -74,15 +73,16 @@ function getUserDetails() {
 if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER["REQUEST_METHOD"] == "POST")) {
     //Prüfen ob die eingegebenen Passwörter gleich sind
     if ($_POST['txtNewPassword'] == $_POST['txtNewPasswordMatch']) {
-        // Passwort vom Formular empfangen
-        $passwordFromForm = $_POST['txtNewPasswordMatch'];
         // Passwort in die Datenbank speichern, indem die Funktion aufgerufen wird
-        savePasswordToDatabase($passwordFromForm);
+        if (savePasswordToDatabase($_POST['txtNewPasswordMatch'])) {
+            echo "true";
+        }
+        else {
+            echo "error_write";
+        }
     }
     else{
-        //Meldung ausgeben und zurück zur letzten Seite gehen
-        $meldung = "Die Passwörter stimmen nicht überein!";
-        echo "<script>alert('$meldung'); window.history.back();</script>";
+        echo "error_unmatch";
     }
 }
 else if (isset($_SERVER['REQUEST_METHOD']) && ($_SERVER["REQUEST_METHOD"] == "GET")) {

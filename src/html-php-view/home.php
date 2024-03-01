@@ -102,7 +102,7 @@
 
   ?>
 
-<?php include ("navbar.php"); ?>
+  <?php include ("navbar.php"); ?>
 
   <div class="container d-flex justify-content-center mt-4">
 
