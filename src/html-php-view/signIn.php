@@ -67,7 +67,7 @@
               </div>
               <div class=row>
                 <label for="txtPasswordRegister">Passwort</label>
-                <input id="txtPasswordRegister" type="text" name="txtPasswordRegister">
+                <input id="txtPasswordRegister" type="password" name="txtPasswordRegister">
               </div>
               <div class="row">
                 <label for="selectStudiengang">Studiengang</label>

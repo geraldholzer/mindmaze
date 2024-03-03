@@ -75,7 +75,7 @@
 
               <div class=row>
                 <label for="txtPasswordLogin">Passwort</label>
-                <input id="txtPasswordLogin" type="text" name="txtPasswordLogin">
+                <input id="txtPasswordLogin" type="password" name="txtPasswordLogin">
               </div>
 
               <div class=row>
