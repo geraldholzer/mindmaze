@@ -15,7 +15,7 @@
 //Noch umzusetzen: Prüfen ob POST Variablen set sind + Umleitung auf Startseite
 
         //Prüfen ob die POST-Variablen gesetzt sind
-        if(isset($_POST["txtFirstNameRegister"],$_POST["txtLastNameRegister"],$_POST["txtMailRegister"],$_POST["txtPasswordRegister"])==false){    //Prüfen ob alle benötigten POST Variablen gesetzt sind
+        if(isset($_POST["txtFirstNameRegister"],$_POST["txtLastNameRegister"],$_POST['selectStudiengang'],$_POST["txtMailRegister"],$_POST["txtPasswordRegister"])==false){    //Prüfen ob alle benötigten POST Variablen gesetzt sind
             die("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>");                                   //Ausgeben einer Fehlermeldung
         }
 
@@ -23,6 +23,7 @@
         session_start();
         $validRegistration = true;  //Diese Variable wird anfangs auf true gesetzt. Bei einem Fehler der eingegebenen Werte (Benutzername, Email, Passwort), wird die Variable auf false gesetzt.
         
+        $_SESSION['StudiengangID'] = $_POST['selectStudiengang'];
 
         //Überprüfen des eingegebenen Nachnamens
         if(empty($_POST["txtLastNameRegister"])){                                   //Prüfe ob der eingegebene Nachname leer ist
@@ -98,8 +99,8 @@
                 echo("<p>Es ist bereits ein Benutzer mit unter der E-Mailadresse " . $_SESSION['Email'] . " registriert! </p>");   //Ausgeben einer Fehlermeldung
             } 
             else { 
-                $sql = "INSERT INTO benutzer (Nachname, Passwort, Vorname, Email, ZugriffsrechteID) VALUES ('" . $_SESSION['Nachname'] . 
-                "','" . $_SESSION['Passwort'] . "','" . $_SESSION['Vorname'] . "','" . $_SESSION['Email'] . "', '1')";
+                $sql = "INSERT INTO benutzer (Nachname, Passwort, Vorname, Email, StudiengangID, ZugriffsrechteID) VALUES ('" . $_SESSION['Nachname'] . 
+                "','" . $_SESSION['Passwort'] . "','" . $_SESSION['Vorname'] . "','" . $_SESSION['Email']  . "','" . $_SESSION['StudiengangID'] . "', '1')";
                 $con->query($sql);
                 echo "<p>Vielen Dank, die Benutzerregistrierung war erfolgreich!</p>";
             } 

@@ -28,7 +28,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="./profile.html">Profil</a></li>
-              <li><a class="dropdown-item" href="./statistik.php">Statistik</a></li>
+              <li><a class="dropdown-item" href="statistik.php">Statistik</a></li>
               <li><a class="dropdown-item" href="#">Fragen</a></li>
               <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
                 echo '<li><a class="dropdown-item" href="userManagement.php">Benutzerverwaltung</a></li>';
@@ -38,7 +38,7 @@
           </li>
           <li class="nav-item">
             <a class="nav-link" href="../server/logout.php">Abmelden</a>
-          </li>
+          </li> 
         </ul>
       </div>
     </div>

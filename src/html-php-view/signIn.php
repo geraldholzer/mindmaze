@@ -71,7 +71,7 @@
               </div>
               <div class="row">
                 <label for="selectStudiengang">Studiengang</label>
-                <select id="selectStudiengang" name="optStudiengang">
+                <select id="selectStudiengang" name="selectStudiengang">
                   <?php
                   // Einrichten der Datenbankverbindung
                   $servername = "localhost";
@@ -87,7 +87,7 @@
                   $result = $con->query($sql);
                   if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                      echo "<option value='" . $row["ID"] . "'>" . $row["Beschreibung"] . "</option>";
+                      echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
                     }
                   } else {
                     echo "Keine Studiengänge gefunden";
