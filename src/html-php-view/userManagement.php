@@ -65,13 +65,13 @@
     
     // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
     if (!empty($qryVorname)) {
-        $whereClause .= " AND Vorname = '" . $qryVorname . "'";
+        $whereClause .= " AND Vorname like '" . "%"    . $qryVorname . "%" . "'";
     }
     if (!empty($qryNachname)) {
-        $whereClause .= " AND Nachname = '" . $qryNachname . "'";
+        $whereClause .= " AND Nachname like '" . "%"    . $qryNachname . "%" . "'";
     }
     if (!empty($qryEmail)) {
-        $whereClause .= " AND Email = '" . $qryEmail . "'";
+        $whereClause .= " AND Email like '" . "%" . $qryEmail . "%" ."'";
     }
 
     // Führe die SQL-Abfrage mit der WHERE-Klausel aus
@@ -104,9 +104,9 @@
                             echo "<td>" . $row["Email"] . "</td>";
                             echo "<td>";
                             echo "<select name='ZugriffsrechteID[" . $row["BenutzerID"] . "]'>";
-                            echo "<option value='1' " . ($row["ZugriffsrechteID"] == 1 ? "selected" : "") . ">Nutzer</option>";
-                            echo "<option value='2' " . ($row["ZugriffsrechteID"] == 2 ? "selected" : "") . ">Tutor</option>";
-                            echo "<option value='3' " . ($row["ZugriffsrechteID"] == 3 ? "selected" : "") . ">Admin</option>";
+                                echo "<option value='1' " . ($row["ZugriffsrechteID"] == 1 ? "selected" : "") . ">Nutzer</option>";
+                                echo "<option value='2' " . ($row["ZugriffsrechteID"] == 2 ? "selected" : "") . ">Tutor</option>";
+                                echo "<option value='3' " . ($row["ZugriffsrechteID"] == 3 ? "selected" : "") . ">Admin</option>";
                             echo "</select>";
                             echo "</td>";
                             echo "</tr>";
