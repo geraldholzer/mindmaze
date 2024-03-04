@@ -61,10 +61,11 @@
       <div class="col-lg-8 mx-auto">
         <div class="card">
           <div class="card-body"> 
+            <!-- Meldungscontainer -->
             <div class="row mb-1">
               <!-- Meldebutton -->
-                      <div class="col-2 offset-8">
-                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Frage Melden</button>
+                      <div class="col-1 offset-11">
+                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
                       </div>
             </div>
             <!-- Frage und Fragemelden button -->
@@ -129,9 +130,29 @@
                   <button  type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"id="Answer3">Primary</button>
                   <button type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"id="Answer4">Primary</button>
                 </div>
+                <!-- Next und Beenden Button -->
                 <div class="row">
-                  <button  type="button" class="btn btn-outline-primary col-11 offset-1  mt-1"id="Next">Next</button>
+                  <button  type="button" class="btn btn-outline-primary col-8 offset-1  mt-1"id="Next">Next</button>
+                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
                 </div>
+                   <!-- Modal -->
+                   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLabel">Spiel beenden</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                          Spiel wirklich beenden?
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                          <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" id="Beenden" onclick="window.location.href='./home.php'">Spiel beenden</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 <div class="row d-none col-lg-10 mx-auto" id="explanationcontainer">
                   <div id="explanation">Standarderklärung</div>
                 </div>

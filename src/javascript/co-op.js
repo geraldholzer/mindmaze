@@ -1,4 +1,8 @@
 //Elemente aus dem DOM holen
+let meldebutton = document.getElementById('Meldebutton')
+let meldecontainer = document.getElementById('Meldecontainer')
+let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton')
+let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
@@ -6,6 +10,7 @@ let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
 let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
 let AnswerButton4 = document.getElementById('Answer4') //Antwortbutton4
 let NextButton = document.getElementById('Next') //Nextbutton
+let BeendenButton = document.getElementById('Beenden') //Beendenbutton
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
 let answercontainer = document.getElementById('answercontainer') //COntainer (div) in dem sich die answerbuttons befinden
@@ -62,35 +67,8 @@ const Answerbuttons = [
     AnswerButton4,
 ]
 
-//Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
-// Wird mit fetch von PHP geholt
-// function laden() {
-//     fetch(questionserver, {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded',
-//         },
-//         //diese action wird im server abgefragt
-//         body: 'action=fragenladen',
-//     })
-//         .then((response) => {
-//             if (!response.ok) {
-//                 throw new Error(
-//                     `Network response was not ok: ${response.statusText}`
-//                 )
-//             }
-//             return response.json() // JSON-Daten aus der Antwort extrahieren
-//         })
-//         .then((data) => {
-//             //Array daten zuweisen
-//             questions = data
-//         })
-//         .then(zuweisen)
-//         .catch((error) => {
-//             console.error('Fehler beim Abrufen der Daten:', error)
-//         })
-// }
-
+//Eventlistener für Beendenbutton
+BeendenButton.addEventListener('click', sendinterruptflag)
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton
@@ -137,6 +115,7 @@ function reset() {
     buttonpressed = false
     explanationcontainer.classList.add('d-none')
     waitforopponent.classList.add('d-none')
+    meldebutton.classList.remove('d-none')
     Answerbuttons.forEach((button) => {
         button.classList.add('btn-outline-primary')
         button.classList.remove('btn-danger')
@@ -145,7 +124,7 @@ function reset() {
     Answerbuttons.forEach((button) => {
         button.disabled = false
     }),
-        (NextButton.disabled = true)
+    (NextButton.disabled = true)
 }
 
 // Ausblenden des answercontainers und einblenden des Ergebnistexts
@@ -157,11 +136,11 @@ function finish() {
     answercontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     resuttext.innerHTML =
-        'Ihr habt ' +
-        pointscounter +
-        ' von ' +
-        questioncounter +
-        ' Fragen richtig beantwortet'
+    'Ihr habt ' +
+    pointscounter +
+    ' von ' +
+    questioncounter +
+    ' Fragen richtig beantwortet'
     questioncounter = 0
 }
 
@@ -175,36 +154,36 @@ async function antworten(e) {
         let correctchoice = await answercheck(
             selectedbutton.dataset.answerid,
             Question.dataset.id
-        )
-        //Einblenden der Erklärung
-        explanationcontainer.classList.remove('d-none')
-        //Ausführen wen die Frage richtig ist
-        if (correctchoice === 1) {
-            selectedbutton.classList.remove('btn-outline-primary')
-            selectedbutton.classList.add('btn-success')
-            //deaktivieren der Answerbuttons
-            Answerbuttons.forEach((button) => {
-                button.disabled = true
-            }),
+            )
+            //Einblenden der Erklärung
+            explanationcontainer.classList.remove('d-none')
+            //Ausführen wen die Frage richtig ist
+            if (correctchoice === 1) {
+                selectedbutton.classList.remove('btn-outline-primary')
+                selectedbutton.classList.add('btn-success')
+                //deaktivieren der Answerbuttons
+                Answerbuttons.forEach((button) => {
+                    button.disabled = true
+                }),
                 //NextButton aktivieren
                 (NextButton.disabled = false)
-            pointscounter++
-            //Ausführen falls Antwort falsch war
-        } else if (correctchoice === 0) {
-            selectedbutton.classList.remove('btn-outline-primary')
+                pointscounter++
+                //Ausführen falls Antwort falsch war
+            } else if (correctchoice === 0) {
+                selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-danger')
             Answerbuttons.forEach((button) => {
                 button.disabled = true
             }),
-                (NextButton.disabled = false)
+            (NextButton.disabled = false)
         }
     }
 }
 
 async function answercheck(answerid, questionid) {
     let actionstring =
-        'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
-
+    'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
+    
     try {
         const response = await fetch(questionserver, {
             method: 'POST',
@@ -213,9 +192,9 @@ async function answercheck(answerid, questionid) {
             },
             body: actionstring,
         })
-
+        
         const data = await response.json()
-
+        
         if (data === 1) {
             return 1
         } else {
@@ -226,7 +205,31 @@ async function answercheck(answerid, questionid) {
         return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
 }
-
+function sendinterruptflag() {
+    explanationcontainer.classList.add('d-none')
+    StartButton.classList.add('d-none')
+    Question.classList.add('d-none')
+    answercontainer.classList.add('d-none')
+    chatcontainer.classList.add('d-none')
+    resultpage.classList.remove('d-none')
+    resuttext.innerHTML =
+    'Du hast aufgegeben und damit das Spiel beendet'
+    const interruptmessage = JSON.stringify({
+        type: 'interrupt',
+        room,
+    })
+    socket.send(interruptmessage)
+}
+function interruptetbyopponent() {
+    explanationcontainer.classList.add('d-none')
+    StartButton.classList.add('d-none')
+    Question.classList.add('d-none')
+    answercontainer.classList.add('d-none')
+    chatcontainer.classList.add('d-none')
+    resultpage.classList.remove('d-none')
+    resuttext.innerHTML =
+    'Dein Gegner hat aufgegeben das Spiel ist beendet'
+}
 //Rücksetzen button pressed sonst Endlosschleife
 let buttonpressed = false
 // Hier wird eine Nachricht vom Server ausgewertet
@@ -273,9 +276,11 @@ socket.onmessage = (event) => {
         questions = JSON.parse(data.questions)
         console.log(questions)
         console.log(questions[Object.keys(questions)[1]])
-
+        
         startquiz()
-    } else {
+    } else if (data.type === 'interrupt') {
+        interruptetbyopponent()
+    }else {
         chat.innerHTML += data.message + '</br>'
     }
 }
@@ -341,39 +346,138 @@ function deletegame() {
         body: actionstring,
     })
 }
+
+
+//Bei Klick auf Meldebutton meldecontainer einblenden
+meldebutton.addEventListener('click', meldecontainereinblenden)
+// Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet
+// dem abrechenbutton wird die funktionalität zum ausblenden des meldecontainers hinzugefügt
+
+function meldecontainereinblenden() {
+    meldebutton.classList.add('d-none')
+    meldecontainer.classList.remove('d-none')
+    meldungabsendenbutton.addEventListener('click', meldungsenden)
+    meldungabbrechenbutton.addEventListener('click', () => {
+        meldecontainer.classList.add('d-none')
+        meldebutton.classList.remove('d-none')
+    })
+}
+//Abfrage des Fragenstatus
+async function statuscheck() {
+    const response = await fetch(questionserver, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=statuscheck&' + 'questionid=' + Question.dataset.id,
+    })
+    const data = await response.text()
+    return data // Assuming the response is the status value
+}
+//Absenden der Meldung
+async function meldungsenden() {
+    let status = await statuscheck()
+    console.log('status' + status)
+    if (status === '1') {
+        meldetext = document.getElementById('Meldetext').value
+        fetch(questionserver, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            //diese action wird im server abgefragt
+            body:
+                'action=fragemelden&' +
+                'questionid=' +
+                Question.dataset.id +
+                '&meldetext=' +
+                meldetext,
+        }).then(() => {
+            meldecontainer.classList.add('d-none')
+            meldebutton.classList.add('d-none')
+            document
+                .getElementById('Meldunggesendet')
+                .classList.remove('d-none')
+            document
+                .getElementById('meldunggesendetclose')
+                .addEventListener('click', () => {
+                    document
+                        .getElementById('Meldunggesendet')
+                        .classList.add('d-none')
+                })
+        })
+    } else {
+        meldecontainer.classList.add('d-none')
+        document
+            .getElementById('Meldungnichtgesendet')
+            .classList.remove('d-none')
+            document.getElementById("meldungnichtgesendetclose").addEventListener("click",()=>{
+            document.getElementById("Meldungnichtgesendet").classList.add("d-none")}) 
+    }
+}
+
 //############ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#AL
 // default questions
 // let questions = [
-//     {
+    //     {
 //         explanation:"a",
 //         questiontext: 'Was ist 3-2',
 //         answers: [
-//             { answer: 'eins', correct: true },
-//             { answer: 'zwei', correct: false },
-//             { answer: 'drei', correct: false },
-//             { answer: 'vier', correct: false },
-//         ],
+    //             { answer: 'eins', correct: true },
+    //             { answer: 'zwei', correct: false },
+    //             { answer: 'drei', correct: false },
+    //             { answer: 'vier', correct: false },
+    //         ],
 //     },
 //     {
-//         questiontext: 'Was ist 1+1',
-//         explanation:"a",
-//         answers: [
-//             { answer: 'zwei', correct: true },
-//             { answer: 'eins', correct: false },
-//             { answer: 'drei', correct: false },
-//             { answer: 'vier', correct: false },
-//         ],
-//     },
-//     {
-//         questiontext: 'Was ist 6/2',
-//         explanation:"a",
-//         answers: [
-//             { answer: 'drei', correct: true },
-//             { answer: 'zwei', correct: false },
-//             { answer: 'eins', correct: false },
-//             { answer: 'vier', correct: false },
-//         ],
-//     },
-// ]
-
-//default questions
+    //         questiontext: 'Was ist 1+1',
+    //         explanation:"a",
+    //         answers: [
+        //             { answer: 'zwei', correct: true },
+        //             { answer: 'eins', correct: false },
+        //             { answer: 'drei', correct: false },
+        //             { answer: 'vier', correct: false },
+        //         ],
+        //     },
+        //     {
+            //         questiontext: 'Was ist 6/2',
+            //         explanation:"a",
+            //         answers: [
+                //             { answer: 'drei', correct: true },
+                //             { answer: 'zwei', correct: false },
+                //             { answer: 'eins', correct: false },
+                //             { answer: 'vier', correct: false },
+                //         ],
+                //     },
+                // ]
+                
+                //default questions
+                
+                //Array mit den Fragen jede Frage hat ein Array mit Antworten mit attribut correct für die richtige Antwort
+                // Wird mit fetch von PHP geholt
+                // function laden() {
+                //     fetch(questionserver, {
+                //         method: 'POST',
+                //         headers: {
+                //             'Content-Type': 'application/x-www-form-urlencoded',
+                //         },
+                //         //diese action wird im server abgefragt
+                //         body: 'action=fragenladen',
+                //     })
+                //         .then((response) => {
+                //             if (!response.ok) {
+                //                 throw new Error(
+                //                     `Network response was not ok: ${response.statusText}`
+                //                 )
+                //             }
+                //             return response.json() // JSON-Daten aus der Antwort extrahieren
+                //         })
+                //         .then((data) => {
+                //             //Array daten zuweisen
+                //             questions = data
+                //         })
+                //         .then(zuweisen)
+                //         .catch((error) => {
+                //             console.error('Fehler beim Abrufen der Daten:', error)
+                //         })
+                // }

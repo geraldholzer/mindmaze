@@ -1,12 +1,17 @@
 //Elemente aus dem DOM holen
+let meldebutton = document.getElementById('Meldebutton')
+let meldecontainer = document.getElementById('Meldecontainer')
+let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton')
+let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
-let fragenzahl =3;
+let fragenzahl = 3
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
 let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
 let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
 let AnswerButton4 = document.getElementById('Answer4') //Antwortbutton4
 let NextButton = document.getElementById('Next') //Nextbutton
+let BeendenButton = document.getElementById('Beenden') //Beendenbutton
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
 let answercontainer = document.getElementById('answercontainer') //COntainer (div) in dem sich die answerbuttons befinden
@@ -14,10 +19,10 @@ let resultpage = document.getElementById('result') //wird eingeblendet am schlus
 let resuttext = document.getElementById('resulttext') // Zeigt am Schluss etwa ihr habt "3/3" Fragen richtig beantwortet
 let explanation = document.getElementById('explanation') //Erklärungstext zu jeder Frage
 let explanationcontainer = document.getElementById('explanationcontainer') //Container(div)in dem sich die Erklärung befindet
-let chatcontainer = document.getElementById('chatcontainer') //Container (div) für den chat
-let messageInput = document.getElementById('messageInput') //Inputfeld für die chatnachricht
-let chat = document.getElementById('chat') //chat div hier wird der chat verlauf angezeigt
-let sendbutton = document.getElementById('sendbutton') //button zum absenden einer Chatnachricht
+// let chatcontainer = document.getElementById('chatcontainer') //Container (div) für den chat
+// let messageInput = document.getElementById('messageInput') //Inputfeld für die chatnachricht
+// let chat = document.getElementById('chat') //chat div hier wird der chat verlauf angezeigt
+// let sendbutton = document.getElementById('sendbutton') //button zum absenden einer Chatnachricht
 let joinbutton = document.getElementById('Joingame') //Dient zum aufrufen der Seite mit den offenen Spielen
 let joingamebutton = document.getElementById('joingamebutton') //Mit diesem Button kann man einem Spiel beitreten
 let newgamebutton = document.getElementById('newgamebutton') //Mit diesem Button kann man ein neues Spiel erstellen
@@ -30,36 +35,17 @@ let answered = false //Verhindert eine Endlosschleife bei den Answerbuttons
 let ready = false // wird wahr wen sich der zweite Spieler dem spiel anschließt
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
-let gameserver="../server/game-server.php"// lokaler gameserver
+let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
-let questionserver= "../server/question-server.php"// lokaler question server
+let questionserver = '../server/question-server.php' // lokaler question server
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let opponentpoints = 0
-let questions = null;
-room = localStorage.getItem("gamenameübergabe");
-let spielname= localStorage.getItem("spielname"); //wird zum löschen des spiels gebraucht
-fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
-let kurs = localStorage.getItem("kurs");// Auslesen des Kurses
-
-console.log("fragen in versus"+fragenzahl)
-// Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
-//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
-const socket = new WebSocket(websocketserver) 
-
-socket.onopen = (event) => {
-    console.log('WebSocket connection opened:', event)
-    joingame();
-}
-
-//Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
-function joingame() {
-    subscribeToRoom(room,fragenzahl,kurs)
-    joingamecontainer.classList.add('d-none')
-    joinbutton.classList.add('d-none')
-    waitforopponent.classList.remove('d-none')
-}
-
+let questions = null
+room = localStorage.getItem('gamenameübergabe')
+let spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
+fragenzahl = localStorage.getItem('fragenzahl') //Auslesen der Fragenzahl
+let kurs = localStorage.getItem('kurs') // Auslesen des Kurses
 //Buttons in Array verwalten so kann man foreach schleifen nutzen
 const Answerbuttons = [
     AnswerButton1,
@@ -67,8 +53,28 @@ const Answerbuttons = [
     AnswerButton3,
     AnswerButton4,
 ]
+console.log('fragen in versus' + fragenzahl)
+// Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
+//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
+const socket = new WebSocket(websocketserver)
 
+socket.onopen = (event) => {
+    console.log('WebSocket connection opened:', event)
+    joingame()
+}
 
+//Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
+function joingame() {
+   waitforopponent.classList.remove('d-none')
+    subscribeToRoom(room, fragenzahl, kurs)
+    joingamecontainer.classList.add('d-none')
+    joinbutton.classList.add('d-none')
+    
+     
+}    
+
+//Eventlistener für Beendenbutton
+BeendenButton.addEventListener('click', sendinterruptflag)
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton
@@ -80,13 +86,11 @@ function startquiz() {
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
     answercontainer.classList.remove('d-none')
-    chatcontainer.classList.remove('d-none')
 }
 // bei drücken des Next buttons wird die funktion zuweisen aufgerufen  oder die Fragen sind fertig -> finish
 function next() {
     if (questioncounter >= fragenzahl) {
         sendfinishflag()
-
     } else {
         zuweisen()
     }
@@ -96,9 +100,12 @@ function next() {
 function zuweisen() {
     mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
-        explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
-        Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
-        Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
+        explanation.innerHTML =
+            questions[Object.keys(questions)[questioncounter]].explanation
+        Question.innerHTML =
+            questions[Object.keys(questions)[questioncounter]].questiontext
+        Question.dataset.id =
+            questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
         //Event listener für auswahl
@@ -115,6 +122,7 @@ function reset() {
     buttonpressed = false
     explanationcontainer.classList.add('d-none')
     waitforopponent.classList.add('d-none')
+    meldebutton.classList.remove('d-none')
     Answerbuttons.forEach((button) => {
         button.classList.add('btn-outline-primary')
         button.classList.remove('btn-danger')
@@ -128,34 +136,32 @@ function reset() {
 
 // Ausblenden des answercontainers und einblenden des Ergebnistexts
 function finish() {
-    let winner = 1;
-    let winnertext="";
-    if (opponentpoints == pointscounter){
-        winner=1;
-        winnertext = "Unentschieden"
+    let winner = 1
+    let winnertext = ''
+    if (opponentpoints == pointscounter) {
+        winner = 1
+        winnertext = 'Unentschieden'
+    } else if (opponentpoints >= pointscounter) {
+        winnertext = 'Du hast verloren'
+        winner = 2
+    } else if (opponentpoints <= pointscounter) {
+        winnertext = 'Du hast gewonnen'
+        winner = 3
     }
-    else if (opponentpoints >= pointscounter){
-       winnertext= "Du hast verloren"
-        winner =2
-    }
-    else if (opponentpoints <= pointscounter){
-        winnertext = "Du hast gewonnen"
-        winner =3
-    }
-    waitforopponent.classList.add("d-none")
+    waitforopponent.classList.add('d-none')
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
     answercontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     resuttext.innerHTML =
-    winnertext+
+        winnertext +
         ' Du hast ' +
         pointscounter +
         ' Fragen richtig ' +
-       " Dein Gegner hat "+
-       opponentpoints+
-       " Fragen richtig"
+        ' Dein Gegner hat ' +
+        opponentpoints +
+        ' Fragen richtig'
     questioncounter = 0
 }
 
@@ -164,13 +170,37 @@ function sendfinishflag() {
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
     answercontainer.classList.add('d-none')
-    chatcontainer.classList.add("d-none")
-    waitforopponent.classList.remove("d-none")
+    waitforopponent.classList.remove('d-none')
     const message = pointscounter
     const finishmessage = JSON.stringify({ type: 'finish', room, message })
     socket.send(finishmessage)
 }
 
+function sendinterruptflag() {
+    explanationcontainer.classList.add('d-none')
+    StartButton.classList.add('d-none')
+    Question.classList.add('d-none')
+    answercontainer.classList.add('d-none')
+    chatcontainer.classList.add('d-none')
+    resultpage.classList.remove('d-none')
+    resuttext.innerHTML =
+        'Du hast aufgegeben und damit automatisch das Spiel verloren'
+    const interruptmessage = JSON.stringify({
+        type: 'interrupt',
+        room,
+    })
+    socket.send(interruptmessage)
+}
+function interruptetbyopponent() {
+    explanationcontainer.classList.add('d-none')
+    StartButton.classList.add('d-none')
+    Question.classList.add('d-none')
+    answercontainer.classList.add('d-none')
+    chatcontainer.classList.add('d-none')
+    resultpage.classList.remove('d-none')
+    resuttext.innerHTML =
+        'Dein Gegner hat aufgegeben du hast automatisch gewonnen'
+}
 // Funktion wird bei Antwortauswahl ausgeführt
 async function antworten(e) {
     //Dieses Ereignis wird an den Mitspieler geschickt und würde dadurch zu einer Endlosschleife führen darum abgesichert mit answered
@@ -204,9 +234,7 @@ async function antworten(e) {
             }),
                 (NextButton.disabled = false)
         }
-       
     }
-    
 }
 
 async function answercheck(answerid, questionid) {
@@ -231,10 +259,9 @@ async function answercheck(answerid, questionid) {
         }
     } catch (error) {
         console.error('Fehler beim Überprüfen der Antwort:', error)
-        return  44// Rückgabe eines Standardwerts im Fehlerfall
+        return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
 }
-
 
 // Hier wird eine Nachricht vom Server ausgewertet
 socket.onmessage = (event) => {
@@ -243,7 +270,7 @@ socket.onmessage = (event) => {
     if (data.type === 'message') {
         if (data.message === 'ready') {
             deletegame()
-            // startquiz()
+            startquiz()
         }
         //Gegner hat das Spiel beendet Gegner Punkte in opponentpoints speichern
     } else if (data.type === 'finish') {
@@ -251,43 +278,114 @@ socket.onmessage = (event) => {
         // Beide Spieler haben das Spiel beendet
     } else if (data.type === 'gameover') {
         finish()
-    }else if (data.type === 'questions') {
-        console.log(typeof(data))
-        questions=data;
-        questions = JSON.parse(data.questions);
+    } else if (data.type === 'questions') {
+        console.log(typeof data)
+        questions = data
+        questions = JSON.parse(data.questions)
         console.log(questions)
         console.log(questions[Object.keys(questions)[1]])
-        
-        startquiz();
-    
-    
+        startquiz()
+    } else if (data.type === 'interrupt') {
+        interruptetbyopponent()
+    }
 }
-}
-
-
-
 
 socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event)
 }
-//Eventlistener für Chat Send button
-sendbutton.addEventListener('click', sendMessage)
 
-//Einlesen des Inhalts des Chatinputfelds und senden an den Server
-function sendMessage() {
-    const message = messageInput.value
-    //Ausgeben in eigenem Verlauf
-    chat.innerHTML += 'Du:' + message + '</br>'
-    //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann
-    //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum
-    const message1 = JSON.stringify({ type: 'message', room, message })
-    socket.send(message1)
+
+//Bei Klick auf Meldebutton meldecontainer einblenden
+meldebutton.addEventListener('click', meldecontainereinblenden)
+// Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet
+// dem abrechenbutton wird die funktionalität zum ausblenden des meldecontainers hinzugefügt
+
+function meldecontainereinblenden() {
+    meldebutton.classList.add('d-none')
+    meldecontainer.classList.remove('d-none')
+    meldungabsendenbutton.addEventListener('click', meldungsenden)
+    meldungabbrechenbutton.addEventListener('click', () => {
+        meldecontainer.classList.add('d-none')
+        meldebutton.classList.remove('d-none')
+    })
+}
+//Abfrage des Fragenstatus
+async function statuscheck() {
+    const response = await fetch(questionserver, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'action=statuscheck&' + 'questionid=' + Question.dataset.id,
+    })
+    const data = await response.text()
+    return data // Assuming the response is the status value
+}
+//Absenden der Meldung
+async function meldungsenden() {
+    let status = await statuscheck()
+    console.log('status' + status)
+    if (status === '1') {
+        meldetext = document.getElementById('Meldetext').value
+        fetch(questionserver, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            //diese action wird im server abgefragt
+            body:
+                'action=fragemelden&' +
+                'questionid=' +
+                Question.dataset.id +
+                '&meldetext=' +
+                meldetext,
+        }).then(() => {
+            meldecontainer.classList.add('d-none')
+            meldebutton.classList.add('d-none')
+            document
+                .getElementById('Meldunggesendet')
+                .classList.remove('d-none')
+            document
+                .getElementById('meldunggesendetclose')
+                .addEventListener('click', () => {
+                    document
+                        .getElementById('Meldunggesendet')
+                        .classList.add('d-none')
+                })
+        })
+    } else {
+        meldecontainer.classList.add('d-none')
+        document
+            .getElementById('Meldungnichtgesendet')
+            .classList.remove('d-none')
+            document.getElementById("meldungnichtgesendetclose").addEventListener("click",()=>{
+            document.getElementById("Meldungnichtgesendet").classList.add("d-none")}) 
+    }
 }
 
+// //Eventlistener für Chat Send button
+// sendbutton.addEventListener('click', sendMessage)
+
+// //Einlesen des Inhalts des Chatinputfelds und senden an den Server
+// function sendMessage() {
+//     const message = messageInput.value
+//     //Ausgeben in eigenem Verlauf
+//     chat.innerHTML += 'Du:' + message + '</br>'
+//     //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann
+//     //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum
+//     const message1 = JSON.stringify({ type: 'message', room, message })
+//     socket.send(message1)
+// }
+
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room,fragenzahl,kurs) {
+function subscribeToRoom(room, fragenzahl, kurs) {
     // Subscribe to the room
-    const subscribeMessage = JSON.stringify({ type: 'subscribe', room,fragenzahl,kurs })
+    const subscribeMessage = JSON.stringify({
+        type: 'subscribe',
+        room,
+        fragenzahl,
+        kurs,
+    })
     socket.send(subscribeMessage)
 }
 //Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird

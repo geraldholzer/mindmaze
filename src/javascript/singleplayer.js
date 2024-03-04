@@ -257,6 +257,7 @@ async function answercheck(answerid, questionid) {
         return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
 }
+
 //Bei Klick auf Meldebutton meldecontainer einblenden
 meldebutton.addEventListener('click', meldecontainereinblenden)
 // Hier wird der meldecontainer eingeblendet und der frage melden button ausgeblendet
@@ -271,7 +272,7 @@ function meldecontainereinblenden() {
         meldebutton.classList.remove('d-none')
     })
 }
-
+//Abfrage des Fragenstatus
 async function statuscheck() {
     const response = await fetch(questionserver, {
         method: 'POST',
@@ -283,7 +284,7 @@ async function statuscheck() {
     const data = await response.text()
     return data // Assuming the response is the status value
 }
-
+//Absenden der Meldung
 async function meldungsenden() {
     let status = await statuscheck()
     console.log('status' + status)
