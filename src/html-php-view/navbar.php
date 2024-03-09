@@ -2,6 +2,20 @@
   <!--Navbar Anfang-->
   <!-- Sticky top damit navi immer oben bleibt -->
   <nav class="navbar navbar-expand-lg custom-navbar">
+    <script>
+
+        function navbarReact(aSite){
+          <?php 
+          $_SESSION['inGame']=false;
+          if ($_SESSION['inGame']==false){
+            echo "document.location.href = aSite;";
+          }else{
+            echo "alert('Du bist im Spiel!')";
+          }
+          ?>
+          
+        }
+    </script>
     <div class="container">
 
 
@@ -21,7 +35,7 @@
           <li class="nav-item">
             <a class="nav-link" href="./lobby.html">Multiplayer</a>
           </li>
-          <li class="nav-item dropdown">
+          <li class="nav-item dropdown">  
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
               aria-expanded="false">
               Konto
@@ -30,6 +44,7 @@
               <li><a class="dropdown-item" href="./profile.html">Profil</a></li>
               <li><a class="dropdown-item" href="statistik.php">Statistik</a></li>
               <li><a class="dropdown-item" href="#">Fragen</a></li>
+              <li><a class="dropdown-item" href="javascript:navbarReact('./profile.html')">TEST</a></li>
               <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
                 echo '<li><a class="dropdown-item" href="userManagement.php">Benutzerverwaltung</a></li>';
               } ?>
