@@ -137,6 +137,9 @@ $stmt = $conn->prepare('SELECT KursID FROM kurse WHERE Beschreibung = ?');
             case 'finish':
                 $this->handleFinish($from, $data['room'], $data['message']);
                 break;
+            case 'interrupt':
+                $this->handleInterrupt($from, $data['room']);
+                break;
         }
     }
     // Hier wird ein Client zu einem Raum gleichbedeutend mit Spielsitzung hinzugefügt
@@ -167,6 +170,13 @@ $stmt = $conn->prepare('SELECT KursID FROM kurse WHERE Beschreibung = ?');
     {
         // Broadcast the message to all clients in the specified room
         $this->broadcastToRoom($room, json_encode(['type' => 'message', 'message' => $message]), $from);
+    }
+    
+    private function handleInterrupt(ConnectionInterface $from, $room)
+    {
+        echo "hello from interrupt";
+        // Broadcast the message to all clients in the specified room
+        $this->broadcastToRoom($room, json_encode(['type' => 'interrupt', 'message' => "interrupt"]), $from);
     }
 
     private function handleFinish(ConnectionInterface $from, $room, $message)

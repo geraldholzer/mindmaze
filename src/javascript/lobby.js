@@ -41,7 +41,7 @@ function loadKursDropdown() {
     })
         .then((response) => response.json())
         .then((data) => {
-           
+
             data.forEach((kurs) => {
                 var li = document.createElement('li')
                 var a = document.createElement('a')
@@ -88,8 +88,9 @@ function loadModusDropdwon() {
 //Funktion zum laden der offenen Spiele  aus der Datenbank
 function loadGames() {
     //leeren der gamelist
-    while (gamelist.firstChild) {
-        gamelist.removeChild(gamelist.lastChild)
+    gamelistbody=document.getElementById("gamelistbody")
+    while (gamelistbody.firstChild) {
+        gamelistbody.removeChild(gamelistbody.lastChild)
     }
     //Mit fetch API wird aus game-server.php die gamelist geholt
     fetch(gameserver, {
@@ -113,6 +114,9 @@ function loadGames() {
                 let kurs = document.createElement('td')
                 kurs.innerHTML = game.kurs
                 let button = document.createElement('button')
+                button.classList.add("btn")
+
+                button.classList.add("btn-outline-primary")
                 button.innerHTML = 'Beitreten'
                 übergabestring = game.name + game.modus + game.kurs
                 button.addEventListener('click', function () {
@@ -122,8 +126,9 @@ function loadGames() {
                 tr.appendChild(modus)
                 tr.appendChild(kurs)
                 tr.appendChild(button)
+                document.getElementById("gamelistbody").appendChild(tr)
                 document.getElementById('gamelist').classList.add("tableLobby")
-                document.getElementById('gamelist').appendChild(tr)
+                // document.querySelector('#gamelist tbody').appendChild(tr);
             })
         })
 
