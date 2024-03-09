@@ -113,6 +113,8 @@ function loadGames() {
                 modus.innerHTML = game.modus
                 let kurs = document.createElement('td')
                 kurs.innerHTML = game.kurs
+                let fragenzahl = document.createElement('td')
+                fragenzahl.innerHTML = game.fragenzahl
                 let button = document.createElement('button')
                 button.classList.add("btn")
 
@@ -120,15 +122,15 @@ function loadGames() {
                 button.innerHTML = 'Beitreten'
                 übergabestring = game.name + game.modus + game.kurs
                 button.addEventListener('click', function () {
-                    joingame(übergabestring, game.modus,game.name,game.fragenzahl)
+                    joingame(übergabestring, game.modus,game.name,game.fragenzahl,game.kurs)
                 })
                 tr.appendChild(name)
                 tr.appendChild(modus)
                 tr.appendChild(kurs)
+                tr.appendChild(fragenzahl)
                 tr.appendChild(button)
                 document.getElementById("gamelistbody").appendChild(tr)
                 document.getElementById('gamelist').classList.add("tableLobby")
-                // document.querySelector('#gamelist tbody').appendChild(tr);
             })
         })
 
@@ -182,7 +184,7 @@ function deletegame() {
 }
 
 //Mit dieser function wird der Benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
-function joingame(übergabestring, modus,spielname,fragenzahl) {
+function joingame(übergabestring, modus,spielname,fragenzahl,kurs) {
     localStorage.setItem('gamenameübergabe', übergabestring)
     localStorage.setItem('spielname', spielname)
     localStorage.setItem('fragenzahl', fragenzahl)

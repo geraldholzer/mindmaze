@@ -38,10 +38,17 @@ let gameserver = '../server/game-server.php' // lokaler gameserver
 let questionserver = '../server/question-server.php' // lokaler question server
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
-let spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
-room = localStorage.getItem('gamenameübergabe')
-let fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
-let kurs = localStorage.getItem("kurs");// Auslesen des Kurses
+let spielname=null
+let fragenzahl=null
+let kurs=null
+
+async function getlocalstorage(){
+    spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
+    room = localStorage.getItem('gamenameübergabe')
+    fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
+    kurs = localStorage.getItem("kurs");// Auslesen des Kurses
+    console.log("kursinlocalstorage"+spielname)
+}
 // Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
 //Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
 const socket = new WebSocket(websocketserver)
@@ -52,7 +59,8 @@ socket.onopen = (event) => {
 }
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
-function joingame() {
+async function joingame() {
+    await getlocalstorage();
     subscribeToRoom(room,fragenzahl,kurs)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
@@ -135,6 +143,7 @@ function finish() {
     answercontainer.classList.add('d-none')
     answercontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
     'Ihr habt ' +
     pointscounter +
@@ -269,21 +278,26 @@ socket.onmessage = (event) => {
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
     } else if (data.message == 'ready') {
         //startquiz()
-        deletegame()
+        //deletegame()
     } else if (data.type === 'questions') {
+        
         console.log(typeof data)
         questions = data
         questions = JSON.parse(data.questions)
-        console.log(questions)
+        console.log("Fragen: "+questions)
         console.log(questions[Object.keys(questions)[1]])
-        
-        startquiz()
+    
+        startquiz();
     } else if (data.type === 'interrupt') {
         interruptetbyopponent()
     }else {
         chat.innerHTML += data.message + '</br>'
     }
+
+
 }
+
+
 
 socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event)
@@ -480,4 +494,4 @@ async function meldungsenden() {
                 //         .catch((error) => {
                 //             console.error('Fehler beim Abrufen der Daten:', error)
                 //         })
-                // }
+                // 
