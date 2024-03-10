@@ -41,7 +41,7 @@
               Konto
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="./profile.html">Profil</a></li>
+              <li><a class="dropdown-item" href="profile.php">Profil</a></li>
               <li><a class="dropdown-item" href="statistik.php">Statistik</a></li>
               <li><a class="dropdown-item" href="#">Fragen</a></li>
               <li><a class="dropdown-item" href="javascript:navbarReact('./profile.html')">TEST</a></li>
