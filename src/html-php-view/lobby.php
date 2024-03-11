@@ -40,7 +40,7 @@ if(isset($_SESSION['BenutzerID'])) {
             <div class="card-body">
               <!-- Button zum starten eines neuen Spiels  die klasse btn-outline-primary ist bootstrap standard col-11 steht für 11 von 12 spalten 
                 und eine spalte offset mt für margin top 1-->
-              <button  type="button" class="btn btn-outline-primary col-11 offset-1  mt-1"id="Joingame">Spiel erstellen oder beitreten</button>
+              <button  type="button" class="btn button-long col-11 offset-1  mt-1"id="Joingame">Spiel erstellen oder beitreten</button>
               <!-- Container für das erstellen eines neuen Spiels oder beitreten zu einem bestehendem-->
               <div class="row d-none col-lg-10 mx-auto d-none" id="joingamecontainer">
                 <div class="input-group mb-3">
@@ -75,7 +75,7 @@ if(isset($_SESSION['BenutzerID'])) {
                   </div>
                   <!-- Button zum erstellen eines neuen Spiels -->
                   <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" id="newgamebutton">erstellen</button>
+                    <button class="btn btn-primary btn-custom" type="button" id="newgamebutton">erstellen</button>
                   </div>
                 </div>  
                 <!-- Liste mit offenen spielen diese werden als buttons in dieses div eingefügt -->
