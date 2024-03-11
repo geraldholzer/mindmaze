@@ -129,6 +129,7 @@ if(isset($_SESSION['BenutzerID'])) {
               <div class="d-none" id="result">
                 <h3>Ergebnis</h3>
                 <div id="resulttext"></div>
+                <a href="home.php" class="btn btn-outline-primary col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
               </div>
               <!-- Warteanzeige -->
               <div class="d-none" id="wait">

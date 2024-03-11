@@ -89,7 +89,7 @@ if(isset($_SESSION['BenutzerID'])) {
                     </tr>
                   </thead>
                     <tbody id="gamelistbody">
-                     # 
+                     
                     </tbody>
                 </table>
               </div>

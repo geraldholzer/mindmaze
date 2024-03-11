@@ -123,42 +123,7 @@ if(isset($_SESSION['BenutzerID'])) {
                     </div>
                   </div>
                 </div>
-                <!-- Modal Multiplayer -->
-                <!-- <div class="modal fade" id="MultiplayerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Spiel beenden</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Spiel wirklich beenden?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" onclick= "window.location.href='./lobby.html'">Spiel beenden </button>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-              <!-- Modal Singleplayer -->
-                <div class="modal fade" id="SingleplayerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Spiel beenden</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Spiel wirklich beenden?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" onclick= "window.location.href='./singleplayer.html'">Spiel beenden </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            
                 <!-- Container für die Erklärung -->
                 <div class="row d-none col-lg-10 mx-auto" id="explanationcontainer">
                   <div id="explanation">Standarderklärung</div>
@@ -176,6 +141,7 @@ if(isset($_SESSION['BenutzerID'])) {
               <div class="d-none" id="result">
                 <h3>Ergebnis</h3>
                 <div id="resulttext"></div>
+                <a href="home.php" class="btn btn-outline-primary col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
               </div>
               <!-- Warteanzeige -->
               <div class="d-none" id="wait">

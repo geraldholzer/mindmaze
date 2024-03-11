@@ -6,7 +6,7 @@
 
         function navbarReact(aSite){
           <?php 
-          $_SESSION['inGame']=false;
+          // $_SESSION['inGame']=false;
           if ($_SESSION['inGame']==false){
             echo "document.location.href = aSite;";
           }else{
