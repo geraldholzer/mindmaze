@@ -30,10 +30,10 @@
             <a class="nav-link" href="./home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.html">Solo</a>
+            <a class="nav-link" href="./singleplayer.php">Solo</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./lobby.html">Multiplayer</a>
+            <a class="nav-link" href="./lobby.php">Multiplayer</a>
           </li>
           <li class="nav-item dropdown">  
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"

@@ -1,3 +1,12 @@
+
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
+
+if(isset($_SESSION['BenutzerID'])) {
+  include ("navbar.php");
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -18,45 +27,7 @@
 <body>
 
 
-  <!--Navbar Anfang-->
-  <!-- Sticky top damit navi immer oben bleibt -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container">
-      <a class="navbar-brand">IU-Mindmaze</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="./home.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.html">Solo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./lobby.html">Multiplayer</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Konto
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Profil</a></li>
-              <li><a class="dropdown-item" href="#">Statistik</a></li>
-              <li><a class="dropdown-item" href="#">Fragen</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Abmelden</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!--Navbar Ende-->
+
   <!-- mt steht für margin top -->
   <div class="row mt-5" >
     <!-- übercontainer -->
@@ -118,44 +89,9 @@
                     </tr>
                   </thead>
                     <tbody id="gamelistbody">
-                      
+                     # 
                     </tbody>
                 </table>
-
-                <!--Beispiel Tabelle-->
-                <!-- <table class="tableLobby">
-                  <caption></caption>
-                  <thead>
-                    <tr>
-                      <th>Spielername</th>
-                      <th>Modul</th>
-                      <th>Modus</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Paul</td>
-                      <td>IT-Recht</td>
-                      <td>Supportive</td>
-                    </tr>
-                    <tr>
-                      <td>John</td>
-                      <td>IT-Projektmanagement</td>
-                      <td>CoOp</td>
-                    </tr>
-                    <tr>
-                      <td>Lisa</td>
-                      <td>IT-Irgendwas</td>
-                      <td>Supportive</td>
-                    </tr>
-                    <tr>
-                      <td>Bob</td>
-                      <td>Rechnungswesen</td>
-                      <td>Versus</td>
-                    </tr>
-                  </tbody>
-                </table> -->
-                
               </div>
             </div>
           </div>
@@ -165,3 +101,8 @@
   </div>
 </body>
 </html>
+<?php
+}else{
+  echo "<h1>Du bist nicht angemeldet</h1>";
+}
+?>

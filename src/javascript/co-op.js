@@ -221,6 +221,7 @@ function sendinterruptflag() {
     answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
     'Du hast aufgegeben und damit das Spiel beendet'
     const interruptmessage = JSON.stringify({
@@ -236,6 +237,7 @@ function interruptetbyopponent() {
     answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
     'Dein Gegner hat aufgegeben das Spiel ist beendet'
 }

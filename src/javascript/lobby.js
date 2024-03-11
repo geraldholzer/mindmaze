@@ -190,9 +190,9 @@ function joingame(übergabestring, modus,spielname,fragenzahl,kurs) {
     localStorage.setItem('fragenzahl', fragenzahl)
     localStorage.setItem('kurs', kurs)
     if (modus === 'Kooperativ') {
-        window.location.href = 'co-op.html'
+        window.location.href = 'co-op.php'
     } else if (modus === 'Versus') {
-        window.location.href = 'versus.html'
+        window.location.href = 'versus.php'
     } else {
         alert('ok')
     }
