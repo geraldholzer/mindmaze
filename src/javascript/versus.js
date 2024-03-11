@@ -44,13 +44,14 @@ let questions = null
 let spielname=null
 let fragenzahl=null
 let kurs=null
+let modus=null
 
 async function getlocalstorage(){
     spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
     room = localStorage.getItem('gamenameübergabe')
     fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
     kurs = localStorage.getItem("kurs");// Auslesen des Kurses
-    console.log("kursinlocalstorage"+spielname)
+    modus = localStorage.getItem("modus");// Auslesen des Kurses   
 }
 
 //Buttons in Array verwalten so kann man foreach schleifen nutzen
@@ -74,7 +75,7 @@ socket.onopen = (event) => {
 async function joingame() {
     await getlocalstorage();
    waitforopponent.classList.remove('d-none')
-    subscribeToRoom(room, fragenzahl, kurs)
+    subscribeToRoom(room, fragenzahl, kurs,modus)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     
@@ -389,13 +390,14 @@ async function meldungsenden() {
 // }
 
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room, fragenzahl, kurs) {
+function subscribeToRoom(room, fragenzahl, kurs,modus) {
     // Subscribe to the room
     const subscribeMessage = JSON.stringify({
         type: 'subscribe',
         room,
         fragenzahl,
         kurs,
+        modus,
     })
     socket.send(subscribeMessage)
 }

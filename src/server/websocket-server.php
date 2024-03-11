@@ -26,27 +26,36 @@ class MyWebSocketServer implements MessageComponentInterface
 
     }
 
-    private function fragenAusgebenAsync($fragenzahl, $kurs)
+    private function fragenAusgebenAsync($fragenzahl,$kurs,$modus)
     {
-        print_r("aufruf fragen ausgeben");
-        return $this->connectToDatabase($kurs)
-            ->then(function ($kursID) use ($fragenzahl) {
-                return $this->fetchQuestions($kursID,$fragenzahl);
+
+       if($modus =='Kooperativ'||$modus=="Versus" ){
+        $FragentypID=1;//multiplechoice
+       }else{
+        $FragentypID=2;//Freitext
+       }
+        return $this->connectToDatabase($kurs,$FragentypID)
+            ->then(function ($kursID) use ($fragenzahl,$FragentypID) {
+                return $this->fetchQuestions($kursID,$fragenzahl,$FragentypID);
             })
-            ->then(function ($questions) use ($fragenzahl, $kurs) {
+            ->then(function ($questions) use ($fragenzahl, $kurs,$modus,$FragentypID) {
                 if (!empty($questions)) {
-                    return $this->processQuestions($questions);
+                    if($FragentypID==1){ 
+                        return $this->processQuestions($questions);
+                    }else{
+                        return $this->processQuestionssupportive($questions);
+                    }
+                    
                 } else {
                     // Sleep for a short delay and then retry
                     sleep(2); // Sleep for 1 second
-                    return $this->fragenAusgebenAsync($fragenzahl, $kurs);
+                    return $this->fragenAusgebenAsync($fragenzahl, $kurs,$modus);
                 }
             });
     }
     private function connectToDatabase($kurs)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kurs) {
-            print_r("Kursinconnect:".$kurs."  \n");
             $servername = "localhost";
             $username = "root";
             $pw = "";
@@ -68,20 +77,27 @@ class MyWebSocketServer implements MessageComponentInterface
         });
     }
     
-    private function fetchQuestions($kursID,$fragenzahl)
+    private function fetchQuestions($kursID,$fragenzahl,$FragentypID)
     {
-        
-        return new \React\Promise\Promise(function ($resolve, $reject) use ($kursID,$fragenzahl) {
+        print_r("ID::::".$FragentypID);
+        return new \React\Promise\Promise(function ($resolve, $reject) use ($kursID,$fragenzahl,$FragentypID) {
             $conn = new mysqli("localhost", "root", "", "mindmaze");
     
-            $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? ORDER BY RAND() LIMIT ?");
-            $stmt1->bind_param("si", $kursID,$fragenzahl);
+            $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? AND FragentypID=? ORDER BY RAND() LIMIT ?");
+            $stmt1->bind_param("sii", $kursID,$FragentypID,$fragenzahl);
             $stmt1->execute();
-    
+            //Nur wenn es sich um multiplechoice handelt
+            if($FragentypID==1){ 
             $stmt = $conn->prepare("SELECT * FROM temp_fragen JOIN antworten ON temp_fragen.FragenID = antworten.FragenID");
             $stmt->execute();
             $result = $stmt->get_result();
-    
+                                  }
+            else{
+            $stmt = $conn->prepare("SELECT * FROM temp_fragen");
+            $stmt->execute();
+            $result = $stmt->get_result();
+                    }
+                    
             $questions = [];
             while ($row = $result->fetch_assoc()) {
                 $questions[] = $row;
@@ -123,6 +139,31 @@ class MyWebSocketServer implements MessageComponentInterface
 return $processedQuestionsJSON;
     }
   
+    private function processQuestionssupportive($questions)
+    {
+        
+        $processedQuestions = [];
+    
+        foreach ($questions as $row) {
+            $fragenID = $row['FragenID'];
+    
+            if (!isset($processedQuestions[$fragenID])) {
+                $processedQuestions[$fragenID] = [
+                    'questiontext' => $row['FrageText'],
+                    "explanation" => $row["InfoText"],
+                    "questionid" => $row["FragenID"],
+                ];
+            }
+    
+           
+        }
+    
+    $processedQuestionsJSON = json_encode($processedQuestions);
+    // print_r("Fragenjson\n".$processedQuestionsJSON);
+return $processedQuestionsJSON;
+    }
+  
+
 //Bei Anmeldung hinzufügen des clients zur clientliste "clients"
     public function onOpen(ConnectionInterface $conn)
     {
@@ -168,7 +209,7 @@ return $processedQuestionsJSON;
         
         switch ($data['type']) {
             case 'subscribe':
-                $this->handleSubscribe($from, $data['room'],$data['fragenzahl'],$data['kurs']);
+                $this->handleSubscribe($from, $data['room'],$data['fragenzahl'],$data['kurs'],$data['modus']);
                 break;
             case 'message':
                 $this->handleMessage($from, $data['room'], $data['message']);
@@ -182,7 +223,7 @@ return $processedQuestionsJSON;
         }
     }
     // Hier wird ein Client zu einem Raum gleichbedeutend mit Spielsitzung hinzugefügt
-    private function handleSubscribe(ConnectionInterface $conn, $room,$fragenzahl,$kurs)
+    private function handleSubscribe(ConnectionInterface $conn, $room,$fragenzahl,$kurs,$modus)
     {
         print_r("Kurs:".$kurs."  \n");
         // Raum erstellen falls nicht vorhanden 
@@ -195,7 +236,7 @@ return $processedQuestionsJSON;
              $this->rooms[$room]->attach($conn);
              //Ready message dient dazu das Spiel nach dem Eintreffen beider Spieler zu Starten
              if($this->rooms[$room]->count()==2){
-                $questionsPromise = $this->fragenAusgebenAsync($fragenzahl, $kurs);
+                $questionsPromise = $this->fragenAusgebenAsync($fragenzahl, $kurs,$modus);
                 $questionsPromise->then(function ($questions) use ($room) {
 
                     $this->broadcastToRoom($room, json_encode(['type' => 'questions', 'questions' => $questions]), null);

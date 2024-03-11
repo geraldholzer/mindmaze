@@ -4,16 +4,10 @@ let meldecontainer = document.getElementById('Meldecontainer')
 let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton')
 let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
 let questioncounter = 0 //zähler für die aktuelle Frage
-let pointscounter = 0 //Zähler für die erreichten Punkte
-let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
-let AnswerButton2 = document.getElementById('Answer2') //Antwortbutton2
-let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
-let AnswerButton4 = document.getElementById('Answer4') //Antwortbutton4
 let NextButton = document.getElementById('Next') //Nextbutton
 let BeendenButton = document.getElementById('Beenden') //Beendenbutton
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
-let answercontainer = document.getElementById('answercontainer') //COntainer (div) in dem sich die answerbuttons befinden
 let resultpage = document.getElementById('result') //wird eingeblendet am schluss als ergebnis
 let resuttext = document.getElementById('resulttext') // Zeigt am Schluss etwa ihr habt "3/3" Fragen richtig beantwortet
 let explanation = document.getElementById('explanation') //Erklärungstext zu jeder Frage
@@ -68,13 +62,6 @@ async function joingame() {
     waitforopponent.classList.remove('d-none')
 }
 
-//Buttons in Array verwalten so kann man foreach schleifen nutzen
-const Answerbuttons = [
-    AnswerButton1,
-    AnswerButton2,
-    AnswerButton3,
-    AnswerButton4,
-]
 
 //Eventlistener für Beendenbutton
 BeendenButton.addEventListener('click', sendinterruptflag)
@@ -88,7 +75,6 @@ function startquiz() {
     zuweisen()
     StartButton.classList.add('d-none')
     Question.classList.remove('d-none')
-    answercontainer.classList.remove('d-none')
     waitforopponent.classList.add('d-none')
     chatcontainer.classList.remove('d-none')
 }
@@ -103,15 +89,10 @@ function next() {
 
 //Funktion zum Zuweisen der Fragen und Antworten zu den  Buttons
 function zuweisen() {
-    mixedanswers = questions[Object.keys(questions)[questioncounter]].answers
     for (let i = 0; i < 4; i++) {
         explanation.innerHTML = questions[Object.keys(questions)[questioncounter]].explanation
         Question.innerHTML = questions[Object.keys(questions)[questioncounter]].questiontext
         Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
-        Answerbuttons[i].innerHTML = mixedanswers[i].answer
-        Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
-        //Event listener für auswahl
-        Answerbuttons[i].addEventListener('click', antworten)
     }
     //inkrementieren des questioncounter
     questioncounter++
@@ -125,15 +106,6 @@ function reset() {
     explanationcontainer.classList.add('d-none')
     waitforopponent.classList.add('d-none')
     meldebutton.classList.remove('d-none')
-    Answerbuttons.forEach((button) => {
-        button.classList.add('btn-outline-primary')
-        button.classList.remove('btn-danger')
-        button.classList.remove('btn-success')
-    })
-    Answerbuttons.forEach((button) => {
-        button.disabled = false
-    }),
-    (NextButton.disabled = true)
 }
 
 // Ausblenden des answercontainers und einblenden des Ergebnistexts
@@ -141,80 +113,14 @@ function finish() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
-    answercontainer.classList.add('d-none')
-    answercontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =
-    'Ihr habt ' +
-    pointscounter +
-    ' von ' +
-    questioncounter +
-    ' Fragen richtig beantwortet'
-    questioncounter = 0
+    "Das Spiel ist Beendet"
 }
 
-// Funktion wird bei Antwortauswahl ausgeführt
-async function antworten(e) {
-    //Dieses Ereignis wird an den Mitspieler geschickt und würde dadurch zu einer Endlosschleife führen darum abgesichert mit answered
-    if (answered === false) {
-        answered = true
-        //welcher button wurde gedrückt
-        const selectedbutton = e.target
-        let correctchoice = await answercheck(
-            selectedbutton.dataset.answerid,
-            Question.dataset.id
-            )
-            //Einblenden der Erklärung
-            explanationcontainer.classList.remove('d-none')
-            //Ausführen wen die Frage richtig ist
-            if (correctchoice === 1) {
-                selectedbutton.classList.remove('btn-outline-primary')
-                selectedbutton.classList.add('btn-success')
-                //deaktivieren der Answerbuttons
-                Answerbuttons.forEach((button) => {
-                    button.disabled = true
-                }),
-                //NextButton aktivieren
-                (NextButton.disabled = false)
-                pointscounter++
-                //Ausführen falls Antwort falsch war
-            } else if (correctchoice === 0) {
-                selectedbutton.classList.remove('btn-outline-primary')
-            selectedbutton.classList.add('btn-danger')
-            Answerbuttons.forEach((button) => {
-                button.disabled = true
-            }),
-            (NextButton.disabled = false)
-        }
-    }
-}
 
-async function answercheck(answerid, questionid) {
-    let actionstring =
-    'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
-    
-    try {
-        const response = await fetch(questionserver, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: actionstring,
-        })
-        
-        const data = await response.json()
-        
-        if (data === 1) {
-            return 1
-        } else {
-            return 0
-        }
-    } catch (error) {
-        console.error('Fehler beim Überprüfen der Antwort:', error)
-        return 44 // Rückgabe eines Standardwerts im Fehlerfall
-    }
-}
+
 function sendinterruptflag() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
@@ -240,7 +146,7 @@ function interruptetbyopponent() {
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =
-    'Dein Gegner hat aufgegeben das Spiel ist beendet'
+    'Dein Mitspieler hat aufgegeben das Spiel ist beendet'
 }
 //Rücksetzen button pressed sonst Endlosschleife
 let buttonpressed = false
@@ -251,39 +157,11 @@ socket.onmessage = (event) => {
     if (data.message == 'nextbuttonclick') {
         next()
     }
-    //Sobald vom Mitspieler ein Answerbutton gedrückt wurde kommt die entsprechende Message
-    //Hier wird dann mit dispatch event das click Event des eigenen Buttons simuliert
-    //So wird immer bei beiden Clients der Button gedrückt
-    else if (data.message == 'Answerbutton1clicked') {
-        if (!buttonpressed) {
-            const clickEvent = new Event('click')
-            buttonpressed = true
-            Answerbuttons[0].dispatchEvent(clickEvent)
-        }
-    } else if (data.message == 'Answerbutton2clicked') {
-        if (!buttonpressed) {
-            const clickEvent = new Event('click')
-            buttonpressed = true
-            Answerbuttons[1].dispatchEvent(clickEvent)
-        }
-    } else if (data.message == 'Answerbutton3clicked') {
-        if (!buttonpressed) {
-            const clickEvent = new Event('click')
-            buttonpressed = true
-            Answerbuttons[2].dispatchEvent(clickEvent)
-        }
-    } else if (data.message == 'Answerbutton4clicked') {
-        if (!buttonpressed) {
-            const clickEvent = new Event('click')
-            buttonpressed = true
-            Answerbuttons[3].dispatchEvent(clickEvent)
-        }
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
-    } else if (data.message == 'ready') {
+     else if (data.message == 'ready') {
         //startquiz()
         //deletegame()
-    } else if (data.type === 'questions') {
-        
+    } else if (data.type === 'questions') {        
         console.log(typeof data)
         questions = data
         questions = JSON.parse(data.questions)
@@ -299,7 +177,6 @@ socket.onmessage = (event) => {
 
 
 }
-
 
 
 socket.onclose = (event) => {
@@ -326,26 +203,7 @@ NextButton.addEventListener('click', function () {
     socket.send(message1)
 })
 
-Answerbuttons[0].addEventListener('click', function () {
-    const message = 'Answerbutton1clicked'
-    const message1 = JSON.stringify({ type: 'message', room, message })
-    socket.send(message1)
-})
-Answerbuttons[1].addEventListener('click', function () {
-    const message = 'Answerbutton2clicked'
-    const message1 = JSON.stringify({ type: 'message', room, message })
-    socket.send(message1)
-})
-Answerbuttons[2].addEventListener('click', function () {
-    const message = 'Answerbutton3clicked'
-    const message1 = JSON.stringify({ type: 'message', room, message })
-    socket.send(message1)
-})
-Answerbuttons[3].addEventListener('click', function () {
-    const message = 'Answerbutton4clicked'
-    const message1 = JSON.stringify({ type: 'message', room, message })
-    socket.send(message1)
-})
+
 // Zuweisen des Clients zu einem Raum
 function subscribeToRoom(room,fragenzahl,kurs,modus) {
     // Subscribe to the room
@@ -389,7 +247,7 @@ async function statuscheck() {
         body: 'action=statuscheck&' + 'questionid=' + Question.dataset.id,
     })
     const data = await response.text()
-    return data // Assuming the response is the status value
+    return data 
 }
 //Absenden der Meldung
 async function meldungsenden() {

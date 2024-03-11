@@ -6,8 +6,8 @@ let gamelist = document.getElementById('gamelist') //Liste mit den offenen spiel
 let waitforopponent = document.getElementById('wait') //Zeigt Warte auf Gegner
 let room = '' // die Spielsitzungen werden als WebsocketRäume umgesetzt damit immer nur 2 Spieler gleichzeitig spielen können
 let modus = '' //Spielmodus
-let kurs = null//Gewählter Kurs
-let fragenzahl =null//Anzahl Fragen
+let kurs = null //Gewählter Kurs
+let fragenzahl = null //Anzahl Fragen
 let gamesarray = [] // Hier werden die offenen Spiele die aus der Datenbank geholt wurden gespeichert
 let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für den Spielnamen
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
@@ -41,7 +41,6 @@ function loadKursDropdown() {
     })
         .then((response) => response.json())
         .then((data) => {
-
             data.forEach((kurs) => {
                 var li = document.createElement('li')
                 var a = document.createElement('a')
@@ -88,7 +87,7 @@ function loadModusDropdwon() {
 //Funktion zum laden der offenen Spiele  aus der Datenbank
 function loadGames() {
     //leeren der gamelist
-    gamelistbody=document.getElementById("gamelistbody")
+    gamelistbody = document.getElementById('gamelistbody')
     while (gamelistbody.firstChild) {
         gamelistbody.removeChild(gamelistbody.lastChild)
     }
@@ -116,21 +115,27 @@ function loadGames() {
                 let fragenzahl = document.createElement('td')
                 fragenzahl.innerHTML = game.fragenzahl
                 let button = document.createElement('button')
-                button.classList.add("btn")
+                button.classList.add('btn')
 
-                button.classList.add("btn-outline-primary")
+                button.classList.add('btn-outline-primary')
                 button.innerHTML = 'Beitreten'
                 übergabestring = game.name + game.modus + game.kurs
                 button.addEventListener('click', function () {
-                    joingame(übergabestring, game.modus,game.name,game.fragenzahl,game.kurs)
+                    joingame(
+                        übergabestring,
+                        game.modus,
+                        game.name,
+                        game.fragenzahl,
+                        game.kurs
+                    )
                 })
                 tr.appendChild(name)
                 tr.appendChild(modus)
                 tr.appendChild(kurs)
                 tr.appendChild(fragenzahl)
                 tr.appendChild(button)
-                document.getElementById("gamelistbody").appendChild(tr)
-                document.getElementById('gamelist').classList.add("tableLobby")
+                document.getElementById('gamelistbody').appendChild(tr)
+                document.getElementById('gamelist').classList.add('tableLobby')
             })
         })
 
@@ -158,7 +163,7 @@ function addnewgame() {
             '&modus=' +
             encodeURIComponent(modus) +
             '&kurs=' +
-            encodeURIComponent(kurs)+
+            encodeURIComponent(kurs) +
             '&fragenzahl=' +
             encodeURIComponent(fragenzahl)),
             fetch(gameserver, {
@@ -184,15 +189,18 @@ function deletegame() {
 }
 
 //Mit dieser function wird der Benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
-function joingame(übergabestring, modus,spielname,fragenzahl,kurs) {
+function joingame(übergabestring, modus, spielname, fragenzahl, kurs) {
     localStorage.setItem('gamenameübergabe', übergabestring)
     localStorage.setItem('spielname', spielname)
     localStorage.setItem('fragenzahl', fragenzahl)
     localStorage.setItem('kurs', kurs)
+    localStorage.setItem('modus', modus)
     if (modus === 'Kooperativ') {
         window.location.href = 'co-op.php'
     } else if (modus === 'Versus') {
         window.location.href = 'versus.php'
+    } else if (modus === 'Supportive') {
+        window.location.href = 'supportive.php'
     } else {
         alert('ok')
     }
@@ -227,6 +235,6 @@ document
             var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
             document.getElementById('fragenDropdownButton').innerHTML =
                 selectedValue
-            fragenzahl = event.target.dataset.fragen;
+            fragenzahl = event.target.dataset.fragen
         }
     })
