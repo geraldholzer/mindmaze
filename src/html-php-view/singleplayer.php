@@ -22,7 +22,13 @@ if(isset($_SESSION['BenutzerID'])) {
     crossorigin="anonymous"></script>
 </head>
 <body>
-
+<script>
+        // Output PHP session variable to JavaScript variable
+        var BenutzerID = <?php echo json_encode($_SESSION['BenutzerID']); ?>;
+        
+        // Now you can use BenutzerID in your JavaScript code
+        console.log("BenutzerID:", BenutzerID);
+    </script>
 <!-- mt steht für margin top -->
 <div class="row mt-5" >
   <div class="container">

@@ -25,19 +25,24 @@ class MyWebSocketServer implements MessageComponentInterface
    
 
     }
-
+//Funktion zum holen und ausgeben der Fragen für den Multiplayer 
     private function fragenAusgebenAsync($fragenzahl,$kurs,$modus)
     {
-
+//Dient zur Auswahl ob multiplechoice oder Freitext fragen gestellt werden
        if($modus =='Kooperativ'||$modus=="Versus" ){
         $FragentypID=1;//multiplechoice
        }else{
         $FragentypID=2;//Freitext
        }
+       //Aufruf der connectToDatabase die dann die fetchquestions funktion aufruft  
+       //die Asynchronität dient dazu keine Verbindungsbedingten fehler im Ablauf zu haben
         return $this->connectToDatabase($kurs,$FragentypID)
             ->then(function ($kursID) use ($fragenzahl,$FragentypID) {
                 return $this->fetchQuestions($kursID,$fragenzahl,$FragentypID);
             })
+            //Nach dem Holen der fragen wird die entsprechende umwandlungsfunktion aufgerufen 
+            //die Daten werden in ein assoziatives array gespeichert und in JSON formatiert
+            //Zwei funktionen weil es bei den Freitextfragen anders zu handeln ist
             ->then(function ($questions) use ($fragenzahl, $kurs,$modus,$FragentypID) {
                 if (!empty($questions)) {
                     if($FragentypID==1){ 
@@ -45,7 +50,7 @@ class MyWebSocketServer implements MessageComponentInterface
                     }else{
                         return $this->processQuestionssupportive($questions);
                     }
-                    
+              //Wiederholter aufruf der Funktion falls die verbindung langsam ist      
                 } else {
                     // Sleep for a short delay and then retry
                     sleep(2); // Sleep for 1 second
@@ -53,6 +58,7 @@ class MyWebSocketServer implements MessageComponentInterface
                 }
             });
     }
+//Hier wird die Verbindung zur Datenbank hergestellt und die KursID für den übergebenen Kurs herausgesucht
     private function connectToDatabase($kurs)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kurs) {
@@ -76,10 +82,9 @@ class MyWebSocketServer implements MessageComponentInterface
             $resolve($kursID);
         });
     }
-    
+    // Hier werden die Fragen aus der Datenbank geholt
     private function fetchQuestions($kursID,$fragenzahl,$FragentypID)
     {
-        print_r("ID::::".$FragentypID);
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kursID,$fragenzahl,$FragentypID) {
             $conn = new mysqli("localhost", "root", "", "mindmaze");
     
@@ -111,9 +116,9 @@ class MyWebSocketServer implements MessageComponentInterface
         });
     }
     
+    // Hier werden die Fragen in ein Assoziatives array gespeichert und in JSON formatiert
     private function processQuestions($questions)
-    {
-        
+    {  
         $processedQuestions = [];
     
         foreach ($questions as $row) {
@@ -206,24 +211,25 @@ return $processedQuestionsJSON;
         if (!isset($data['type'])) {
             return; // Invalid message format
         }
-        
+        //Abfrage um welche art von Anfrage es sich handelt mit dem type parameter
         switch ($data['type']) {
-            case 'subscribe':
-                $this->handleSubscribe($from, $data['room'],$data['fragenzahl'],$data['kurs'],$data['modus']);
+            case 'subscribe'://Anmelden zu einer Spielsitzung bzw raum
+                $this->handleSubscribe($from, $data['room'],$data['fragenzahl'],$data['kurs'],$data['modus'],$data['benutzername']);
+                print_r($data['benutzername']);
                 break;
-            case 'message':
+            case 'message'://Allgemeine nachricht message
                 $this->handleMessage($from, $data['room'], $data['message']);
                 break;
-            case 'finish':
+            case 'finish'://Nachricht vom CLient spiel beendet
                 $this->handleFinish($from, $data['room'], $data['message']);
                 break;
-            case 'interrupt':
+            case 'interrupt'://Nachricht vom CLient spiel vorzeitig beendet
                 $this->handleInterrupt($from, $data['room']);
                 break;
         }
     }
     // Hier wird ein Client zu einem Raum gleichbedeutend mit Spielsitzung hinzugefügt
-    private function handleSubscribe(ConnectionInterface $conn, $room,$fragenzahl,$kurs,$modus)
+    private function handleSubscribe(ConnectionInterface $conn, $room,$fragenzahl,$kurs,$modus,$benutzername)
     {
         print_r("Kurs:".$kurs."  \n");
         // Raum erstellen falls nicht vorhanden 
@@ -237,11 +243,11 @@ return $processedQuestionsJSON;
              //Ready message dient dazu das Spiel nach dem Eintreffen beider Spieler zu Starten
              if($this->rooms[$room]->count()==2){
                 $questionsPromise = $this->fragenAusgebenAsync($fragenzahl, $kurs,$modus);
-                $questionsPromise->then(function ($questions) use ($room) {
+                $questionsPromise->then(function ($questions) use ($room,$benutzername) {
 
                     $this->broadcastToRoom($room, json_encode(['type' => 'questions', 'questions' => $questions]), null);
                     $message = "ready";
-                    $this->broadcastToRoom($room, json_encode(['type' => 'message', 'message' => $message]), null);
+                    $this->broadcastToRoom($room, json_encode(['type' => 'message', 'message' => $message,"opponent"=>$benutzername]), null);
                  
                    
                   

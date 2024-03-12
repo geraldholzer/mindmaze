@@ -14,19 +14,25 @@ if(isset($_SESSION['BenutzerID'])) {
   <title>Document</title>
   <link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" href="../css/main.css">
-  <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+  <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script defer src="../javascript/supportive.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
 
 </head>
 
 <body>
-
+<script>
+        // Session variable für js speichern
+        var vorname = <?php echo json_encode($_SESSION['Vorname']); ?>;
+        var nachname = <?php echo json_encode($_SESSION['Nachname']); ?>;
+        var benutzername=vorname+" "+nachname;
+      
+    </script>
  
   <!-- mt steht für margin top -->
   <div class="row mt-5">
@@ -41,7 +47,7 @@ if(isset($_SESSION['BenutzerID'])) {
     <!-- Meldungscontainer -->
             <div class="row mb-1">
               <!-- Meldebutton -->
-                      <div class="col-1 offset-11">
+                      <div class="col-1">
                           <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
                       </div>
             </div>
@@ -89,7 +95,7 @@ if(isset($_SESSION['BenutzerID'])) {
                 <!-- Button zum Weiterschalten -->
                 <div class="row">
                   <button  type="button" class="btn btn-outline-primary col-8 offset-1  mt-1"id="Next">Next</button>
-                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
+                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="Beenden">Beenden</button>
                 </div>
                 <!-- Meldung erscheint falls der Beenden button gedrückt wird -->
                 <!-- Modal -->
@@ -116,12 +122,15 @@ if(isset($_SESSION['BenutzerID'])) {
                   <div id="explanation">Standarderklärung</div>
                 </div>
                 <!-- Container für den Chat -->
-                <div class="row d-none col-lg-10 mx-auto" id="chatcontainer">
-                  <input type="text" class="border border-primary rounded col-10 offset-1 mt-2"
+                <div class="row d-none col-lg-12 mx-auto" id="chatcontainer">
+                <div id="chatContainer" class="border border-primary rounded mt-2" style="max-height: 280px; overflow-y: auto;">
+                     <div class="row" id="chat" placeholder="Chatnachricht">
+                       </div>
+                  </div>
+                  <input type="text" class="border border-primary rounded col-10 mt-2"
                     placeholder="Chatnachricht eingeben" id="messageInput">
-                  <button type="button" class="btn btn-primary btn-sm col-1 ofset 9 mt-2 ml-2"
+                  <button type="button" class="btn btn-primary btn-sm col-1 mt-2"
                     id="sendbutton">Senden</button>
-                  <div id="chat" placeholder="Chatnachricht"></div>
                 </div>
               </div>
               <!-- Ergebnis class d-none wird entfernt um sichtbar zu sein -->

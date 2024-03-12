@@ -42,6 +42,7 @@ let spielname=null
 let fragenzahl=null
 let kurs=null
 let modus =null
+let opponent=null
 
 async function getlocalstorage(){
     spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
@@ -62,7 +63,7 @@ socket.onopen = (event) => {
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
 async function joingame() {
     await getlocalstorage();
-    subscribeToRoom(room,fragenzahl,kurs,modus)
+    subscribeToRoom(room,fragenzahl,kurs,modus,benutzername)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
@@ -280,7 +281,7 @@ socket.onmessage = (event) => {
         }
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
     } else if (data.message == 'ready') {
-        //startquiz()
+        opponent=data.opponent
         //deletegame()
     } else if (data.type === 'questions') {
         
@@ -294,7 +295,19 @@ socket.onmessage = (event) => {
     } else if (data.type === 'interrupt') {
         interruptetbyopponent()
     }else {
-        chat.innerHTML += data.message + '</br>'
+        var newMessage = document.createElement("div");
+        newMessage.textContent = opponent+":" + data.message;
+        newMessage.style.borderRadius = "10px";
+        newMessage.style.padding = "5px"
+        newMessage.style.margin= "2px"
+        newMessage.style.backgroundColor="lightblue"
+        newMessage.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.6)"; 
+        newMessage.classList.add("col-5")
+        var padding=document.createElement("div");
+        padding.classList.add("col-6")
+        chat.appendChild(padding);
+        chat.appendChild(newMessage);
+        // chat.innerHTML += opponent+":"+data.message + '</br>'
     }
 
 
@@ -307,12 +320,33 @@ socket.onclose = (event) => {
 }
 //Eventlistener für Chat Send button
 sendbutton.addEventListener('click', sendMessage)
-
+messageInput.addEventListener("keyup",function(e){
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+})
 //Einlesen des Inhalts des Chatinputfelds und senden an den Server
 function sendMessage() {
     const message = messageInput.value
+    messageInput.value="";
     //Ausgeben in eigenem Verlauf
-    chat.innerHTML += 'Du:' + message + '</br>'
+    var newMessage = document.createElement("div");
+    newMessage.textContent = 'Du: ' + message;
+    newMessage.style.borderRadius = "10px";
+    newMessage.style.padding = "5px"
+    newMessage.style.margin= "2px"
+    newMessage.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.6)"; 
+    newMessage.style.backgroundColor="#AB82FF"
+    newMessage.style.color = 'white';
+    newMessage.classList.add("col-5")
+    var padding=document.createElement("div");
+    var padding2=document.createElement("div");
+    padding.classList.add("col-1") 
+    chat.appendChild(padding);
+    chat.appendChild(newMessage);
+    padding2.classList.add("col-5") 
+    chat.appendChild(padding2);
+    // chat.innerHTML += 'Du:' + message + '</br>'
     //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann
     //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum
     const message1 = JSON.stringify({ type: 'message', room, message })
@@ -347,9 +381,10 @@ Answerbuttons[3].addEventListener('click', function () {
     socket.send(message1)
 })
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room,fragenzahl,kurs,modus) {
+function subscribeToRoom(room,fragenzahl,kurs,modus,benutzername) {
     // Subscribe to the room
-    const subscribeMessage = JSON.stringify({ type: 'subscribe', room ,fragenzahl,kurs,modus})
+    console.log("Benutzername:", benutzername);
+    const subscribeMessage = JSON.stringify({ type: 'subscribe', room ,fragenzahl,kurs,modus,benutzername:benutzername})
     socket.send(subscribeMessage)
 }
 //Funktioniert ähnlich wie die addnewgame Funktion nur das hier deletegame übergeben wird

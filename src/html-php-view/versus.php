@@ -23,7 +23,14 @@ if(isset($_SESSION['BenutzerID'])) {
     crossorigin="anonymous"></script>
 </head>
 <body>
-
+<script>
+        // Session variable für js speichern
+        var vorname = <?php echo json_encode($_SESSION['Vorname']); ?>;
+        var nachname = <?php echo json_encode($_SESSION['Nachname']); ?>;
+        var benutzername=vorname+" "+nachname;
+      
+      
+    </script>
   <!-- mt steht für margin top -->
   <div class="row mt-5" >
     <!-- übercontainer -->

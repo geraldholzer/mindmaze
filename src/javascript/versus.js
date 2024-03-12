@@ -45,6 +45,7 @@ let spielname=null
 let fragenzahl=null
 let kurs=null
 let modus=null
+let opponent=null
 
 async function getlocalstorage(){
     spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
@@ -75,7 +76,7 @@ socket.onopen = (event) => {
 async function joingame() {
     await getlocalstorage();
    waitforopponent.classList.remove('d-none')
-    subscribeToRoom(room, fragenzahl, kurs,modus)
+    subscribeToRoom(room, fragenzahl, kurs,modus,benutzername)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     
@@ -282,7 +283,7 @@ socket.onmessage = (event) => {
     if (data.type === 'message') {
         if (data.message === 'ready') {
             deletegame()
-            startquiz()
+            opponent=data.opponent
         }
         //Gegner hat das Spiel beendet Gegner Punkte in opponentpoints speichern
     } else if (data.type === 'finish') {
@@ -390,7 +391,7 @@ async function meldungsenden() {
 // }
 
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room, fragenzahl, kurs,modus) {
+function subscribeToRoom(room, fragenzahl, kurs,modus,benutzername) {
     // Subscribe to the room
     const subscribeMessage = JSON.stringify({
         type: 'subscribe',
@@ -398,6 +399,7 @@ function subscribeToRoom(room, fragenzahl, kurs,modus) {
         fragenzahl,
         kurs,
         modus,
+        benutzername
     })
     socket.send(subscribeMessage)
 }
