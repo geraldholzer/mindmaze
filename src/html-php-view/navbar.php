@@ -19,6 +19,11 @@
     <div class="container">
 
 
+    <div class="d-flex align-items-center">
+
+      <a class="navbar-brand" href="#">
+        <img src="../../img/logo.svg" alt="Logo" height="40" class="me-3">
+
       <a class="navbar-brand">IU-Mindmaze</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +47,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="./profile.html">Profil</a></li>
-              <li><a class="dropdown-item" href="statistik.php">Statistik</a></li>
+              <li><a class="dropdown-item" href="./statistik.php">Statistik</a></li>
               <li><a class="dropdown-item" href="#">Fragen</a></li>
               <li><a class="dropdown-item" href="javascript:navbarReact('./profile.html')">TEST</a></li>
               <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
