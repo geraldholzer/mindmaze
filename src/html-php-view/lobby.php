@@ -11,7 +11,7 @@ if(isset($_SESSION['BenutzerID'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Multiplayer-Lobby</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
@@ -82,10 +82,10 @@ if(isset($_SESSION['BenutzerID'])) {
                 <table id="gamelist" class="tableLobby">
                   <thead>
                     <tr>
-                      <th>Spielname</th>
-                      <th>Modus</th>
-                      <th>Modul</th>
-                      <th>Fragen</th>
+                      <th id="Spielnameheader">Spielname</th>
+                      <th id="Modusheader">Modus</th>
+                      <th id="Modulheader">Modul</th>
+                      <th id="Fragenheader">Fragen</th>
                     </tr>
                   </thead>
                     <tbody id="gamelistbody">

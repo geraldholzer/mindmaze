@@ -84,8 +84,22 @@ function loadModusDropdwon() {
             })
         })
 }
+document.getElementById("Spielnameheader").addEventListener("click",function(){
+    loadGames("spiele.Spielname")
+})
+document.getElementById("Modusheader").addEventListener("click",function(){
+    loadGames("modus")
+})
+document.getElementById("Modulheader").addEventListener("click",function(){
+    loadGames("kurs")
+}
+
+)
 //Funktion zum laden der offenen Spiele  aus der Datenbank
-function loadGames() {
+function loadGames(order) {
+    if(order == undefined){
+        order="spiele.Spielname"
+    }
     //leeren der gamelist
     gamelistbody = document.getElementById('gamelistbody')
     while (gamelistbody.firstChild) {
@@ -98,7 +112,7 @@ function loadGames() {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
         //diese action wird im server abgefragt
-        body: 'action=getGameList',
+        body: 'action=getGameList'+"&order="+order,
     }) //empfangene Daten in gamesarray speichern
         .then((response) => response.json())
         .then((data) => {

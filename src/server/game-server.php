@@ -25,6 +25,9 @@ if(isset ($_POST["fragenzahl"])){
 if(isset($_POST['gamename'])){
     $gamename=$_POST['gamename'];
 }
+if(isset($_POST['order'])){
+    $order=$_POST['order'];
+}
 // Hier wird die passende spielmodi ID aus der Datenbank geholt da in der Auswahl im Dropdown Feld nur die Beschreibung steht
 //Gespeichert wird das Ergebnis in der variable $modusID diese wird zum erstellen eines neuen Spiels benötigt 
 if(isset($_POST['modus'])){
@@ -55,7 +58,7 @@ if ($action === 'deleteGame') {
 } else if ($action === 'addGame') {
     addGame($gamename,$kursID,$modusID,$fragenzahl, $conn);
 } else if ($action === 'getGameList') {
-    sendGamelist($conn);
+    sendGamelist($conn,$order);
 } else if ($action === 'getKursDropdown') {
     sendKursDropdown($conn);
 }
@@ -79,12 +82,26 @@ function deleteGame($name, $conn) {
 }
 
 //Hier wird ein assoziatives Array mit allen verfügbaren spielen an den client gesendet
-function sendGamelist($conn) {
+function sendGamelist($conn,$order) {
+    
+
+// Validierung $order für SQL injection
+$validOrders = ["spiele.Spielname", "spiele.ID", "kurse.Beschreibung", "spielmodi.Beschreibung","kurs","modus","BenutzerFragen"]; // Add more as needed
+if (!in_array($order, $validOrders)) {
+   $order = "spiele.Spielname"; // standardwert 
+}
     //Die spiele Tabelle wird mit der kurse und spielmodi Tabelle gejoint
     // um die Beschreibungen für spielmodi und kurs auch weitergeben zu können
-    $result = $conn->query("SELECT spiele.*, kurse.Beschreibung AS kurs, spielmodi.Beschreibung AS modus
-     FROM spiele JOIN kurse ON (spiele.KursID = kurse.KursID) JOIN spielmodi ON (spiele.SpielmodiID = spielmodi.SpielmodiID);");
-    $gamesArray = array();
+    $stmt = $conn->prepare("SELECT spiele.*, kurse.Beschreibung AS kurs, spielmodi.Beschreibung AS modus
+     FROM spiele JOIN kurse ON (spiele.KursID = kurse.KursID) JOIN spielmodi ON (spiele.SpielmodiID = spielmodi.SpielmodiID)
+     ORDER BY $order;");
+
+   $stmt->execute();
+    
+   $result = $stmt->get_result();
+   
+   
+   $gamesArray = array();
 
     while ($row = $result->fetch_assoc()) {
         $gamesArray[] = array(
