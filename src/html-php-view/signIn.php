@@ -66,10 +66,11 @@
                 <select id="selectStudiengang" name="selectStudiengang">
                   <?php
                   // Einrichten der Datenbankverbindung
-                  $servername = "localhost";
-                  $username = "root";
-                  $password = "";
-                  $dbname = "mindmaze";
+                  // $servername = "localhost";
+                  // $username = "root";
+                  // $password = "";
+                  // $dbname = "mindmaze";
+                  include "../html-php-view/dbconnect.php";
                   $con = new mysqli($servername, $username, $password, $dbname);
                   if ($con->connect_error) {
                       die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);

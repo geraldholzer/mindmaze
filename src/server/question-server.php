@@ -1,12 +1,14 @@
 <?php
 
 // Verbindung zur MySQL-Datenbank herstellen
-//$servername="13.53.246.106";
-$servername="localhost";
-$username="root";
-$pw="";
-$db="mindmaze";
-$conn= new mysqli($servername,$username,$pw,$db);
+// //$servername="13.53.246.106";
+// $servername="localhost";
+// $username="root";
+// $pw="";
+// $db="mindmaze";
+
+include "../html-php-view/dbconnect.php";
+$conn= new mysqli($servername,$username,$password,$dbname);
 
 // Überprüfen, ob die Verbindung erfolgreich war
 if ($conn->connect_error) {

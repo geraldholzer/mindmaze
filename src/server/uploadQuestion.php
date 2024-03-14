@@ -1,11 +1,12 @@
 <?php
 session_start();
 
-// Datenbankverbindung herstellen
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "mindmaze";
+// // Datenbankverbindung herstellen
+// $servername = "localhost";
+// $username = "root";
+// $password = "";
+// $dbname = "mindmaze";
+include "../html-php-view/dbconnect.php";
 $con = new mysqli($servername, $username, $password, $dbname);
 
 // Überprüfen, ob eine Verbindung hergestellt werden konnte

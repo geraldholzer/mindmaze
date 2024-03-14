@@ -45,13 +45,13 @@
     //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
     function getStudiengang(){
       // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      $servername = "localhost";
-      $username = "root";
-      $dbpassword = "";
-      $dbname = "mindmaze";
-
+      // $servername = "localhost";
+      // $username = "root";
+      // $dbpassword = "";
+      // $dbname = "mindmaze";
+      include "../html-php-view/dbconnect.php";
       try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
         // Durchführen der SQL Abfrage
@@ -68,13 +68,13 @@
     //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
     function getKurse(){
       // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      $servername = "localhost";
-      $username = "root";
-      $dbpassword = "";
-      $dbname = "mindmaze";
-
+      // $servername = "localhost";
+      // $username = "root";
+      // $dbpassword = "";
+      // $dbname = "mindmaze";
+      include "../html-php-view/dbconnect.php";
       try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
 
         $UserID = $_SESSION['BenutzerID']; 
@@ -94,13 +94,13 @@
     //lädt die Fragen + Antworten eines Studiengangs aus der DB und erzeugt eine Tabelle
     function getQuestionTable(){
       // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      $servername = "localhost";
-      $username = "root";
-      $dbpassword = "";
-      $dbname = "mindmaze";
-
+      // $servername = "localhost";
+      // $username = "root";
+      // $dbpassword = "";
+      // $dbname = "mindmaze";
+      include "../html-php-view/dbconnect.php";
       try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);              
         
         $kursID = 1;

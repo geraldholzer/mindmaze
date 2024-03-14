@@ -63,12 +63,15 @@ class MyWebSocketServer implements MessageComponentInterface
     private function connectToDatabase($kurs)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kurs) {
-           //$servername="13.53.246.106";
-            $servername = "localhost";
-            $username = "root";
-            $pw = "";
-            $db = "mindmaze";
-            $conn = new mysqli($servername, $username, $pw, $db);
+        //    //$servername="13.53.246.106";
+            // $servername = "localhost";
+            // $username = "root";
+            // $password = "";
+            // $dbname = "mindmaze";
+            include __DIR__ . "/../html-php-view/dbconnect.php";
+            // include "../html-php-view/dbconnect.php";
+
+            $conn = new mysqli($servername,$username,$password,$dbname);
             if ($conn->connect_error){
                 print_r("fehler verbindung".$conn->connect_error);}
 
@@ -88,8 +91,9 @@ class MyWebSocketServer implements MessageComponentInterface
     private function fetchQuestions($kursID,$fragenzahl,$FragentypID)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kursID,$fragenzahl,$FragentypID) {
-            //$servername="13.53.246.106";
-            $conn = new mysqli("localhost", "root", "", "mindmaze");
+            //$Datenbankverbindung
+            include __DIR__ . "/../html-php-view/dbconnect.php";
+            $conn = new mysqli($servername,$username,$password,$dbname);
     
             $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? AND FragentypID=? ORDER BY RAND() LIMIT ?");
             $stmt1->bind_param("sii", $kursID,$FragentypID,$fragenzahl);

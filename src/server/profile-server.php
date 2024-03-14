@@ -3,13 +3,14 @@
 // Funktion zum Speichern des Passworts in die Datenbank
 function savePasswordToDatabase($password) {
      // Verbindung zur Datenbank herstellen und Abfrage ausführen
-     $servername = "localhost";
-     $username = "root";
-     $dbpassword = "";
-     $dbname = "mindmaze";
- 
+    //  $servername = "localhost";
+    //  $username = "root";
+    //  $dbpassword = "";
+    //  $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+
      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $dbpassword);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
  
         session_start();
@@ -37,11 +38,11 @@ function savePasswordToDatabase($password) {
 
 function getUserDetails() {
     // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "mindmaze";
-
+    // $servername = "localhost";
+    // $username = "root";
+    // $password = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
     try {
         $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
