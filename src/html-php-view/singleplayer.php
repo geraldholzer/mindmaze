@@ -39,9 +39,9 @@ if(isset($_SESSION['BenutzerID'])) {
             <!-- Meldungscontainer -->
             <div class="row mb-1">
               <!-- Meldebutton -->
-                      <div class="col-1 offset-11">
-                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
-                      </div>
+              <div class="col-1">
+                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>   
+                </div>
             </div>
             <!-- Frage und Fragemelden button -->
             <div class="row mb-1">

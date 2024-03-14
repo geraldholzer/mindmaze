@@ -85,7 +85,7 @@ function deleteGame($name, $conn) {
 function sendGamelist($conn,$order) {
     
 
-// Validierung $order für SQL injection
+// Validierung $order 
 $validOrders = ["spiele.Spielname", "spiele.ID", "kurse.Beschreibung", "spielmodi.Beschreibung","kurs","modus","BenutzerFragen"]; // Add more as needed
 if (!in_array($order, $validOrders)) {
    $order = "spiele.Spielname"; // standardwert 

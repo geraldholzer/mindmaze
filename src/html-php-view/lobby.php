@@ -78,9 +78,10 @@ if(isset($_SESSION['BenutzerID'])) {
                     <button class="btn btn-primary btn-custom" type="button" id="newgamebutton">erstellen</button>
                   </div>
                 </div>  
-                <!-- Liste mit offenen spielen diese werden als buttons in dieses div eingefügt -->
+                <!-- Liste mit offenen spielen  -->
                 <table id="gamelist" class="tableLobby">
                   <thead>
+                    <!-- Diese ids werden für die sortierfunktion benötigt -->
                     <tr>
                       <th id="Spielnameheader">Spielname</th>
                       <th id="Modusheader">Modus</th>
@@ -88,8 +89,7 @@ if(isset($_SESSION['BenutzerID'])) {
                       <th id="Fragenheader">Fragen</th>
                     </tr>
                   </thead>
-                    <tbody id="gamelistbody">
-                     
+                    <tbody id="gamelistbody">                
                     </tbody>
                 </table>
               </div>

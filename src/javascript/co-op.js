@@ -1,8 +1,8 @@
 //Elemente aus dem DOM holen
-let meldebutton = document.getElementById('Meldebutton')
-let meldecontainer = document.getElementById('Meldecontainer')
-let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton')
-let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
+let meldebutton = document.getElementById('Meldebutton')//Button zum melden einer Frage
+let meldecontainer = document.getElementById('Meldecontainer')//Container für die Meldung dient zum ein ausblenden
+let meldungabsendenbutton = document.getElementById('Meldungabsendenbutton') //Button zum absenden einer Meldung
+let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')//Button zum abbrechen 
 let questioncounter = 0 //zähler für die aktuelle Frage
 let pointscounter = 0 //Zähler für die erreichten Punkte
 let AnswerButton1 = document.getElementById('Answer1') //Antwortbutton1
@@ -22,9 +22,6 @@ let chatcontainer = document.getElementById('chatcontainer') //Container (div) f
 let messageInput = document.getElementById('messageInput') //Inputfeld für die chatnachricht
 let chat = document.getElementById('chat') //chat div hier wird der chat verlauf angezeigt
 let sendbutton = document.getElementById('sendbutton') //button zum absenden einer Chatnachricht
-let joinbutton = document.getElementById('Joingame') //Dient zum aufrufen der Seite mit den offenen Spielen
-let newgamebutton = document.getElementById('newgamebutton') //Mit diesem Button kann man ein neues Spiel erstellen
-let joingamecontainer = document.getElementById('joingamecontainer') //Container der Seite mit offenen spielen
 let gamelist = document.getElementById('gamelist') //Liste mit den offenen spielen
 let waitforopponent = document.getElementById('wait') //Zeigt Warte auf Gegner
 let room = '' // die Spielsitzungen werden als WebsocketRäume umgesetzt damit immer nur 2 Spieler gleichzeitig spielen können
@@ -38,21 +35,22 @@ let gameserver = '../server/game-server.php' // lokaler gameserver
 let questionserver = '../server/question-server.php' // lokaler question server
 //let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
-let spielname=null
-let fragenzahl=null
+let spielname=null//wird zum löschen des spiels gebraucht
+let fragenzahl=null//Auslesen der Fragenzahl
 let kurs=null
 let modus =null
 let opponent=null
 
+// Auslesen der Variablen aus dem localstorage hier wurden die Daten von lobby.js hineingespeichert d
 async function getlocalstorage(){
-    spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
+    spielname = localStorage.getItem('spielname') 
     room = localStorage.getItem('gamenameübergabe')
-    fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
+    fragenzahl = localStorage.getItem("fragenzahl");
     kurs = localStorage.getItem("kurs");// Auslesen des Kurses
     modus = localStorage.getItem("modus");// Auslesen des Kurses   
 }
 // Websocket für Multiplayer//////////////////////////////////////////////////////////////////////////////////
-//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  ip adresse von aws
+//Verbindung zu Websocketserver erstellen der PORT 8081 weil ich sonst einen Konflikt mit XAMPP hatte  
 const socket = new WebSocket(websocketserver)
 
 socket.onopen = (event) => {
@@ -61,11 +59,10 @@ socket.onopen = (event) => {
 }
 
 //Mit dieser function wird der benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
+//Einblenden von Warte auf Gegner
 async function joingame() {
-    await getlocalstorage();
+    await getlocalstorage();// Hier wird auf die Daten aus dem localstorage gewartet um nicht vorzeitig null werte zu übergeben
     subscribeToRoom(room,fragenzahl,kurs,modus,benutzername)
-    joingamecontainer.classList.add('d-none')
-    joinbutton.classList.add('d-none')
     waitforopponent.classList.remove('d-none')
 }
 
@@ -84,7 +81,8 @@ NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton
 StartButton.addEventListener('click', startquiz)
 
-//Hier wird zuerst die laden funktion aufgerufen und anschließend die entsprechenden buttons ein/aus geblendet
+//Hier wird zuerst die zuweisen funktion aufgerufen und anschließend die entsprechenden buttons ein/aus geblendet
+//Funktion wird aufgerufen sobald beide Spieler die Fragen erhalten haben
 function startquiz() {
     zuweisen()
     StartButton.classList.add('d-none')
@@ -111,7 +109,7 @@ function zuweisen() {
         Question.dataset.id = questions[Object.keys(questions)[questioncounter]].questionid
         Answerbuttons[i].innerHTML = mixedanswers[i].answer
         Answerbuttons[i].dataset.answerid = mixedanswers[i].answerid
-        //Event listener für auswahl
+        //Event listener für Auswahl bei jedem Answerbutton wird beim Drücken die antworten funktion ausgeführt
         Answerbuttons[i].addEventListener('click', antworten)
     }
     //inkrementieren des questioncounter
@@ -162,13 +160,14 @@ async function antworten(e) {
         answered = true
         //welcher button wurde gedrückt
         const selectedbutton = e.target
+        //asynchrones Abrufen der answercheck funktion (gibt 0 oder 1 zurück)
         let correctchoice = await answercheck(
             selectedbutton.dataset.answerid,
             Question.dataset.id
             )
             //Einblenden der Erklärung
             explanationcontainer.classList.remove('d-none')
-            //Ausführen wen die Frage richtig ist
+            //Ausführen falls die Frage richtig ist
             if (correctchoice === 1) {
                 selectedbutton.classList.remove('btn-outline-primary')
                 selectedbutton.classList.add('btn-success')
@@ -179,7 +178,7 @@ async function antworten(e) {
                 //NextButton aktivieren
                 (NextButton.disabled = false)
                 pointscounter++
-                //Ausführen falls Antwort falsch war
+                //Ausführen falls Antwort falsch war Answerbuttons werden ausgeblendet um erneutes drücken zu verhindern
             } else if (correctchoice === 0) {
                 selectedbutton.classList.remove('btn-outline-primary')
             selectedbutton.classList.add('btn-danger')
@@ -191,10 +190,11 @@ async function antworten(e) {
     }
 }
 
+//Funktion zum Abfragen ob eine Frage richtig bewantwortet wurde 
 async function answercheck(answerid, questionid) {
     let actionstring =
     'action=answercheck&answerid=' + answerid + '&questionid=' + questionid
-    
+    //Hier wird mit await gearbeitet weil sonst die antwort nicht abgewartet wird
     try {
         const response = await fetch(questionserver, {
             method: 'POST',
@@ -216,6 +216,9 @@ async function answercheck(answerid, questionid) {
         return 44 // Rückgabe eines Standardwerts im Fehlerfall
     }
 }
+
+// Wird beim vorzeitigen Beenden ausgeführt  Hier werden die entsprechenden Buttons ausgeblendet
+// Eine interrupt Meldung wird über Websocket an den Gegner gesendet
 function sendinterruptflag() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
@@ -232,6 +235,7 @@ function sendinterruptflag() {
     })
     socket.send(interruptmessage)
 }
+//Empfangen einer interrupt Meldung des Gegners
 function interruptetbyopponent() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
@@ -279,21 +283,22 @@ socket.onmessage = (event) => {
             buttonpressed = true
             Answerbuttons[3].dispatchEvent(clickEvent)
         }
-        //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
+        //Wenn zwei Spieler verbunden sind wird das Spiel aus der Tabelle gelöscht und der Name des Gegners gespeichert
+        // Das Verhindert das mehr wie zwei Spieler teilnehmen der Server sendet hierzu "ready"
     } else if (data.message == 'ready') {
         opponent=data.opponent
-        //deletegame()
+        deletegame()
+
+        //Hier werden die Fragen vom Server empfangen und in questions gespeichert anschließend wird das Spiel gestartet
     } else if (data.type === 'questions') {
-        
-        console.log(typeof data)
         questions = data
-        questions = JSON.parse(data.questions)
-        console.log("Fragen: "+questions)
-        console.log(questions[Object.keys(questions)[1]])
-    
+        questions = JSON.parse(data.questions)  
         startquiz();
+        //Aufrufen der interruptetbyopponent() funktion falls der Mitspieler das Spiel beendet hat
     } else if (data.type === 'interrupt') {
         interruptetbyopponent()
+//Falls es sich nicht um eine spezielle nachricht vom Server handelt so wird sie in den Chat geschrieben
+//Dazu wird ein element erstellt und mit appendchild in den Chatcontainer hinzugefügt
     }else {
         var newMessage = document.createElement("div");
         newMessage.textContent = opponent+":" + data.message;
@@ -303,7 +308,7 @@ socket.onmessage = (event) => {
         newMessage.style.backgroundColor="lightblue"
         newMessage.style.boxShadow = "2px 2px 5px rgba(0, 0, 0, 0.6)"; 
         newMessage.classList.add("col-5")
-        var padding=document.createElement("div");
+        var padding=document.createElement("div");//Dient zum Positionieren der Nachricht im Chatcontainer
         padding.classList.add("col-6")
         chat.appendChild(padding);
         chat.appendChild(newMessage);
@@ -313,8 +318,7 @@ socket.onmessage = (event) => {
 
 }
 
-
-
+//Debug information
 socket.onclose = (event) => {
     console.log('WebSocket connection closed:', event)
 }
@@ -339,14 +343,13 @@ function sendMessage() {
     newMessage.style.backgroundColor="#AB82FF"
     newMessage.style.color = 'white';
     newMessage.classList.add("col-5")
-    var padding=document.createElement("div");
-    var padding2=document.createElement("div");
+    var padding=document.createElement("div");//Dient zum Positionieren der Nachricht im Chatcontainer
+    var padding2=document.createElement("div");//Dient zum Positionieren der Nachricht im Chatcontainer
     padding.classList.add("col-1") 
     chat.appendChild(padding);
     chat.appendChild(newMessage);
     padding2.classList.add("col-5") 
     chat.appendChild(padding2);
-    // chat.innerHTML += 'Du:' + message + '</br>'
     //Mit JSON.stringify wird ein Datenstring erzeugt mit dem Der Server arbeiten kann
     //type zur unterscheidung ob normale nachricht oder anmeldung zu einem raum
     const message1 = JSON.stringify({ type: 'message', room, message })
