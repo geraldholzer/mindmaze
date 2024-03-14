@@ -1,65 +1,39 @@
-<html lang="en">
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
 
+if(isset($_SESSION['BenutzerID'])) {
+  include ("navbar.php");
+?>
+
+
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" href="../css/main.css">
-  <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
-  <script defer src="../javascript/co-op.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+  <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script defer src="../javascript/supportive.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
     crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
 
 </head>
 
 <body>
-
-  <!--Navbar Anfang-->
-  <!-- Sticky top damit navi immer oben bleibt -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container">
-      <a class="navbar-brand">IU-Mindmaze</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="./home.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.html">Solo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./lobby.html">Multiplayer</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Konto
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Profil</a></li>
-              <li><a class="dropdown-item" href="#">Statistik</a></li>
-              <li><a class="dropdown-item" href="#">Fragen</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Abmelden</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!--Navbar Ende-->
-
-
+<script>
+        // Session variable für js speichern
+        var vorname = <?php echo json_encode($_SESSION['Vorname']); ?>;
+        var nachname = <?php echo json_encode($_SESSION['Nachname']); ?>;
+        var benutzername=vorname+" "+nachname;
+      
+    </script>
+ 
   <!-- mt steht für margin top -->
   <div class="row mt-5">
     <!-- übercontainer -->
@@ -73,7 +47,7 @@
     <!-- Meldungscontainer -->
             <div class="row mb-1">
               <!-- Meldebutton -->
-                      <div class="col-1 offset-11">
+                      <div class="col-1">
                           <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
                       </div>
             </div>
@@ -117,24 +91,11 @@
                 starten</button>
               <!-- Fragetext -->
               <p class="card-text d-none col-10 mx-auto" id="question">Wer bin ich</p>
-              <!-- Antwortcontainer -->
-              <div class="container-fluid d-none" id="answercontainer">
-                <!-- Obere Antwortbuttons -->
-                <div class="row">
-                  <button type="button" class="btn btn-outline-primary col-5  offset-1" id="Answer1">Primary</button>
-                  <button type="button" class="btn btn-outline-primary col-5 offset-1 " id="Answer2">Primary</button>
-                </div>
-                <!-- Untere Antwortbuttons -->
-                <div class="row">
-                  <button type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"
-                    id="Answer3">Primary</button>
-                  <button type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"
-                    id="Answer4">Primary</button>
-                </div>
+              
                 <!-- Button zum Weiterschalten -->
                 <div class="row">
                   <button  type="button" class="btn btn-outline-primary col-8 offset-1  mt-1"id="Next">Next</button>
-                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
+                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="Beenden">Beenden</button>
                 </div>
                 <!-- Meldung erscheint falls der Beenden button gedrückt wird -->
                 <!-- Modal -->
@@ -155,63 +116,32 @@
                     </div>
                   </div>
                 </div>
-                <!-- Modal Multiplayer -->
-                <!-- <div class="modal fade" id="MultiplayerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Spiel beenden</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Spiel wirklich beenden?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" onclick= "window.location.href='./lobby.html'">Spiel beenden </button>
-                      </div>
-                    </div>
-                  </div>
-                </div> -->
-              <!-- Modal Singleplayer -->
-                <div class="modal fade" id="SingleplayerModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Spiel beenden</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        Spiel wirklich beenden?
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" onclick= "window.location.href='./singleplayer.html'">Spiel beenden </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            
                 <!-- Container für die Erklärung -->
                 <div class="row d-none col-lg-10 mx-auto" id="explanationcontainer">
                   <div id="explanation">Standarderklärung</div>
                 </div>
                 <!-- Container für den Chat -->
-                <div class="row d-none col-lg-10 mx-auto" id="chatcontainer">
-                  <input type="text" class="border border-primary rounded col-10 offset-1 mt-2"
+                <div class="row d-none col-lg-12 mx-auto" id="chatcontainer">
+                <div id="chatContainer" class="border border-primary rounded mt-2" style="max-height: 280px; overflow-y: auto;">
+                     <div class="row" id="chat" placeholder="Chatnachricht">
+                       </div>
+                  </div>
+                  <input type="text" class="border border-primary rounded col-10 mt-2"
                     placeholder="Chatnachricht eingeben" id="messageInput">
-                  <button type="button" class="btn btn-primary btn-sm col-1 ofset 9 mt-2 ml-2"
+                  <button type="button" class="btn btn-primary btn-sm col-1 mt-2"
                     id="sendbutton">Senden</button>
-                  <div id="chat" placeholder="Chatnachricht"></div>
                 </div>
               </div>
               <!-- Ergebnis class d-none wird entfernt um sichtbar zu sein -->
               <div class="d-none" id="result">
                 <h3>Ergebnis</h3>
                 <div id="resulttext"></div>
+                <a href="home.php" class="btn btn-outline-primary col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
               </div>
               <!-- Warteanzeige -->
               <div class="d-none" id="wait">
-                <h3>Warte auf Gegner.....</h3>
+                <h3>Warte auf Mitspieler.....</h3>
               </div>
               <!-- Container für das erstellen eines neuen Spiels oder beitreten zu einem bestehendem-->
               <div class="row d-none col-lg-10 mx-auto d-none" id="joingamecontainer">
@@ -236,3 +166,8 @@
 </body>
 
 </html>
+<?php
+}else{
+  echo "<h1>Du bist nicht angemeldet</h1>";
+}
+?>

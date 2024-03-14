@@ -1,8 +1,17 @@
+
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
+
+if(isset($_SESSION['BenutzerID'])) {
+  include ("navbar.php");
+?>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Multiplayer-Lobby</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
@@ -18,45 +27,7 @@
 <body>
 
 
-  <!--Navbar Anfang-->
-  <!-- Sticky top damit navi immer oben bleibt -->
-  <nav class="navbar navbar-expand-lg custom-navbar">
-    <div class="container">
-      <a class="navbar-brand">IU-Mindmaze</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="./home.php">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.html">Solo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="./lobby.html">Multiplayer</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Konto
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="#">Profil</a></li>
-              <li><a class="dropdown-item" href="#">Statistik</a></li>
-              <li><a class="dropdown-item" href="#">Fragen</a></li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Abmelden</a>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <!--Navbar Ende-->
+
   <!-- mt steht für margin top -->
   <div class="row mt-5" >
     <!-- übercontainer -->
@@ -69,7 +40,7 @@
             <div class="card-body">
               <!-- Button zum starten eines neuen Spiels  die klasse btn-outline-primary ist bootstrap standard col-11 steht für 11 von 12 spalten 
                 und eine spalte offset mt für margin top 1-->
-              <button  type="button" class="btn btn-outline-primary col-11 offset-1  mt-1"id="Joingame">Spiel erstellen oder beitreten</button>
+              <button  type="button" class="btn button-long col-11 offset-1  mt-1"id="Joingame">Spiel erstellen oder beitreten</button>
               <!-- Container für das erstellen eines neuen Spiels oder beitreten zu einem bestehendem-->
               <div class="row d-none col-lg-10 mx-auto d-none" id="joingamecontainer">
                 <div class="input-group mb-3">
@@ -104,58 +75,23 @@
                   </div>
                   <!-- Button zum erstellen eines neuen Spiels -->
                   <div class="input-group-append">
-                    <button class="btn btn-primary" type="button" id="newgamebutton">erstellen</button>
+                    <button class="btn btn-primary btn-custom" type="button" id="newgamebutton">erstellen</button>
                   </div>
                 </div>  
-                <!-- Liste mit offenen spielen diese werden als buttons in dieses div eingefügt -->
+                <!-- Liste mit offenen spielen  -->
                 <table id="gamelist" class="tableLobby">
                   <thead>
+                    <!-- Diese ids werden für die sortierfunktion benötigt -->
                     <tr>
-                      <th>Spielname</th>
-                      <th>Modus</th>
-                      <th>Modul</th>
-                      <th>Fragen</th>
+                      <th id="Spielnameheader">Spielname</th>
+                      <th id="Modusheader">Modus</th>
+                      <th id="Modulheader">Modul</th>
+                      <th id="Fragenheader">Fragen</th>
                     </tr>
                   </thead>
-                    <tbody id="gamelistbody">
-                      
+                    <tbody id="gamelistbody">                
                     </tbody>
                 </table>
-
-                <!--Beispiel Tabelle-->
-                <!-- <table class="tableLobby">
-                  <caption></caption>
-                  <thead>
-                    <tr>
-                      <th>Spielername</th>
-                      <th>Modul</th>
-                      <th>Modus</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Paul</td>
-                      <td>IT-Recht</td>
-                      <td>Supportive</td>
-                    </tr>
-                    <tr>
-                      <td>John</td>
-                      <td>IT-Projektmanagement</td>
-                      <td>CoOp</td>
-                    </tr>
-                    <tr>
-                      <td>Lisa</td>
-                      <td>IT-Irgendwas</td>
-                      <td>Supportive</td>
-                    </tr>
-                    <tr>
-                      <td>Bob</td>
-                      <td>Rechnungswesen</td>
-                      <td>Versus</td>
-                    </tr>
-                  </tbody>
-                </table> -->
-                
               </div>
             </div>
           </div>
@@ -165,3 +101,8 @@
   </div>
 </body>
 </html>
+<?php
+}else{
+  echo "<h1>Du bist nicht angemeldet</h1>";
+}
+?>

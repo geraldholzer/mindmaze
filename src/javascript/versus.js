@@ -44,13 +44,15 @@ let questions = null
 let spielname=null
 let fragenzahl=null
 let kurs=null
+let modus=null
+let opponent=null
 
 async function getlocalstorage(){
     spielname = localStorage.getItem('spielname') //wird zum löschen des spiels gebraucht
     room = localStorage.getItem('gamenameübergabe')
     fragenzahl = localStorage.getItem("fragenzahl");//Auslesen der Fragenzahl
     kurs = localStorage.getItem("kurs");// Auslesen des Kurses
-    console.log("kursinlocalstorage"+spielname)
+    modus = localStorage.getItem("modus");// Auslesen des Kurses   
 }
 
 //Buttons in Array verwalten so kann man foreach schleifen nutzen
@@ -74,7 +76,7 @@ socket.onopen = (event) => {
 async function joingame() {
     await getlocalstorage();
    waitforopponent.classList.remove('d-none')
-    subscribeToRoom(room, fragenzahl, kurs)
+    subscribeToRoom(room, fragenzahl, kurs,modus,benutzername)
     joingamecontainer.classList.add('d-none')
     joinbutton.classList.add('d-none')
     
@@ -192,6 +194,7 @@ function sendinterruptflag() {
     answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
         'Du hast aufgegeben und damit automatisch das Spiel verloren'
     const interruptmessage = JSON.stringify({
@@ -207,6 +210,7 @@ function interruptetbyopponent() {
     answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
         'Dein Gegner hat aufgegeben du hast automatisch gewonnen'
 }
@@ -279,7 +283,7 @@ socket.onmessage = (event) => {
     if (data.type === 'message') {
         if (data.message === 'ready') {
             deletegame()
-            startquiz()
+            opponent=data.opponent
         }
         //Gegner hat das Spiel beendet Gegner Punkte in opponentpoints speichern
     } else if (data.type === 'finish') {
@@ -387,13 +391,15 @@ async function meldungsenden() {
 // }
 
 // Zuweisen des Clients zu einem Raum
-function subscribeToRoom(room, fragenzahl, kurs) {
+function subscribeToRoom(room, fragenzahl, kurs,modus,benutzername) {
     // Subscribe to the room
     const subscribeMessage = JSON.stringify({
         type: 'subscribe',
         room,
         fragenzahl,
         kurs,
+        modus,
+        benutzername
     })
     socket.send(subscribeMessage)
 }
@@ -408,7 +414,7 @@ function deletegame() {
         body: actionstring,
     })
 }
-//############ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#AL
+//############ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT#ALT
 // default questions
 // let questions = [
 //     {

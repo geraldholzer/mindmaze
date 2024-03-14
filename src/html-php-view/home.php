@@ -2,21 +2,12 @@
 <html lang="en">
 
 <head>
+  <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
-    integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
-    integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
-    crossorigin="anonymous"></script>
-
+  <title>Home</title>
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" href="../css/main.css">
 
@@ -124,7 +115,7 @@
             <div class="card-body">
               <h5 class="card-title">Benutzerverwaltung</h5>
               <p class="card-text">Zugriffsrechte anpassen</p>
-              <a href="userManagement.php" class="btn btn-primary">Los!</a>
+              <a href="userManagement.php" class="btn btn-primary btn-custom">Los!</a>
             </div>
           </div>
         </div>';
@@ -136,7 +127,7 @@
           <div class="card-body">
             <h5 class="card-title">Einzelspieler</h5>
             <p class="card-text">Lerne für dich alleine</p>
-            <a href="#" class="btn btn-primary">Los!</a>
+            <a href="#" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -146,7 +137,7 @@
           <div class="card-body">
             <h5 class="card-title">Supportive Mode</h5>
             <p class="card-text">Lerne zusammen mit einem Partner und korrigiert euch gegenseitig</p>
-            <a href="#" class="btn btn-primary">Los!</a>
+            <a href="#" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -156,7 +147,7 @@
           <div class="card-body">
             <h5 class="card-title">Versus</h5>
             <p class="card-text">Trete gegen einen Gegner an und vergleicht euer Wissen in einem Quiz</p>
-            <a href="#" class="btn btn-primary">Los!</a>
+            <a href="#" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -166,7 +157,7 @@
           <div class="card-body">
             <h5 class="card-title">Team</h5>
             <p class="card-text">Testet euer Wissen als Team</p>
-            <a href="#" class="btn btn-primary">Los!</a>
+            <a href="#" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -176,7 +167,7 @@
           <div class="card-body">
             <h5 class="card-title">Profil</h5>
             <p class="card-text">Ändere deine Benutzereinstellungen</p>
-            <a href="#" class="btn btn-primary">Los!</a>
+            <a href="#" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>

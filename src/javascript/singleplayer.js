@@ -34,6 +34,9 @@ const Answerbuttons = [
     AnswerButton4,
 ]
 
+// Accessing BenutzerID from the PHP session
+console.log("BenutzerID from JavaScript file:", BenutzerID);
+
 //Funktion zum holen der verfügbaren kurse und laden in das Dropdownfeld
 function loadKursDropdown() {
     let kursdropdown = document.getElementById('kursliste')

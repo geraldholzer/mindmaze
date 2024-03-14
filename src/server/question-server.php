@@ -117,6 +117,7 @@ $stmt1->execute();
     }
     
     $stmt->close();
+    //Temporäre Tabelle löschen
     $conn->query("DROP TEMPORARY TABLE IF EXISTS temp_fragen");
     $questionsJSON = json_encode($questions);
     

@@ -6,7 +6,7 @@
 
         function navbarReact(aSite){
           <?php 
-          $_SESSION['inGame']=false;
+          // $_SESSION['inGame']=false;
           if ($_SESSION['inGame']==false){
             echo "document.location.href = aSite;";
           }else{
@@ -19,6 +19,11 @@
     <div class="container">
 
 
+    <div class="d-flex align-items-center">
+
+      <a class="navbar-brand" href="#">
+        <img src="../../img/logo.svg" alt="Logo" height="40" class="me-3">
+
       <a class="navbar-brand">IU-Mindmaze</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,10 +35,10 @@
             <a class="nav-link" href="./home.php">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.html">Solo</a>
+            <a class="nav-link" href="./singleplayer.php">Solo</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./lobby.html">Multiplayer</a>
+            <a class="nav-link" href="./lobby.php">Multiplayer</a>
           </li>
           <li class="nav-item dropdown">  
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"

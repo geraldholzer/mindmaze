@@ -67,7 +67,7 @@ h1.heading-modus {
     background-color: #9257DD;
     color: white;
     font-weight: bold;
-    border: none;
+    border: 2px solid #9257DD !important;
     border-radius: 50px;
     padding: 7.5px 100px;
     text-align: center;
@@ -255,4 +255,59 @@ h1.heading-modus {
   background-color: #7749C1;;
   color: #f2f4f7;
   padding: 5px;
+}
+
+.statistikheader {
+  font-size: 2em;
+  text-transform: uppercase;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  font-weight: bold;
+  font-family: "Inter", sans-serif;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+.statistikheader span {
+  background-color: #9257DD;
+  color: #FFFFFF !important;
+  padding: 10px 20px; 
+  border-radius: 20px;
+}
+
+.btn-custom {
+  background-color: #9257DD !important; 
+  border-color: #9257DD !important; 
+}
+
+.progress {
+  height: 30px;
+  margin-bottom: 0;
+}
+
+.progress-bar {
+  background-color: #9257DD;
+  text-align: left;
+  padding-left: 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.last-game-info {
+  font-size: 1.2em; 
+  margin-top: 50px; 
+  margin-bottom: 10px; 
+  color: #333; 
+  font-family: "Inter", sans-serif;
+  line-height: 1.3;
+  text-align: center;
+
+}
+
+.last-game-info span {
+  background-color: #9257DD;
+  color: #FFFFFF;
+  padding: 10px 20px; 
+  border-radius: 20px;
 }
