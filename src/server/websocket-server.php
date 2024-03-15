@@ -9,7 +9,7 @@ use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
         
-//Websocket server class 
+//Websocket server Klasse 
 class MyWebSocketServer implements MessageComponentInterface
 {
     protected $clients;
@@ -25,6 +25,7 @@ class MyWebSocketServer implements MessageComponentInterface
    
 
     }
+
 //Funktion zum holen und ausgeben der Fragen für den Multiplayer 
     private function fragenAusgebenAsync($fragenzahl,$kurs,$modus)
     {
@@ -42,7 +43,7 @@ class MyWebSocketServer implements MessageComponentInterface
             })
             //Nach dem Holen der fragen wird die entsprechende umwandlungsfunktion aufgerufen 
             //die Daten werden in ein assoziatives array gespeichert und in JSON formatiert
-            //Zwei funktionen weil es bei den Freitextfragen anders zu handeln ist
+            //Zwei Funktionen weil es bei den Freitextfragen anders zu handeln ist
             ->then(function ($questions) use ($fragenzahl, $kurs,$modus,$FragentypID) {
                 if (!empty($questions)) {
                     if($FragentypID==1){ 
@@ -62,11 +63,15 @@ class MyWebSocketServer implements MessageComponentInterface
     private function connectToDatabase($kurs)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kurs) {
-            $servername = "localhost";
-            $username = "root";
-            $pw = "";
-            $db = "mindmaze";
-            $conn = new mysqli($servername, $username, $pw, $db);
+        //    //$servername="13.53.246.106";
+            // $servername = "localhost";
+            // $username = "root";
+            // $password = "";
+            // $dbname = "mindmaze";
+            include __DIR__ . "/../html-php-view/dbconnect.php";
+            // include "../html-php-view/dbconnect.php";
+
+            $conn = new mysqli($servername,$username,$password,$dbname);
             if ($conn->connect_error){
                 print_r("fehler verbindung".$conn->connect_error);}
 
@@ -86,12 +91,14 @@ class MyWebSocketServer implements MessageComponentInterface
     private function fetchQuestions($kursID,$fragenzahl,$FragentypID)
     {
         return new \React\Promise\Promise(function ($resolve, $reject) use ($kursID,$fragenzahl,$FragentypID) {
-            $conn = new mysqli("localhost", "root", "", "mindmaze");
+            //$Datenbankverbindung
+            include __DIR__ . "/../html-php-view/dbconnect.php";
+            $conn = new mysqli($servername,$username,$password,$dbname);
     
             $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? AND FragentypID=? ORDER BY RAND() LIMIT ?");
             $stmt1->bind_param("sii", $kursID,$FragentypID,$fragenzahl);
             $stmt1->execute();
-            //Nur wenn es sich um multiplechoice handelt
+            //Nur wenn es sich um multiplechoice handelt wird mit antworten gejoint
             if($FragentypID==1){ 
             $stmt = $conn->prepare("SELECT * FROM temp_fragen JOIN antworten ON temp_fragen.FragenID = antworten.FragenID");
             $stmt->execute();
@@ -240,7 +247,7 @@ return $processedQuestionsJSON;
         // Client zu Raum hinzufügen mit attach Wenn sich 2 Spieler im Raum befinden wird eine ready message gesendet.
         if($this->rooms[$room]->count()<2){
              $this->rooms[$room]->attach($conn);
-             //Ready message dient dazu das Spiel nach dem Eintreffen beider Spieler zu Starten
+             //Ready message dient dazu das Spiel nach dem Eintreffen beider Spieler zu löschen und die namen der Spieler zu übertragen
              if($this->rooms[$room]->count()==2){
                 $questionsPromise = $this->fragenAusgebenAsync($fragenzahl, $kurs,$modus);
                 $questionsPromise->then(function ($questions) use ($room,$benutzername) {
@@ -254,30 +261,29 @@ return $processedQuestionsJSON;
                 });
             }
              }
-        echo "Client {$conn->resourceId} subscribed to room $room\n";
-        
-    
+        echo "Client {$conn->resourceId} subscribed to room $room\n";   
     }
-
+    
+    //Normale Nachricht an alle Teilnehmer ausgeben
     private function handleMessage(ConnectionInterface $from, $room, $message)
     {
-        // Broadcast the message to all clients in the specified room
+        
         $this->broadcastToRoom($room, json_encode(['type' => 'message', 'message' => $message]), $from);
     }
-    
+    // Wird bei einer Interrupt message aufgerufen
     private function handleInterrupt(ConnectionInterface $from, $room)
     {
-        echo "hello from interrupt";
-        // Broadcast the message to all clients in the specified room
+       //Senden einer interuppt message an den gegner 
         $this->broadcastToRoom($room, json_encode(['type' => 'interrupt', 'message' => "interrupt"]), $from);
     }
-
+    // Wird aufgerufen wen ein finishflag eingeht sobald ein Spieler das Spiel normal beendet hat 
     private function handleFinish(ConnectionInterface $from, $room, $message)
     {
+        //Ausgeben der finish nachricht mit den Punkten an den Gegner
         $this->broadcastToRoom($room,  json_encode(['type' => 'finish', 'points' => $message]), $from);
-        
+        //Setzen des finishflag für den User der die Nachricht gesendet hat
         $from->finishflag= true;
-
+        //Abfrage ob finishflag bei allen Spielern gesetzt ist
         $allClientsFinished = true;
         foreach ($this->rooms[$room] as $client) {
             if (!isset($client->finishflag) || !$client->finishflag) {
@@ -302,7 +308,7 @@ return $processedQuestionsJSON;
         }
 
         foreach ($this->rooms[$room] as $client) {
-            // Do not send the message to the sender
+            // Nachricht nicht an den absender schicken außer ready message
            if($message!=="ready"){
              if ($exclude !== $client) {
                 $client->send($message);
@@ -314,7 +320,7 @@ return $processedQuestionsJSON;
 
 }
 
-// Set up the WebSocket Server
+//  WebSocket Server erstellen
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(
@@ -326,7 +332,7 @@ $server = IoServer::factory(
 //Port8081 weil sonst konflikt mit XAMPP
 echo "WebSocket server started at 127.0.0.1:8081\n";
 
-// Start the WebSocket Server
+// Starten des WebSocket Server
 $server->run();
 ?>
 

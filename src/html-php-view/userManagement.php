@@ -25,7 +25,7 @@
 <!--Navbar Anfang-->
 <!-- Sticky top damit navi immer oben bleibt -->
 
-<?php include ("navbar.php"); ?>
+
 
 <body>
     <?php
@@ -34,12 +34,13 @@
         echo "<h3>Du scheinst nicht über die notwendigen Zugriffsrechte zu verfügen!</h3>";
         die();
     }
-
+    include ("navbar.php");
     // Verbinde mit der Datenbank
-    $servername = "localhost";
-    $username = "root";
-    $password = "";
-    $dbname = "mindmaze";
+    // $servername = "localhost";
+    // $username = "root";
+    // $password = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
     $con = new mysqli($servername, $username, $password, $dbname);
     if ($con->connect_error) {
         die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);

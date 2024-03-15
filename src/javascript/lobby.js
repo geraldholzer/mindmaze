@@ -16,6 +16,7 @@ let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let gameserver = '../server/game-server.php' // lokaler gameserver
 //Seite für das erstellen oder beitreten zu einem spiel anzeigen
 joinbutton.addEventListener('click', joingamepage)
+
 //Ausblenden des Spielbeitreten buttons einblenden der Seite mit den Spielen loadGames wird aufgerufen zum laden aus der DB
 function joingamepage() {
     joingamecontainer.classList.remove('d-none')
@@ -84,6 +85,7 @@ function loadModusDropdwon() {
             })
         })
 }
+//Eventlistener für die Sortierfunktionen der Spalten
 document.getElementById("Spielnameheader").addEventListener("click",function(){
     loadGames("spiele.Spielname")
 })
@@ -93,9 +95,10 @@ document.getElementById("Modusheader").addEventListener("click",function(){
 document.getElementById("Modulheader").addEventListener("click",function(){
     loadGames("kurs")
 }
-
 )
+
 //Funktion zum laden der offenen Spiele  aus der Datenbank
+//Parameter order dient zum sortieren der Liste falls dieser undefiniert ist wird nach Spielname sortiert
 function loadGames(order) {
     if(order == undefined){
         order="spiele.Spielname"
@@ -117,7 +120,7 @@ function loadGames(order) {
         .then((response) => response.json())
         .then((data) => {
             gamesarray = data
-            //Für jedes game im gamesarray wird ein button erstellt
+            //Für jedes game im gamesarray wird eine Spalte und ein Button erstellt
             gamesarray.forEach((game) => {
                 let tr = document.createElement('tr')
                 let name = document.createElement('td')
@@ -134,6 +137,8 @@ function loadGames(order) {
                 button.classList.add('btn-outline-primary')
                 button.innerHTML = 'Beitreten'
                 übergabestring = game.name + game.modus + game.kurs
+                //Eventlistener für den jeweiligen button Die übergebenen Parameter werden gebraucht um zum richtigen Spiel -
+                //hinzugefügt zu werden
                 button.addEventListener('click', function () {
                     joingame(
                         übergabestring,
@@ -202,7 +207,8 @@ function deletegame() {
     }).then(loadGames)
 }
 
-//Mit dieser function wird der Benutzer zum entsprechenden raum hinzugefügt mit subsribeToRoom und Warteseite eingeblendet
+//Mit dieser Funktion wird der Benutzer auf die entsprechende Seite weitergeleitet 
+//die Übergabevariablen werden im localstorage gespeichert
 function joingame(übergabestring, modus, spielname, fragenzahl, kurs) {
     localStorage.setItem('gamenameübergabe', übergabestring)
     localStorage.setItem('spielname', spielname)
@@ -215,11 +221,9 @@ function joingame(übergabestring, modus, spielname, fragenzahl, kurs) {
         window.location.href = 'versus.php'
     } else if (modus === 'Supportive') {
         window.location.href = 'supportive.php'
-    } else {
-        alert('ok')
-    }
+    } 
 }
-//Wert auslesen aus dropdownfeld und in Variable speichern
+//Wert auslesen aus dropdownfeld und in Variable speichern 
 document
     .getElementById('spielmodusliste')
     .addEventListener('click', function (event) {

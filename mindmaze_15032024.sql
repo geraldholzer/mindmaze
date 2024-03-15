@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 28. Feb 2024 um 14:46
+-- Erstellungszeit: 15. Mrz 2024 um 00:37
 -- Server-Version: 10.4.32-MariaDB
 -- PHP-Version: 8.2.12
 
@@ -98,7 +98,11 @@ INSERT INTO `antworten` (`AntwortID`, `FragenID`, `Text`, `Korrekt`) VALUES
 (57, 3, 'Fotografie', 0),
 (58, 3, 'Buch', 0),
 (59, 3, 'Logo', 0),
-(60, 3, 'technische Erfindung', 1);
+(60, 3, 'technische Erfindung', 1),
+(61, 17, '5', 0),
+(62, 17, '8', 0),
+(63, 17, '2', 1),
+(64, 17, '1', 0);
 
 -- --------------------------------------------------------
 
@@ -122,7 +126,8 @@ CREATE TABLE `benutzer` (
 
 INSERT INTO `benutzer` (`BenutzerID`, `StudiengangID`, `ZugriffsrechteID`, `Vorname`, `Nachname`, `Email`, `Passwort`) VALUES
 (1, 1, 1, 'Gerald', 'Holzer', 'test@fakemail.com', '1234'),
-(2, 1, 1, 'Tim', 'Schneider', 'Tim@iu-study.org', '$2y$10$k1YtY982FRJ9G4ektHFI.Owgu2bwFgRYYW2qLEqQLeqkORSSDHUMq');
+(2, 1, 1, 'Tim', 'Schneider', 'Tim@iu-study.org', '$2y$10$k1YtY982FRJ9G4ektHFI.Owgu2bwFgRYYW2qLEqQLeqkORSSDHUMq'),
+(4, 1, 1, 'Gerald', 'Holzer', 'gerald.holzer@iu-study.org', '$2y$10$fPLhRfm9ThvxmzkWolz5yuMNgNaNJSMEZo0TfVaKu19oQx7GP/Lfu');
 
 -- --------------------------------------------------------
 
@@ -134,7 +139,7 @@ CREATE TABLE `fragen` (
   `FragenID` int(12) NOT NULL,
   `KursID` int(12) DEFAULT NULL,
   `FragentypID` int(12) DEFAULT NULL,
-  `FrageText` varchar(255) DEFAULT NULL,
+  `FrageText` varchar(1024) DEFAULT NULL,
   `InfoText` varchar(255) DEFAULT NULL,
   `Status` tinyint(1) DEFAULT NULL,
   `Änderungsdatum` date NOT NULL,
@@ -146,21 +151,31 @@ CREATE TABLE `fragen` (
 --
 
 INSERT INTO `fragen` (`FragenID`, `KursID`, `FragentypID`, `FrageText`, `InfoText`, `Status`, `Änderungsdatum`, `MeldeGrund`) VALUES
-(0, 2, 1, 'Wie viele Bücher hat das Bürgerliche Gesetzbuch (BGB)?', 'Nachzulesen im BGB', 1, '2024-02-20', NULL),
-(1, 2, 1, 'Wie viele „Kaufleute“-Begriffe kennt das Handelsgesetzbuch (HGB)?', 'Im HGB nachzulesen', 1, '2024-02-20', NULL),
-(2, 2, 1, 'Ist das Hacking von IT-Systemen immer strafbar?', 'IM STGB nachzulesen', 1, '2024-02-20', NULL),
-(3, 2, 1, 'Was kann nach dem Patentrecht geschützt sein?', 'Details im Patentgesetz', 1, '2024-02-22', NULL),
-(5, 2, 1, 'Wann muss ein Kaufmann einen bei Lieferung sofort erkannten Mangel an einer gelieferten Ware nach dem Gesetz rügen?', 'Nachzulesen im HGB', 1, '2024-02-20', NULL),
-(6, 2, 1, 'Welche der nachfolgend genannten gesetzlichen Vorschriften regelt den Kaufvertrag?', 'Details im BGB', 1, '2024-02-22', NULL),
-(7, 2, 1, 'Welches Recht muss der Käufer bei einem Mangel einer Kaufsache zuerst geltend machen?', 'Details im BGB', 1, '2024-02-22', NULL),
-(8, 2, 1, 'Welche Vertragsart findet auf den Erstellungsvertrag von Software Anwendung?', 'Details im BGB', 1, '2024-02-22', NULL),
-(9, 2, 1, 'Wann muss eine öffentliche Einrichtung das Vergaberecht beachten?', 'Details im BGB', 1, '2024-02-22', NULL),
-(10, 2, 1, 'Wann greift das Kartellrecht ein?', 'Details im BGB', 1, '2024-02-22', NULL),
-(11, 2, 1, 'Was regelt die Lizenz bei der Softwareüberlassung?', 'Details im BGB', 1, '2024-02-22', NULL),
-(12, 2, 1, 'Was sind Allgemeine Geschäftsbedingungen (AGB)?', 'Details im BGB', 1, '2024-02-22', NULL),
-(13, 2, 1, 'Was kann die Folge sein, wenn Allgemeine Geschäftsbedingungen (AGB) nicht lesbar sind?', 'Details im BGB', 1, '2024-02-22', NULL),
+(0, 2, 1, 'Wie viele Bücher hat das Bürgerliche Gesetzbuch (BGB)?', 'Nachzulesen im BGB', 0, '2024-03-04', 'a'),
+(1, 2, 1, 'Wie viele „Kaufleute“-Begriffe kennt das Handelsgesetzbuch (HGB)?', 'Im HGB nachzulesen', 1, '2024-03-04', 'a'),
+(2, 2, 1, 'Ist das Hacking von IT-Systemen immer strafbar?', 'IM STGB nachzulesen', 0, '2024-03-07', 'Testmeldung'),
+(3, 2, 1, 'Was kann nach dem Patentrecht geschützt sein?', 'Details im Patentgesetz', 1, '2024-03-04', ''),
+(5, 2, 1, 'Wann muss ein Kaufmann einen bei Lieferung sofort erkannten Mangel an einer gelieferten Ware nach dem Gesetz rügen?', 'Nachzulesen im HGB', 0, '2024-03-04', 'a'),
+(6, 2, 1, 'Welche der nachfolgend genannten gesetzlichen Vorschriften regelt den Kaufvertrag?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(7, 2, 1, 'Welches Recht muss der Käufer bei einem Mangel einer Kaufsache zuerst geltend machen?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(8, 2, 1, 'Welche Vertragsart findet auf den Erstellungsvertrag von Software Anwendung?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(9, 2, 1, 'Wann muss eine öffentliche Einrichtung das Vergaberecht beachten?', 'Details im BGB', 0, '2024-03-04', 'Testmeldung'),
+(10, 2, 1, 'Wann greift das Kartellrecht ein?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(11, 2, 1, 'Was regelt die Lizenz bei der Softwareüberlassung?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(12, 2, 1, 'Was sind Allgemeine Geschäftsbedingungen (AGB)?', 'Details im BGB', 1, '2024-03-01', 'f'),
+(13, 2, 1, 'Was kann die Folge sein, wenn Allgemeine Geschäftsbedingungen (AGB) nicht lesbar sind?', 'Details im BGB', 1, '2024-03-01', 'f'),
 (14, 2, 1, 'Welcher Anspruch kann zur Durchsetzung von Ansprüchen aus dem Urheberrecht geltend macht werden?', 'Details im BGB', 1, '2024-02-22', NULL),
-(15, 2, 1, 'Was ist der Unterschied zwischen Open Source Software und „normaler“ Software?', 'Details im BGB', 1, '2024-02-22', NULL);
+(15, 2, 1, 'Was ist der Unterschied zwischen Open Source Software und „normaler“ Software?', 'Details im BGB', 1, '2024-03-04', 'a'),
+(17, 3, 1, '1+1', '2', 1, '2024-03-08', NULL),
+(18, 2, 2, 'Diskutiert ob und warum  ein Rechtsanwalt Kaufmann nach dem HGB ist oder nicht.', 'Diskutiert', 1, '0000-00-00', NULL),
+(19, 2, 2, 'Was sollte bei AGB beachtet werden', 'AGB sind wichtig', 1, '2024-03-11', NULL),
+(20, 2, 2, 'Testfrage', 'Test', 1, '2024-02-22', NULL),
+(21, 2, 2, 'Testfrage', 'Testfrage', 0, '0000-00-00', NULL),
+(22, 2, 2, 'Testfrage', 'Testfrage', 1, '2024-03-11', NULL),
+(23, 2, 2, 'Was sollte bei AGB beachtet werden', 'AGB sind wichtig', 1, '2024-03-11', NULL),
+(24, 2, 2, 'Testfrage', 'Test', 1, '2024-02-22', NULL),
+(25, 2, 2, 'Testfrage', 'Testfrage', 1, '0000-00-00', NULL),
+(26, 2, 2, 'Testfrage', 'Testfrage', 1, '2024-03-11', NULL);
 
 --
 -- Trigger `fragen`
@@ -190,7 +205,8 @@ CREATE TABLE `fragentyp` (
 --
 
 INSERT INTO `fragentyp` (`FragentypID`, `Beschreibung`) VALUES
-(1, 'multiplechoice');
+(1, 'multiplechoice'),
+(2, 'Freitext');
 
 -- --------------------------------------------------------
 
@@ -209,7 +225,8 @@ CREATE TABLE `kurse` (
 --
 
 INSERT INTO `kurse` (`KursID`, `BenutzerID`, `Beschreibung`) VALUES
-(2, 1, 'IT-Recht');
+(2, 1, 'IT-Recht'),
+(3, 1, 'Mathematik');
 
 -- --------------------------------------------------------
 
@@ -227,6 +244,13 @@ CREATE TABLE `spiele` (
   `KursID` int(11) DEFAULT NULL,
   `Spielname` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Daten für Tabelle `spiele`
+--
+
+INSERT INTO `spiele` (`SpieleID`, `SpielmodiID`, `BenutzerIDSpieler1`, `BenutzerIDSpieler2`, `SitzungAktiv`, `BenutzerFragen`, `KursID`, `Spielname`) VALUES
+(235, 3, NULL, NULL, NULL, 5, 2, 'test');
 
 -- --------------------------------------------------------
 
@@ -294,7 +318,9 @@ INSERT INTO `statistik` (`BenutzerIDSieger`, `BenutzerIDVerlierer`, `SpielmodiID
 (2, 1, 3, '2024-02-22', 37),
 (2, 1, 1, '2024-02-21', 38),
 (1, 2, 3, '2024-02-20', 39),
-(2, 1, 1, '2024-02-19', 40);
+(2, 1, 1, '2024-02-19', 40),
+(4, 2, 2, '2024-03-12', 41),
+(4, 2, 2, '2024-03-12', 42);
 
 -- --------------------------------------------------------
 
@@ -450,37 +476,37 @@ ALTER TABLE `zugriffsrechte`
 -- AUTO_INCREMENT für Tabelle `antworten`
 --
 ALTER TABLE `antworten`
-  MODIFY `AntwortID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `AntwortID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT für Tabelle `benutzer`
 --
 ALTER TABLE `benutzer`
-  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `BenutzerID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT für Tabelle `fragen`
 --
 ALTER TABLE `fragen`
-  MODIFY `FragenID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `FragenID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT für Tabelle `fragentyp`
 --
 ALTER TABLE `fragentyp`
-  MODIFY `FragentypID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `FragentypID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT für Tabelle `kurse`
 --
 ALTER TABLE `kurse`
-  MODIFY `KursID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `KursID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT für Tabelle `spiele`
 --
 ALTER TABLE `spiele`
-  MODIFY `SpieleID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `SpieleID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=240;
 
 --
 -- AUTO_INCREMENT für Tabelle `spielmodi`
@@ -498,7 +524,7 @@ ALTER TABLE `spielrunden`
 -- AUTO_INCREMENT für Tabelle `statistik`
 --
 ALTER TABLE `statistik`
-  MODIFY `StatistikID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `StatistikID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
 
 --
 -- AUTO_INCREMENT für Tabelle `studiengang`

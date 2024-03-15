@@ -65,7 +65,7 @@ h1.heading-modus {
   
   .button-long {
     background-color: #9257DD;
-    color: white;
+    color: black !important;
     font-weight: bold;
     border: 2px solid #9257DD !important;
     border-radius: 50px;
@@ -73,12 +73,19 @@ h1.heading-modus {
     text-align: center;
     cursor: pointer;
     transition: 0.3s;
+  
   }
   
   .button-long:hover {
-    background-color: #7749C1;
+    background-color: #7749C1 !important;
+    color: white !important;
   }
   
+  .meldegrund {
+    border: 2px solid #7749C1;
+    text-align: center;
+  }
+
   .button-short {
     background-color: #9257DD;
     color: white;
@@ -311,3 +318,69 @@ h1.heading-modus {
   padding: 10px 20px; 
   border-radius: 20px;
 }
+
+
+#Meldecontainer {
+  text-align: center;
+}
+
+#Meldungabsendenbutton,
+#Meldungabbrechenbutton {
+  display: inline-block;
+  margin: 10px;
+}
+
+#question {
+  padding-bottom: 20px;
+}
+
+#BeendenButton {
+  display: block !important;  
+  margin-top: 20px !important; 
+  margin-right: 10px !important;
+}
+
+.answercontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.btn {
+  height: auto; 
+  min-height: 38px; 
+  line-height: 1.5;
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  margin: 5px; 
+}
+
+#explanationcontainer {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+}
+
+#explanation {
+  font-family: "Inter", sans-serif;
+  font-size: 1.5em;
+  text-align: center; 
+}
+
+#start {
+  background-color: #9257DD ;
+  color: white !important;
+}
+
+#anmelden {
+  color: white !important;
+}
+
+#registrieren {
+  color: white !important;
+  margin-top: 10px;
+}
+
+
+

@@ -40,7 +40,7 @@
       <div class="col-6">
         
         <!--Register Formular!-->
-        <button onclick="showSection('frmRegister')" class="button-long col-12 mt-3">Jetzt Registrieren</button>
+        <button onclick="showSection('frmRegister')" class="button-long col-12 mt-3" id="registrieren">Jetzt Registrieren</button>
         <br>
         <form class="hidden mb-3" id="frmRegister" action="register.php" method="post">
           <div class="row justify-content-center">
@@ -66,10 +66,11 @@
                 <select id="selectStudiengang" name="selectStudiengang">
                   <?php
                   // Einrichten der Datenbankverbindung
-                  $servername = "localhost";
-                  $username = "root";
-                  $password = "";
-                  $dbname = "mindmaze";
+                  // $servername = "localhost";
+                  // $username = "root";
+                  // $password = "";
+                  // $dbname = "mindmaze";
+                  include "../html-php-view/dbconnect.php";
                   $con = new mysqli($servername, $username, $password, $dbname);
                   if ($con->connect_error) {
                       die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);

@@ -27,7 +27,7 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-6">
-        <button onclick="showSection('frmLogin')" class="button-long col-12 mt-3">Anmelden</button>
+        <button onclick="showSection('frmLogin')" class="button-long col-12 mt-3" id="anmelden">Anmelden</button>
 
         <!--Login Formular!-->
         <form class="hidden mb-3" id="frmLogin" action="src\html-php-view\home.php" method="post">
