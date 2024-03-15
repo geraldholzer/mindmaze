@@ -1,6 +1,6 @@
 
-
-            <?php
+<?php
+            
             //Einrichten der Datenbankverbindung
             // $servername = "localhost";                                                                      //Server der Datenbank
             // $username = "root";                                                                             //Benutzer der Datenbank

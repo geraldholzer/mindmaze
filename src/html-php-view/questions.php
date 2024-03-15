@@ -38,85 +38,111 @@
 
 <body>
   <!-- Einbinden der PHP-Seite für die Navbar -->
-  <?php session_start();?>
-  <?php include ("navbar.php");?>
+  <?php session_start(); ?>
+  <?php include("navbar.php"); ?>
 
   <?php
-    //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
-    function getStudiengang(){
-      // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      // $servername = "localhost";
-      // $username = "root";
-      // $dbpassword = "";
-      // $dbname = "mindmaze";
-      include "../html-php-view/dbconnect.php";
-      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
+  function getStudiengang()
+  {
+    // Verbindung zur Datenbank herstellen und Abfrage ausführen
+    // $servername = "localhost";
+    // $username = "root";
+    // $dbpassword = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+    try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Durchführen der SQL Abfrage
-        $stmt = $conn->query("SELECT * FROM studiengang");
+      // Durchführen der SQL Abfrage
+      $stmt = $conn->query("SELECT * FROM studiengang");
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
-        }
-      } catch(PDOException $e) {
-        echo "Fehler: " . $e->getMessage();
-      }    
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+      }
+    } catch (PDOException $e) {
+      echo "Fehler: " . $e->getMessage();
     }
+  }
 
-    //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
-    function getKurse(){
-      // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      // $servername = "localhost";
-      // $username = "root";
-      // $dbpassword = "";
-      // $dbname = "mindmaze";
-      include "../html-php-view/dbconnect.php";
-      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);  
+  function getFragentyp()
+  {
+    // Verbindung zur Datenbank herstellen und Abfrage ausführen
+    // $servername = "localhost";
+    // $username = "root";
+    // $dbpassword = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+    try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $UserID = $_SESSION['BenutzerID']; 
-        // Durchführen der SQL Abfrage
-        $stmt = $conn->prepare("SELECT * FROM kurse WHERE BenutzerID = :benID");
-        $stmt->bindParam(':benID', $UserID);
-        $stmt->execute();
+      // Durchführen der SQL Abfrage
+      $stmt = $conn->query("SELECT * FROM fragentyp");
 
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-          echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
-        }
-      } catch(PDOException $e) {
-        echo "Fehler: " . $e->getMessage();
-      }    
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row["FragentypID"] . "'>" . $row["Beschreibung"] . "</option>";
+      }
+    } catch (PDOException $e) {
+      echo "Fehler: " . $e->getMessage();
     }
+  }
 
-    //lädt die Fragen + Antworten eines Studiengangs aus der DB und erzeugt eine Tabelle
-    function getQuestionTable(){
-      // Verbindung zur Datenbank herstellen und Abfrage ausführen
-      // $servername = "localhost";
-      // $username = "root";
-      // $dbpassword = "";
-      // $dbname = "mindmaze";
-      include "../html-php-view/dbconnect.php";
-      try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);              
-        
-        $kursID = 1;
-        // Durchführen der SQL Abfrage
-        $stmt = $conn->prepare("SELECT fragen.* FROM fragen LEFT JOIN antworten ON fragen.FragenID = antworten.FragenID
+  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
+  function getKurse()
+  {
+    // Verbindung zur Datenbank herstellen und Abfrage ausführen
+    // $servername = "localhost";
+    // $username = "root";
+    // $dbpassword = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+    try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      $UserID = $_SESSION['BenutzerID'];
+      // Durchführen der SQL Abfrage
+      $stmt = $conn->prepare("SELECT * FROM kurse WHERE BenutzerID = :benID");
+      $stmt->bindParam(':benID', $UserID);
+      $stmt->execute();
+
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
+      }
+    } catch (PDOException $e) {
+      echo "Fehler: " . $e->getMessage();
+    }
+  }
+
+  //lädt die Fragen + Antworten eines Studiengangs aus der DB und erzeugt eine Tabelle
+  function getQuestionTable()
+  {
+    // Verbindung zur Datenbank herstellen und Abfrage ausführen
+    // $servername = "localhost";
+    // $username = "root";
+    // $dbpassword = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+    try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      $kursID = 1;
+      // Durchführen der SQL Abfrage
+      $stmt = $conn->prepare("SELECT fragen.* FROM fragen LEFT JOIN antworten ON fragen.FragenID = antworten.FragenID
                                                             WHERE fragen.KursID = :kurs");
-        $stmt->bindParam(':kurs', $kursID);
-        $stmt->execute();
-        
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)){
-        
-        }
-      } catch(PDOException $e) {
-        echo "Fehler: " . $e->getMessage();
-      }              
+      $stmt->bindParam(':kurs', $kursID);
+      $stmt->execute();
+
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+
+      }
+    } catch (PDOException $e) {
+      echo "Fehler: " . $e->getMessage();
     }
+  }
   ?>
 
   <!--Einklappbarer Bereich-->
@@ -125,14 +151,15 @@
     <div class="card">
       <div class="card-header" id="Question_Submit">
         <h5 class="mb-0">
-          <button class="button-short" type="button" data-toggle="collapse"
-            data-target="#collapseQuestionSubmit" aria-expanded="true" aria-controls="collapseQuestionSubmit">
+          <button class="button-short" type="button" data-toggle="collapse" data-target="#collapseQuestionSubmit"
+            aria-expanded="true" aria-controls="collapseQuestionSubmit">
             Frage einreichen
           </button>
         </h5>
       </div>
 
-      <div id="collapseQuestionSubmit" class="collapse show" aria-labelledby="Frage einreichen" data-parent="#Questions">
+      <div id="collapseQuestionSubmit" class="collapse show" aria-labelledby="Frage einreichen"
+        data-parent="#Questions">
         <div class="card-body">
           <div class="row">
             <form id=submitQuestion method="post">
@@ -140,19 +167,22 @@
                 <label for="selectStudiengang">Studiengang</label>
                 <select id="selectStudiengang" name="selectStudiengang">
                   <?php
-                    getStudiengang();
+                  getStudiengang();
                   ?>
                 </select>
               </div>
               <div class="form-group">
                 <label for="question">Frage:</label>
                 <textarea id="question" name="question" rows="4" cols="80"></textarea>
-              </div>  
+              </div>
               <div class="form-group">
-                <label for="answertype">Antwortart:</label>   
+                <label for="answertype">Antwortart:</label>
+
+                <!-- BAUSTELLE: Hier die DB abfragen !-->
                 <select id="answertype" name="answertype">
-                  <option value="freetext">Freitext</option>
-                  <option value="multiplechoice">Multiple Choice</option>
+                  <?php getFragentyp() ?>
+
+
                 </select>
               </div>
               <div class="form-group">
@@ -160,17 +190,18 @@
                   <div class="form-group">
                     <label for="answer">Antwort:</label>
                     <textarea id="answer" name="answer" rows="4" cols="80"></textarea>
-                  </div>                
+                  </div>
                 </div>
-              </div>  
+              </div>
               <div class="form-group">
                 <label for="hint">Hinweis:</label>
-                <textarea id="hint" name="hint" rows="4" cols="80"></textarea>               
-              </div>              
+                <textarea id="hint" name="hint" rows="4" cols="80"></textarea>
+              </div>
               <div class="form-group">
-                <input class="mt-3 button-short" type="submit" value="Absenden">
-              </div>  
-            </form>  
+                <!-- SH: ButtonType entfernt und ID hinzugefügt!-->
+                <input class="mt-3 button-short" id="submitBtn" value="Absenden">
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -193,13 +224,13 @@
                   <form id=QuestionAcceptForm>
                     <div class="form-group">
                       <label for="selectKurs">Kurs</label>
-                      <select id="selectKurs" name="selectKurs">';                       
-                        echo getKurse();                      
-      echo           '</select>
+                      <select id="selectKurs" name="selectKurs">';
+      echo getKurse();
+      echo '</select>
                     </div>
                     <div class="form-group">';
-                      echo getQuestionTable(); 
-      echo         '</div>
+      echo getQuestionTable();
+      echo '</div>
                   </form>
                 </div>
               </div>
@@ -208,20 +239,61 @@
     ?>
   </div>
 
+  <!-- SH: Nachfolgendes Skript hinzugefügt, um Daten in die Datenbank zu schicken !-->
   <script>
-    document.getElementById('answertype').addEventListener('change', function() {
-      var auswahl = this.value;
+    document.getElementById('submitBtn').addEventListener('click', function () {
+      // Daten sammeln
+      var modul = document.getElementById('selectStudiengang').value;
+      var frage = document.getElementById('question').value;
+      var infotext = document.getElementById('hint').value;
+      var antwort = document.getElementById('answer').value;
+      var fragentyp = document.getElementById('answertype').value;
+
+      // Daten vorbereiten
+      var data = new FormData();
+      data.append('modul', modul);
+      data.append('frage', frage);
+      data.append('antwort', antwort);
+      data.append('infotext', infotext);
+      data.append('fragentyp', fragentyp);
+
+      // Anfrage senden
+      fetch('../server/uploadQuestion.php', {
+        method: 'POST',
+        body: data
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Fehler beim Senden der Daten.');
+          }
+          return response.text();
+        })
+        .then(data => {
+          // Erfolgsmeldung anzeigen oder weitere Aktionen ausführen
+          console.log('Daten erfolgreich eingereicht:', data);
+          // Hier kannst du weitere Aktionen ausführen, z.B. eine Erfolgsmeldung anzeigen
+        })
+        .catch(error => {
+          console.error('Fehler:', error);
+          // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+        });
+      document.getElementById("textQuestion").value = "";
+    });
+  </script>
+  <script>
+    document.getElementById('answertype').addEventListener('change', function () {
+      var auswahl = event.target.value;
       var answerfieldsDiv = document.getElementById('answerfields');
-      
+
       // Leere das Div, um vorherige Felder zu entfernen
       answerfieldsDiv.innerHTML = '';
-      
-      if (auswahl === 'freetext') {
+
+      if (auswahl === '2') {
         answerfieldsDiv.innerHTML = `<div class="form-group">
                                       <label for="answer">Antwort:</label>
                                       <textarea id="answer" name="answer" rows="4" cols="80"></textarea>
                                     </div>`;
-      } else if (auswahl === 'multiplechoice') {
+      } else if (auswahl === '1') {
         answerfieldsDiv.innerHTML = ` <div class="form-group">
                                         <label for="A">A:</label>
                                         <textarea id="A" name="A" rows="1" cols="60"></textarea>
@@ -241,9 +313,14 @@
       }
     });
 
-    function getStudiengangfromField(){
+    function getStudiengangfromField() {
 
     }
   </script>
+  
+  <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
+  <script> document.getElementById('answertype').dispatchEvent(new Event('change')); </script>
+
 </body>
-</html> 
+
+</html>
