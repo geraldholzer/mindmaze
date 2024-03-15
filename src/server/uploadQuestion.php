@@ -18,12 +18,17 @@ $modul = $_POST['modul'];
 $frage = $_POST['frage'];
 $status = 0;
 $infotext = $_POST['infotext'];
+$fragentyp = $_POST['fragentyp'];
 
 // SQL-Statement vorbereiten und ausführen
-$sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText) VALUES ('$modul', '$frage', '$status', '$infotext')";
+$sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID) VALUES ('$modul', '$frage', '$status', '$infotext', '$fragentyp')";
 
 if ($con->query($sql) === TRUE) {
-    echo "Die Frage wurde erfolgreich eingereicht.";
+    $fragenID = $con->insert_id;
+    $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', 'testing')";
+    $con->query($sql);
+
+
 } else {
     echo "Fehler beim Einfügen der Frage in die Datenbank: " . $con->error;
 }

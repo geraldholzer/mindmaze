@@ -10,6 +10,8 @@
   <script src="node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <link rel="stylesheet" type="text/css" href="src/css/style.css">
   <link rel="stylesheet" href="src/css/main.css">
+  <script src="src/javascript/index.js"></script>
+
 
 </head>
 
@@ -63,6 +65,8 @@
     </div>
   </div>
 
+
+  <!--
   <script>
     function showSection(sectionID) {
       if (document.getElementById(sectionID).style.display == "block") {
@@ -72,6 +76,7 @@
       }
     }
   </script>
+  !-->
 
 </body>
 
