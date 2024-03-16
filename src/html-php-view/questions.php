@@ -78,7 +78,7 @@ if (!(isset($_SESSION["Email"]))) {
         
         $UserID = $_SESSION['BenutzerID'];
         // Durchführen der SQL Abfrage
-        $stmt = $conn->prepare("SELECT studiengang.StudiengangID AS Studiengang, studiengang.Beschreibung AS Beschreibung 
+        $stmt = $conn->prepare("SELECT DISTINCT studiengang.StudiengangID AS Studiengang, studiengang.Beschreibung AS Beschreibung 
                                 FROM kurse
                                 INNER JOIN studiengangKurse ON kurse.KursID = studiengangKurse.KursID
                                 INNER JOIN studiengang      ON studiengangKurse.StudiengangID = studiengang.StudiengangID
