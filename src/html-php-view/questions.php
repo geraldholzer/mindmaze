@@ -43,7 +43,7 @@
 
   <?php
   //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
-  function getStudiengang()
+  function getStudiengangByUser()
   {
     // Verbindung zur Datenbank herstellen und Abfrage ausführen
     // $servername = "localhost";
@@ -55,11 +55,33 @@
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-      // Durchführen der SQL Abfrage
-      $stmt = $conn->query("SELECT * FROM studiengang");
+      //Normaler User darf nur seinen eigenen Studiengang sehen
+      if ($_SESSION['ZugriffsrechteID'] == 1){ 
+        $studiengangIDUser = $_SESSION['StudiengangID'];
+        // Durchführen der SQL Abfrage
+        $stmt = $conn->prepare("SELECT * FROM studiengang WHERE StudiengangID = :studiengangID");
+        $stmt->bindParam(':studiengangID', $studiengangIDUser);
+        $stmt->execute();
 
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+        }
+      // Tutor darf alle Studiengänge sehen, bei denen er in mindestens einem Kurs als Zuständiger Benutzer eingetragen ist
+      } else if ($_SESSION['ZugriffsrechteID'] == 2){ 
+        
+        $UserID = $_SESSION['BenutzerID'];
+        // Durchführen der SQL Abfrage
+        $stmt = $conn->prepare("SELECT studiengang.StudiengangID AS Studiengang, studiengang.Beschreibung AS Beschreibung 
+                                FROM kurse
+                                INNER JOIN studiengangKurse ON kurse.KursID = studiengangKurse.KursID
+                                INNER JOIN studiengang      ON studiengangKurse.StudiengangID = studiengang.StudiengangID
+                                WHERE kurse.BenutzerID = :benID");
+        $stmt->bindParam(':benID', $UserID);
+        $stmt->execute();    
+        
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          echo "<option value='" . $row["Studiengang"] . "'>" . $row["Beschreibung"] . "</option>";
+        }
       }
     } catch (PDOException $e) {
       echo "Fehler: " . $e->getMessage();
@@ -83,6 +105,34 @@
 
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<option value='" . $row["FragentypID"] . "'>" . $row["Beschreibung"] . "</option>";
+      }
+    } catch (PDOException $e) {
+      echo "Fehler: " . $e->getMessage();
+    }
+  }
+
+  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
+  function getQuestionSubmitKurse($studiengang)
+  {
+    // Verbindung zur Datenbank herstellen und Abfrage ausführen
+    // $servername = "localhost";
+    // $username = "root";
+    // $dbpassword = "";
+    // $dbname = "mindmaze";
+    include "../html-php-view/dbconnect.php";
+    try {
+      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+      // Durchführen der SQL Abfrage
+      $stmt = $conn->prepare("SELECT kurse.KursID AS KursID, kurse.Beschreibung AS Beschreibung FROM kurse 
+                                       LEFT JOIN studiengangkurse ON kurse.KursID = studiengangkurse.KursID
+                                       WHERE studiengangkurse.StudiengangID = :studiengangID");
+      $stmt->bindParam(':studiengangID', $studiengang);
+      $stmt->execute();
+
+      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
       }
     } catch (PDOException $e) {
       echo "Fehler: " . $e->getMessage();
@@ -166,7 +216,13 @@
               <div class="form-group">
                 <label for="selectStudiengang">Studiengang</label>
                 <select id="selectStudiengang" name="selectStudiengang">
-                  <?php getStudiengang(); ?>
+                  <?php getStudiengangByUser(); ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="questionSubmitKurse">Kurs</label>
+                <select id="questionSubmitKurse" name="questionSubmitKurse">
+                <!-- AG: wird im Change befüllt) -->
                 </select>
               </div>
               <div class="form-group">
@@ -175,12 +231,8 @@
               </div>
               <div class="form-group">
                 <label for="answertype">Antwortart:</label>
-
-                <!-- BAUSTELLE: Hier die DB abfragen !-->
                 <select id="answertype" name="answertype">
                   <?php getFragentyp() ?>
-
-
                 </select>
               </div>
               <div class="form-group">
@@ -200,13 +252,15 @@
                 <input class="mt-3 button-short" id="submitBtn" value="Absenden">
               </div>
             </form>
+            <!-- AG: Zu Beginn nicht sichtbares Textfeld, welches beim erfolgreichen absenden aktiviert wird-->
+            <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit</p>
           </div>
         </div>
       </div>
     </div>
 
     <!--"Frage freigeben"-->
-    <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
+    <?php if ($_SESSION['ZugriffsrechteID'] == 2) {
       echo '<div class="card">
               <div class="card-header" id="Question_Accept">
                 <h5 class="mb-0">
@@ -240,6 +294,9 @@
   <!-- SH: Nachfolgendes Skript hinzugefügt, um Daten in die Datenbank zu schicken !-->
   <script>
     document.getElementById('submitBtn').addEventListener('click', function () {
+      //Meldungen alle deaktivieren
+      document.getElementById("submitMessage").style.display = "none";
+
       // Daten sammeln
       var modul = document.getElementById('selectStudiengang').value;
       var frage = document.getElementById('question').value;
@@ -275,7 +332,28 @@
         .then(data => {
           // Erfolgsmeldung anzeigen oder weitere Aktionen ausführen
           console.log('Daten erfolgreich eingereicht:', data);
-          // Hier kannst du weitere Aktionen ausführen, z.B. eine Erfolgsmeldung anzeigen
+
+          // AG: Hier wird auf die Antwort reagiert
+          if (data.trim() === "true") {
+            //Aktion, wenn die Frage korrekt eingereicht wurde
+            //Alle Eingaben wieder leeren
+            document.getElementById("question").reset();
+            document.getElementById("answertype").value = "1";
+            document.getElementById("answer").reset();
+            document.getElementById("hint").reset();
+            document.getElementById("answerA").reset();
+            document.getElementById("answerB").reset();
+            document.getElementById("answerC").reset();
+            document.getElementById("answerD").reset();
+            document.getElementById("correctAnswer").value = "correctAnswerA";
+
+            //Meldung für erfolgreiches einreichen anzeigen
+            document.getElementById("submitMessage").style.display = "block";
+          }
+          //Fehler beim Schreiben in die Datenbank
+          else if (data.trim() === "false") {
+            //ToDo: Eventuell Fehlermeldung anzeigen
+          }
         })
         .catch(error => {
           console.error('Fehler:', error);
@@ -284,6 +362,7 @@
       document.getElementById("textQuestion").value = "";
     });
   </script>
+
   <script>
     document.getElementById('answertype').addEventListener('change', function () {
       var auswahl = event.target.value;
@@ -313,17 +392,41 @@
                                       <div class="form-group">
                                         <label for="D">D:</label>
                                         <textarea id="D" name="D" rows="1" cols="60"></textarea>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="correctAnswer">Korrekte Antwort:</label>
+                                        <select id="correctAnswer" name="correctAnswer"> 
+                                          <option value='correctAnswerA'>A</option>"
+                                          <option value='correctAnswerB'>B</option>"
+                                          <option value='correctAnswerC'>C</option>"
+                                          <option value='correctAnswerD'>D</option>"
+                                        </select> 
                                       </div>`;
       }
-    });
+    }); 
+  </script>
 
-    function getStudiengangfromField() {
+  <script>
+    //Wenn sich der Studiengang ändern, müssen die Kurse aktualisiert werden
+    document.getElementById('selectStudiengang').addEventListener('change', function () {
+      var auswahl = event.target.value;
+      var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
+      // Leere das Div, um vorherige Felder zu entfernen
+      questionSubmitKurseDiv.innerHTML = '';
 
-    }
+      // Einbetten des PHP-Codes in JavaScript
+      var phpCode = "<?php echo getQuestionSubmitKurse('PLACEHOLDER'); ?>";
+      // Ersetze den Platzhalter durch die ausgewählte Option
+      phpCode = phpCode.replace('PLACEHOLDER', auswahl);
+      // Füge den PHP-Code dem Div hinzu
+      questionSubmitKurseDiv.innerHTML = phpCode;
+    }); 
   </script>
 
   <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
   <script> document.getElementById('answertype').dispatchEvent(new Event('change')); </script>
+
+  <script> document.getElementById('selectStudiengang').dispatchEvent(new Event('change')); </script>
 
 </body>
 

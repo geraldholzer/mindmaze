@@ -21,6 +21,9 @@ $status = 0;
 $infotext = $_POST['infotext'];
 $fragentyp = $_POST['fragentyp'];
 
+//AG: Transaktion starten, da mehrere DB-Änderungen gemacht werden
+$con->begin_transaction();
+
 // SQL-Statement vorbereiten und ausführen
 $sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID) VALUES ('$modul', '$frage', '$status', '$infotext', '$fragentyp')";
 
@@ -44,10 +47,14 @@ if ($con->query($sql) === TRUE) {
         $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$antwort')";
         $con->query($sql);
     }
+} else {
+    echo "Fehler beim Einfügen der Frage in die Datenbank: " . $con->error;
+}
 
-
-
-
+// Commit Transaktion und darauf reagieren
+if ($con->commit()) {
+    //Abhängig vom Ergebnis wird Meldung angezeigt, dass erfolgreich gespeichert wurde
+    echo "true";
 } else {
     echo "Fehler beim Einfügen der Frage in die Datenbank: " . $con->error;
 }
