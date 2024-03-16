@@ -166,9 +166,7 @@
               <div class="form-group">
                 <label for="selectStudiengang">Studiengang</label>
                 <select id="selectStudiengang" name="selectStudiengang">
-                  <?php
-                  getStudiengang();
-                  ?>
+                  <?php getStudiengang(); ?>
                 </select>
               </div>
               <div class="form-group">
@@ -246,16 +244,22 @@
       var modul = document.getElementById('selectStudiengang').value;
       var frage = document.getElementById('question').value;
       var infotext = document.getElementById('hint').value;
-      var antwort = document.getElementById('answer').value;
       var fragentyp = document.getElementById('answertype').value;
 
       // Daten vorbereiten
       var data = new FormData();
       data.append('modul', modul);
       data.append('frage', frage);
-      data.append('antwort', antwort);
       data.append('infotext', infotext);
       data.append('fragentyp', fragentyp);
+      if(document.getElementById('answertype').value === '1'){
+        data.append('A', document.getElementById("A").value);
+        data.append('B', document.getElementById("B").value);
+        data.append('C', document.getElementById("C").value);
+        data.append('D', document.getElementById("D").value);
+      }else{
+        data.append('antwort',document.getElementById('answer').value);
+      }
 
       // Anfrage senden
       fetch('../server/uploadQuestion.php', {
@@ -317,7 +321,7 @@
 
     }
   </script>
-  
+
   <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
   <script> document.getElementById('answertype').dispatchEvent(new Event('change')); </script>
 

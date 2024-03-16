@@ -26,8 +26,26 @@ $sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID) VA
 
 if ($con->query($sql) === TRUE) {
     $fragenID = $con->insert_id;
-    $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', 'testing')";
-    $con->query($sql);
+    if($fragentyp === '1'){
+        $A = $_POST['A'];
+        $B = $_POST['B'];
+        $C = $_POST['C'];
+        $D = $_POST['D'];
+        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$A')";
+        $con->query($sql);
+        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$B')";
+        $con->query($sql);
+        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$C')";
+        $con->query($sql);
+        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$D')";
+        $con->query($sql);
+    }else{
+        $antwort = $_POST['antwort'];
+        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$antwort')";
+        $con->query($sql);
+    }
+
+
 
 
 } else {
