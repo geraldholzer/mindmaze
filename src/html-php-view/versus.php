@@ -116,7 +116,7 @@ if(isset($_SESSION['BenutzerID'])) {
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" id="Beenden">Spiel beenden</button>
+                        <button type="button" class="btn btn-primary"   data-bs-dismiss="modal" id="Beendenmodal">Spiel beenden</button>
                       </div>
                     </div>
                   </div>

@@ -11,6 +11,7 @@ let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
 let AnswerButton4 = document.getElementById('Answer4') //Antwortbutton4
 let NextButton = document.getElementById('Next') //Nextbutton
 let BeendenButton = document.getElementById('Beenden') //Beendenbutton
+let BeendenButtonmodal = document.getElementById('Beendenmodal') //Beendenbutton im modal
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
 let answercontainer = document.getElementById('answercontainer') //COntainer (div) in dem sich die answerbuttons befinden
@@ -75,7 +76,7 @@ const Answerbuttons = [
 ]
 
 //Eventlistener für Beendenbutton
-BeendenButton.addEventListener('click', sendinterruptflag)
+BeendenButtonmodal.addEventListener('click', sendinterruptflag)
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton
