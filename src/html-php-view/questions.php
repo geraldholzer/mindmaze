@@ -36,9 +36,16 @@
   }
 </style>
 
+<?php
+session_start();
+if (!(isset($_SESSION["Email"]))) {
+  die("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>"); //Ausgeben einer Fehlermeldung
+}
+?>
+
 <body>
   <!-- Einbinden der PHP-Seite für die Navbar -->
-  <?php session_start(); ?>
+
   <?php include("navbar.php"); ?>
 
   <?php
@@ -309,13 +316,13 @@
       data.append('frage', frage);
       data.append('infotext', infotext);
       data.append('fragentyp', fragentyp);
-      if(document.getElementById('answertype').value === '1'){
+      if (document.getElementById('answertype').value === '1') {
         data.append('A', document.getElementById("A").value);
         data.append('B', document.getElementById("B").value);
         data.append('C', document.getElementById("C").value);
         data.append('D', document.getElementById("D").value);
-      }else{
-        data.append('antwort',document.getElementById('answer').value);
+      } else {
+        data.append('antwort', document.getElementById('answer').value);
       }
 
       // Anfrage senden
