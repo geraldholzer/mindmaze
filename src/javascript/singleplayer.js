@@ -38,12 +38,12 @@ const Answerbuttons = [
 console.log("BenutzerID from JavaScript file:", BenutzerID);
 
 //Funktion zum holen der verfügbaren kurse und laden in das Dropdownfeld
-function loadKursDropdown() {
+async function loadKursDropdown() {
     let kursdropdown = document.getElementById('kursliste')
     while (kursdropdown.firstChild) {
         kursdropdown.removeChild(kursdropdown.lastChild)
     }
-    fetch(gameserver, {
+  await  fetch(gameserver, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -72,7 +72,8 @@ loadKursDropdown()
 //Wert auslesen aus dropdownfeld und in Variable speichern
 document
     .getElementById('kursliste')
-    .addEventListener('click', function (event) {
+    .addEventListener('click', async function (event) {
+       await loadKursDropdown()
         if (event.target.classList.contains('dropdown-item')) {
             var selectedValue = event.target.textContent.trim() // Wert des ausgewählten Elements
             document.getElementById('kursDropdownButton').innerHTML =
@@ -193,6 +194,7 @@ function finish() {
     Question.classList.add('d-none')
     answercontainer.classList.add('d-none')
     answercontainer.classList.add('d-none')
+    meldebutton.classList.add('d-none')
     resultpage.classList.remove('d-none')
     resuttext.innerHTML =
         'Du hast ' +
