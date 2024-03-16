@@ -73,16 +73,17 @@ function loadModusDropdwon() {
         .then((response) => response.json())
         .then((data) => {
             data.forEach((modus) => {
+                if(modus!="Einzelspieler"){
                 var li = document.createElement('li')
                 var a = document.createElement('a')
                 a.setAttribute('class', 'dropdown-item')
                 a.setAttribute('href', '#')
-                a.textContent = modus
-
+                    a.textContent = modus
+               
                 // Link zum Listenelement hinzufügen
                 li.appendChild(a)
                 modusdropdown.appendChild(li)
-            })
+             }})
         })
 }
 //Eventlistener für die Sortierfunktionen der Spalten

@@ -82,7 +82,8 @@ function fragenAusgeben($conn,$fragenzahl,$kursID) {
 
 // Zufällig 5 Fragen aus der Datenbank laden und in eine temporäre Tabelle einfügen
 
-$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? ORDER BY RAND() LIMIT ?");
+//$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? AND FragentypID=1 ORDER BY RAND() LIMIT ?");
+$stmt1 =$conn->prepare ("CREATE TEMPORARY TABLE temp_fragen AS SELECT fragen.FragenID,fragen.KursID,fragen.FrageText,fragen.InfoText,fragen.Status,fragen.MeldeGrund FROM fragen WHERE fragen.KursID=? AND FragentypID=1 ORDER BY RAND() LIMIT ?");
 $stmt1->bind_param("is",$kursID,$fragenzahl);
 $stmt1->execute();
 

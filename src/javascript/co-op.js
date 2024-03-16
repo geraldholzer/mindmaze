@@ -11,6 +11,7 @@ let AnswerButton3 = document.getElementById('Answer3') //Antwortbutton3
 let AnswerButton4 = document.getElementById('Answer4') //Antwortbutton4
 let NextButton = document.getElementById('Next') //Nextbutton
 let BeendenButton = document.getElementById('Beenden') //Beendenbutton
+let BeendenButtonmodal = document.getElementById('Beendenmodal') //Beendenbutton im modal
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
 let answercontainer = document.getElementById('answercontainer') //COntainer (div) in dem sich die answerbuttons befinden
@@ -33,7 +34,7 @@ let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für 
 let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver = '../server/question-server.php' // lokaler question server
-//let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
+//let websocketserver="ws://13.53.246.106:8081" //websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let spielname=null//wird zum löschen des spiels gebraucht
 let fragenzahl=null//Auslesen der Fragenzahl
@@ -75,7 +76,7 @@ const Answerbuttons = [
 ]
 
 //Eventlistener für Beendenbutton
-BeendenButton.addEventListener('click', sendinterruptflag)
+BeendenButtonmodal.addEventListener('click', sendinterruptflag)
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton

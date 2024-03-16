@@ -6,6 +6,7 @@ let meldungabbrechenbutton = document.getElementById('Meldungabbrechenbutton')
 let questioncounter = 0 //zähler für die aktuelle Frage
 let NextButton = document.getElementById('Next') //Nextbutton
 let BeendenButton = document.getElementById('Beenden') //Beendenbutton
+let BeendenButtonmodal = document.getElementById('Beendenmodal') //Beendenbutton im modal
 let Question = document.getElementById('question') //Frage text
 let StartButton = document.getElementById('Start') //Startbutton
 let resultpage = document.getElementById('result') //wird eingeblendet am schluss als ergebnis
@@ -30,7 +31,7 @@ let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für 
 let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver = '../server/question-server.php' // lokaler question server
-//let websocketserver="ws://13.53.246.106:8081"//websocket server auf aws server
+//let websocketserver="ws://13.53.246.106:8081" //websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let spielname=null
 let fragenzahl=null
@@ -67,7 +68,7 @@ async function joingame() {
 
 
 //Eventlistener für Beendenbutton
-BeendenButton.addEventListener('click', sendinterruptflag)
+BeendenButtonmodal.addEventListener('click', sendinterruptflag)
 //Eventlistener für next button
 NextButton.addEventListener('click', next)
 //Eventlistener für Startbutton
@@ -123,6 +124,7 @@ function finish() {
     NextButton.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     BeendenButton.classList.add("d-none")
+    meldebutton.classList.add('d-none')
     resuttext.innerHTML =
     "Das Spiel ist Beendet"
 }
@@ -133,10 +135,11 @@ function sendinterruptflag() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
-    answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
+    NextButton.classList.add("d-none")
+    BeendenButton.classList.add("d-none")
     resuttext.innerHTML =
     'Du hast aufgegeben und damit das Spiel beendet'
     const interruptmessage = JSON.stringify({
@@ -149,10 +152,11 @@ function interruptetbyopponent() {
     explanationcontainer.classList.add('d-none')
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
-    answercontainer.classList.add('d-none')
     chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
+    NextButton.classList.add("d-none")
+    BeendenButton.classList.add("d-none")
     resuttext.innerHTML =
     'Dein Mitspieler hat aufgegeben das Spiel ist beendet'
 }
