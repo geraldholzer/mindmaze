@@ -174,70 +174,71 @@ if (!(isset($_SESSION["Email"]))) {
   }
   ?>
 
-  <!--Einklappbarer Bereich-->
-  <div class="accordion" id="Questions">
-    <!--"Frage einreichen"-->
-    <div class="card">
-      <div class="card-header" id="Question_Submit">
-        <h5 class="mb-0">
-          <button class="button-short" type="button" data-toggle="collapse" data-target="#collapseQuestionSubmit"
-            aria-expanded="true" aria-controls="collapseQuestionSubmit">
-            Frage einreichen
-          </button>
-        </h5>
-      </div>
+  <div class="container">
+    <!--Einklappbarer Bereich-->
+    <div class="accordion" id="Questions">
+      <!--"Frage einreichen"-->
+      <div class="card">
+        <div class="card-header" id="Question_Submit">
+          <h5 class="mb-0">
+            <button class="button-short" type="button" data-toggle="collapse" data-target="#collapseQuestionSubmit"
+              aria-expanded="true" aria-controls="collapseQuestionSubmit">
+              Frage einreichen
+            </button>
+          </h5>
+        </div>
 
-      <div id="collapseQuestionSubmit" class="collapse show" aria-labelledby="Frage einreichen"
-        data-parent="#Questions">
-        <div class="card-body">
-          <div class="row">
-            <form id=submitQuestion method="post">
-              <div class="form-group">
-                <label for="selectStudiengang">Studiengang</label>
-                <select id="selectStudiengang" name="selectStudiengang">
-                  <?php getStudiengangByUser(); ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="questionSubmitKurse">Kurs</label>
-                <select id="questionSubmitKurse" name="questionSubmitKurse">
-                <!-- AG: wird im Change befüllt) -->
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="question">Frage:</label>
-                <textarea id="question" name="question" rows="4" cols="80"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="answertype">Antwortart:</label>
-                <select id="answertype" name="answertype">
-                  <?php getFragentyp() ?>
-                </select>
-              </div>
-              <div class="form-group">
-                <div id="answerfields">
-                  <div class="form-group">
-                    <label for="answer">Antwort:</label>
-                    <textarea id="answer" name="answer" rows="4" cols="80"></textarea>
+        <div id="collapseQuestionSubmit" class="collapse show" aria-labelledby="Frage einreichen"
+          data-parent="#Questions">
+          <div class="card-body">
+            <div class="row">
+              <form id=submitQuestion method="post">
+                <div class="form-group">
+                  <label for="selectStudiengang">Studiengang</label>
+                  <select id="selectStudiengang" name="selectStudiengang">
+                    <?php getStudiengangByUser(); ?>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="questionSubmitKurse">Kurs</label>
+                  <select id="questionSubmitKurse" name="questionSubmitKurse">
+                  <!-- AG: wird im Change befüllt) -->
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="question">Frage:</label>
+                  <textarea id="question" name="question" rows="4" cols="80"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="answertype">Antwortart:</label>
+                  <select id="answertype" name="answertype">
+                    <?php getFragentyp() ?>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <div id="answerfields">
+                    <div class="form-group">
+                      <label for="answer">Antwort:</label>
+                      <textarea id="answer" name="answer" rows="4" cols="80"></textarea>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="form-group">
-                <label for="hint">Hinweis:</label>
-                <textarea id="hint" name="hint" rows="4" cols="80"></textarea>
-              </div>
-              <div class="form-group">
-                <!-- SH: ButtonType entfernt und ID hinzugefügt!-->
-                <input class="mt-3 button-short" id="submitBtn" value="Absenden">
-              </div>
-            </form>
-            <!-- AG: Zu Beginn nicht sichtbares Textfeld, welches beim erfolgreichen absenden aktiviert wird-->
-            <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit!</p>
+                <div class="form-group">
+                  <label for="hint">Hinweis:</label>
+                  <textarea id="hint" name="hint" rows="4" cols="80"></textarea>
+                </div>
+                <div class="form-group">
+                  <!-- SH: ButtonType entfernt und ID hinzugefügt!-->
+                  <input class="mt-3 button-short" id="submitBtn" value="Absenden">
+                </div>
+              </form>
+              <!-- AG: Zu Beginn nicht sichtbares Textfeld, welches beim erfolgreichen absenden aktiviert wird-->
+              <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit!</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
     <!--"Frage freigeben"-->
     <?php if ($_SESSION['ZugriffsrechteID'] == 2) {
       echo '<div class="card">
