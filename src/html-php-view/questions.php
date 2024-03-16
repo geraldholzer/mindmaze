@@ -119,34 +119,6 @@ if (!(isset($_SESSION["Email"]))) {
   }
 
   //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
-  function getQuestionSubmitKurse($studiengang)
-  {
-    // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    // $servername = "localhost";
-    // $username = "root";
-    // $dbpassword = "";
-    // $dbname = "mindmaze";
-    include "../html-php-view/dbconnect.php";
-    try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      // Durchführen der SQL Abfrage
-      $stmt = $conn->prepare("SELECT kurse.KursID AS KursID, kurse.Beschreibung AS Beschreibung FROM kurse 
-                                       LEFT JOIN studiengangkurse ON kurse.KursID = studiengangkurse.KursID
-                                       WHERE studiengangkurse.StudiengangID = :studiengangID");
-      $stmt->bindParam(':studiengangID', $studiengang);
-      $stmt->execute();
-
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
-      }
-    } catch (PDOException $e) {
-      echo "Fehler: " . $e->getMessage();
-    }
-  }
-
-  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
   function getKurse()
   {
     // Verbindung zur Datenbank herstellen und Abfrage ausführen
@@ -260,7 +232,7 @@ if (!(isset($_SESSION["Email"]))) {
               </div>
             </form>
             <!-- AG: Zu Beginn nicht sichtbares Textfeld, welches beim erfolgreichen absenden aktiviert wird-->
-            <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit</p>
+            <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit!</p>
           </div>
         </div>
       </div>
@@ -305,7 +277,7 @@ if (!(isset($_SESSION["Email"]))) {
       document.getElementById("submitMessage").style.display = "none";
 
       // Daten sammeln
-      var modul = document.getElementById('selectStudiengang').value;
+      var modul = document.getElementById('questionSubmitKurse').value;
       var frage = document.getElementById('question').value;
       var infotext = document.getElementById('hint').value;
       var fragentyp = document.getElementById('answertype').value;
@@ -344,16 +316,7 @@ if (!(isset($_SESSION["Email"]))) {
           if (data.trim() === "true") {
             //Aktion, wenn die Frage korrekt eingereicht wurde
             //Alle Eingaben wieder leeren
-            document.getElementById("question").reset();
-            document.getElementById("answertype").value = "1";
-            document.getElementById("answer").reset();
-            document.getElementById("hint").reset();
-            document.getElementById("answerA").reset();
-            document.getElementById("answerB").reset();
-            document.getElementById("answerC").reset();
-            document.getElementById("answerD").reset();
-            document.getElementById("correctAnswer").value = "correctAnswerA";
-
+            document.getElementById("submitQuestion").reset();
             //Meldung für erfolgreiches einreichen anzeigen
             document.getElementById("submitMessage").style.display = "block";
           }
@@ -414,25 +377,33 @@ if (!(isset($_SESSION["Email"]))) {
   </script>
 
   <script>
-    //Wenn sich der Studiengang ändern, müssen die Kurse aktualisiert werden
+    //Wenn sich der Studiengang ändert, müssen die Kurse aktualisiert werden
     document.getElementById('selectStudiengang').addEventListener('change', function () {
-      var auswahl = event.target.value;
-      var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
-      // Leere das Div, um vorherige Felder zu entfernen
-      questionSubmitKurseDiv.innerHTML = '';
+      var data = new FormData();
+      data.append('action', 'getKurseByStudiengang');
+      data.append('studiengangID', document.getElementById("selectStudiengang").value);
 
-      // Einbetten des PHP-Codes in JavaScript
-      var phpCode = "<?php echo getQuestionSubmitKurse('PLACEHOLDER'); ?>";
-      // Ersetze den Platzhalter durch die ausgewählte Option
-      phpCode = phpCode.replace('PLACEHOLDER', auswahl);
-      // Füge den PHP-Code dem Div hinzu
-      questionSubmitKurseDiv.innerHTML = phpCode;
+      // Anfrage senden
+      fetch('../server/kurse-server.php', {
+        method: 'POST',
+        body: data
+      })
+      // Die Antwort als Text lesen und ins HTML setzen
+      .then(response => response.text())
+      .then(data => {
+        console.error(data);
+        var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
+        questionSubmitKurseDiv.innerHTML = data.trim();
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+      });
     }); 
   </script>
 
   <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
   <script> document.getElementById('answertype').dispatchEvent(new Event('change')); </script>
-
   <script> document.getElementById('selectStudiengang').dispatchEvent(new Event('change')); </script>
 
 </body>
