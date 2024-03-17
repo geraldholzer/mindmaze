@@ -61,9 +61,17 @@ if (!(isset($_SESSION["Email"]))) {
     try {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      
 
+      if ($_SESSION['ZugriffsrechteID'] == 3){
+        $stmt = $conn->prepare("SELECT * FROM studiengang");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+        }
+      }
       //Normaler User darf nur seinen eigenen Studiengang sehen
-      if ($_SESSION['ZugriffsrechteID'] == 1){ 
+      if ($_SESSION['ZugriffsrechteID'] == 1) {
         $studiengangIDUser = $_SESSION['StudiengangID'];
         // Durchführen der SQL Abfrage
         $stmt = $conn->prepare("SELECT * FROM studiengang WHERE StudiengangID = :studiengangID");
@@ -73,9 +81,9 @@ if (!(isset($_SESSION["Email"]))) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
         }
-      // Tutor darf alle Studiengänge sehen, bei denen er in mindestens einem Kurs als Zuständiger Benutzer eingetragen ist
-      } else if ($_SESSION['ZugriffsrechteID'] == 2){ 
-        
+        // Tutor darf alle Studiengänge sehen, bei denen er in mindestens einem Kurs als Zuständiger Benutzer eingetragen ist
+      } else if ($_SESSION['ZugriffsrechteID'] == 2) {
+
         $UserID = $_SESSION['BenutzerID'];
         // Durchführen der SQL Abfrage
         $stmt = $conn->prepare("SELECT DISTINCT studiengang.StudiengangID AS Studiengang, studiengang.Beschreibung AS Beschreibung 
@@ -84,8 +92,8 @@ if (!(isset($_SESSION["Email"]))) {
                                 INNER JOIN studiengang      ON studiengangKurse.StudiengangID = studiengang.StudiengangID
                                 WHERE kurse.BenutzerID = :benID");
         $stmt->bindParam(':benID', $UserID);
-        $stmt->execute();    
-        
+        $stmt->execute();
+
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           echo "<option value='" . $row["Studiengang"] . "'>" . $row["Beschreibung"] . "</option>";
         }
@@ -103,6 +111,7 @@ if (!(isset($_SESSION["Email"]))) {
     // $dbpassword = "";
     // $dbname = "mindmaze";
     include "../html-php-view/dbconnect.php";
+
     try {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -202,7 +211,7 @@ if (!(isset($_SESSION["Email"]))) {
                 <div class="form-group">
                   <label for="questionSubmitKurse">Kurs</label>
                   <select id="questionSubmitKurse" name="questionSubmitKurse">
-                  <!-- AG: wird im Change befüllt) -->
+                    <!-- AG: wird im Change befüllt) -->
                   </select>
                 </div>
                 <div class="form-group">
@@ -233,7 +242,8 @@ if (!(isset($_SESSION["Email"]))) {
                 </div>
               </form>
               <!-- AG: Zu Beginn nicht sichtbares Textfeld, welches beim erfolgreichen absenden aktiviert wird-->
-              <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre Mitarbeit!</p>
+              <p id="submitMessage" style="display: none;">Frage wurde erfolgreich eingereicht! Danke für Ihre
+                Mitarbeit!</p>
             </div>
           </div>
         </div>
@@ -390,17 +400,17 @@ if (!(isset($_SESSION["Email"]))) {
         method: 'POST',
         body: data
       })
-      // Die Antwort als Text lesen und ins HTML setzen
-      .then(response => response.text())
-      .then(data => {
-        console.error(data);
-        var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
-        questionSubmitKurseDiv.innerHTML = data.trim();
-      })
-      .catch(error => {
-        console.error('Fehler:', error);
-        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
-      });
+        // Die Antwort als Text lesen und ins HTML setzen
+        .then(response => response.text())
+        .then(data => {
+          console.error(data);
+          var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
+          questionSubmitKurseDiv.innerHTML = data.trim();
+        })
+        .catch(error => {
+          console.error('Fehler:', error);
+          // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+        });
     }); 
   </script>
 
