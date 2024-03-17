@@ -294,6 +294,7 @@ if (!(isset($_SESSION["Email"]))) {
         data.append('B', document.getElementById("B").value);
         data.append('C', document.getElementById("C").value);
         data.append('D', document.getElementById("D").value);
+        data.append('richtigeAntwort', document.getElementById("correctAnswer").value);
       } else {
         data.append('antwort', document.getElementById('answer').value);
       }

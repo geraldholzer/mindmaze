@@ -29,20 +29,38 @@ $sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID) VA
 
 if ($con->query($sql) === TRUE) {
     $fragenID = $con->insert_id;
-    if($fragentyp === '1'){
+    if ($fragentyp === '1') {
+        $AKorrekt = false;
+        $BKorrekt = false;
+        $CKorrekt = false;
+        $DKorrekt = false;
+        switch ($_POST['richtigeAntwort']) {
+            case "correctAnswerA":
+                $AKorrekt = true;
+                break;
+            case "correctAnswerB":
+                $BKorrekt = true;
+                break;
+            case "correctAnswerC":
+                $CKorrekt = true;
+                break;
+            case "correctAnswerD":
+                $DKorrekt = true;
+                break;
+        }
         $A = $_POST['A'];
         $B = $_POST['B'];
         $C = $_POST['C'];
         $D = $_POST['D'];
-        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$A')";
+        $sql = "INSERT INTO antworten (FragenID, Text, Korrekt) VALUES ('$fragenID', '$A', '$AKorrekt')";
         $con->query($sql);
-        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$B')";
+        $sql = "INSERT INTO antworten (FragenID, Text, Korrekt) VALUES ('$fragenID', '$B', '$BKorrekt')";
         $con->query($sql);
-        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$C')";
+        $sql = "INSERT INTO antworten (FragenID, Text, Korrekt) VALUES ('$fragenID', '$C', '$CKorrekt')";
         $con->query($sql);
-        $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$D')";
+        $sql = "INSERT INTO antworten (FragenID, Text, Korrekt) VALUES ('$fragenID', '$D', '$DKorrekt')";
         $con->query($sql);
-    }else{
+    } else {
         $antwort = $_POST['antwort'];
         $sql = "INSERT INTO antworten (FragenID, Text) VALUES ('$fragenID', '$antwort')";
         $con->query($sql);
