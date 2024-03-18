@@ -41,8 +41,24 @@
     if ($con->connect_error) {
         die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
     }
+    // Baue die WHERE-Bedingung basierend auf den eingereichten Formularwerten auf
+    $qryVorname = isset($_GET['Vorname']) ? $_GET['Vorname'] : "";
+    $qryNachname = isset($_GET['Nachname']) ? $_GET['Nachname'] : "";
+    $qryEmail = isset($_GET['Email']) ? $_GET['Email'] : "";
+    $whereClause = "WHERE 1"; // Initialisiere die WHERE-Klausel mit 1, um alle Datensätze zu erhalten
+    
+    // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
+    if (!empty($qryVorname)) {
+        $whereClause .= " AND Vorname like '" . "%" . $qryVorname . "%" . "'";
+    }
+    if (!empty($qryNachname)) {
+        $whereClause .= " AND Nachname like '" . "%" . $qryNachname . "%" . "'";
+    }
+    if (!empty($qryEmail)) {
+        $whereClause .= " AND Email like '" . "%" . $qryEmail . "%" . "'";
+    }
 
-    $sql = "SELECT COUNT(*) AS total FROM benutzer";
+    $sql = "SELECT COUNT(*) AS total FROM benutzer $whereClause";
     $result = mysqli_query($con, $sql);
 
     // Überprüfe, ob die Abfrage erfolgreich war
@@ -69,29 +85,14 @@
     }
 
     // Setze die Standardwerte für die Suchfelder
-    $qryVorname = isset($_GET['Vorname']) ? $_GET['Vorname'] : "";
-    $qryNachname = isset($_GET['Nachname']) ? $_GET['Nachname'] : "";
-    $qryEmail = isset($_GET['Email']) ? $_GET['Email'] : "";
-    $maxRecords = isset($_GET['MaxRecords']) ? $_GET['maxRecords'] : 3;
+    
+    $maxRecords = isset($_GET['MaxRecords']) ? $_GET['MaxRecords'] : 3;
     $page = isset($_GET['Page']) ? $_GET['Page'] : 1;
     $offset = $maxRecords * ($page - 1);
     $lastPage = ceil($totalRecords / $maxRecords);
     $nextPage = $page + 1;
     $previousPage = $page - 1;
 
-    // Baue die WHERE-Bedingung basierend auf den eingereichten Formularwerten auf
-    $whereClause = "WHERE 1"; // Initialisiere die WHERE-Klausel mit 1, um alle Datensätze zu erhalten
-    
-    // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
-    if (!empty($qryVorname)) {
-        $whereClause .= " AND Vorname like '" . "%" . $qryVorname . "%" . "'";
-    }
-    if (!empty($qryNachname)) {
-        $whereClause .= " AND Nachname like '" . "%" . $qryNachname . "%" . "'";
-    }
-    if (!empty($qryEmail)) {
-        $whereClause .= " AND Email like '" . "%" . $qryEmail . "%" . "'";
-    }
 
     // Führe die SQL-Abfrage mit der WHERE-Klausel aus
     $sql = "SELECT * FROM benutzer $whereClause LIMIT $maxRecords OFFSET $offset";
@@ -103,8 +104,16 @@
             <div class="col-1"> </div>
             <div class="col-10">
                 <h1 class="mt-3">Benutzer</h1>
+                <form id="frmMaxRecords" action="userManagement.php" method="get">
+                    <input name="MaxRecords" value="<?php echo ($maxRecords) ?>"></input>
+                    <input name="Page" value="1" type="hidden" />
+                    <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
+                    <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
+                    <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
+                    <button class="button-short" type="submit">Ok</button>
+                </form>
                 <form class="mt-3" method="post">
-                <button class="button-short" type="submit">Änderungen bestätigen</button>
+                    <button class="button-short" type="submit">Änderungen bestätigen</button>
 
                     <table class='table table-striped'>
                         <tr>
@@ -140,15 +149,23 @@
                         <div class="col">
                             <form action="userManagement.php" method="get">
                                 <input type="hidden" name="Page" value=<?php echo $nextPage ?>>
+                                <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
+                                <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
+                                <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
+                                <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
                                 <!-- Hier die Seitenzahl entsprechend aktualisieren -->
                                 <button class="button-short" type="submit" <?php if ($page == $lastPage) {
                                     echo "disabled";
                                 } ?>>Weiter</button>
                             </form>
-                            </div>
-                            <div class="col">
+                        </div>
+                        <div class="col">
 
                             <form id="pages" action="userManagement.php" method="get">
+                                <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
+                                <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
+                                <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
+                                <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
                                 <select name="Page" id="changePage">
                                     <?php for ($i = 1; $i <= $lastPage; $i++) {
                                         echo "<option value='" . $i . "'";
@@ -165,11 +182,15 @@
                                     });
                                 </script>
                             </form>
-                            </div>
+                        </div>
 
                         <div class="col">
                             <form action="userManagement.php" method="get">
                                 <input type="hidden" name="Page" value=<?php echo $previousPage ?>>
+                                <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
+                                <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
+                                <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
+                                <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
                                 <!-- Hier die Seitenzahl entsprechend aktualisieren -->
                                 <button class="button-short" type="submit" <?php if ($page == 1) {
                                     echo "disabled";
@@ -181,13 +202,13 @@
 
                 <form action="userManagement.php" method="GET">
                     <label for="Vorname">Vorname:</label><br>
-                    <input type="text" id="Vorname" name="Vorname"><br><br>
+                    <input type="text" id="Vorname" name="Vorname" value="<?php echo ($qryVorname) ?>"><br><br>
 
                     <label for="Nachname">Nachname:</label><br>
-                    <input type="text" id="Nachname" name="Nachname"><br><br>
+                    <input type="text" id="Nachname" name="Nachname" value="<?php echo ($qryNachname) ?>"><br><br>
 
                     <label for="Email">E-mail:</label><br>
-                    <input type="text" id="Email" name="Email"><br><br>
+                    <input type="text" id="Email" name="Email" value="<?php echo ($qryEmail) ?>"><br><br>
 
                     <input class="button-short" accept="" type="submit" value="Absenden">
                 </form>
