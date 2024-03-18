@@ -177,7 +177,7 @@ function reset() {
     explanationcontainer.classList.add('d-none')
     meldebutton.classList.remove('d-none')
     Answerbuttons.forEach((button) => {
-        button.classList.add('btn-outline-primary')
+        button.classList.add('button-long')
         button.classList.remove('btn-danger')
         button.classList.remove('btn-success')
     })
@@ -217,7 +217,7 @@ async function antworten(e) {
     explanationcontainer.classList.remove('d-none')
 
     if (correctchoice === 1) {
-        selectedbutton.classList.remove('btn-outline-primary')
+        selectedbutton.classList.remove('button-long')
         selectedbutton.classList.add('btn-success')
 
         Answerbuttons.forEach((button) => {
@@ -227,7 +227,7 @@ async function antworten(e) {
             (NextButton.disabled = false)
         pointscounter++
     } else if (correctchoice === 0) {
-        selectedbutton.classList.remove('btn-outline-primary')
+        selectedbutton.classList.remove('button-long')
         selectedbutton.classList.add('btn-danger')
         Answerbuttons.forEach((button) => {
             button.disabled = true

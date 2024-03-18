@@ -6,6 +6,8 @@ if(isset($_SESSION['BenutzerID'])) {
     $_SESSION['inGame']=true;
     include("navbar.php");
 ?>
+
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -13,7 +15,7 @@ if(isset($_SESSION['BenutzerID'])) {
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
-    <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
+    <!--<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
     <script defer src="../javascript/singleplayer.js"></script>
     <!-- Popper.js and Bootstrap JS CDN links -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
@@ -44,8 +46,10 @@ if(isset($_SESSION['BenutzerID'])) {
                         <!-- Meldungscontainer -->
                         <div class="row mb-1">
                             <!-- Meldebutton -->
-                            <div class="col-1 offset-11">
-                                <button type="button" class="btn button-long btn-block btn-sm d-none" id="Meldebutton">Melden</button>
+                            <div class="col-1 offset-10">
+                            <div class="button-container">
+                                <button type="button" class="btn button-long btn-block btn-sm d-none button-container button" id="Meldebutton">Melden</button>
+</div>
                             </div>
                         </div>
                         <!-- Frage und Fragemelden button -->
@@ -130,8 +134,10 @@ if(isset($_SESSION['BenutzerID'])) {
                             </div>
                             <div class="row mb-1">
                                 <!-- Beenden Button -->
-                                <div class="col-1 offset-11 text-end">
-                                    <button type="button" class="btn button-long btn-block btn-sm d-none" id="BeendenButton" data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
+                                <div class="col-1 offset-10 text-end">
+                                    <div class="button-container">
+                                    <button type="button" class="btn button-long btn-block btn-sm d-none button-container button" id="BeendenButton" data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
+</div>
                                 </div>
                             </div>
                             <!-- Modal -->
