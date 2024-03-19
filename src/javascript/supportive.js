@@ -126,7 +126,9 @@ function finish() {
     BeendenButton.classList.add("d-none")
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =
-    "Das Spiel ist Beendet"
+    "Das Spiel ist Beendet";
+
+
 }
 
 

@@ -172,7 +172,20 @@ function finish() {
         ' Dein Gegner hat ' +
         opponentpoints +
         ' Fragen richtig'
-    questioncounter = 0
+    questioncounter = 0;
+    writestatistic(BenutzerID,fragenzahl,pointscounter)
+
+}
+//Funktion zum schreiben der Statistik nach Spielende
+function writestatistic(BenutzerID,Fragenzahl,pointscounter){
+    fetch(gameserver,{
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=writestatistic&'+"BenutzerID="+BenutzerID+"&fragenzahl="+Fragenzahl+"&Punkte="+pointscounter+"&modus="+"Versus"
+    })
 }
 
 function sendfinishflag() {

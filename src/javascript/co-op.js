@@ -152,6 +152,18 @@ function finish() {
     questioncounter +
     ' Fragen richtig beantwortet'
     questioncounter = 0
+    writestatistic(BenutzerID,fragenzahl,pointscounter)
+}
+//Funktion zum schreiben der Statistik nach Spielende
+function writestatistic(BenutzerID,Fragenzahl,pointscounter){
+    fetch(gameserver,{
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=writestatistic&'+"BenutzerID="+BenutzerID+"&fragenzahl="+Fragenzahl+"&Punkte="+pointscounter+"&modus="+"Kooperativ"
+    })
 }
 
 // Funktion wird bei Antwortauswahl ausgeführt
