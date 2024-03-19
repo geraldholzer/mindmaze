@@ -22,42 +22,46 @@
 
 </head>
 
-<!--Navbar Anfang-->
-<!-- Sticky top damit navi immer oben bleibt -->
-
 
 
 <body>
     <?php
     session_start();
+    //Prüfe, ob Session(Mail) gesetzt ist
+    if (!(isset ($_SESSION["Email"]))) {
+        die ("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>"); //Ausgeben einer Fehlermeldung
+    }
+    //Prüfe ob User über die benötiten Zugriffsrechte verfügt
     if ($_SESSION['ZugriffsrechteID'] != 3) {
         echo "<h3>Du scheinst nicht über die notwendigen Zugriffsrechte zu verfügen!</h3>";
         die();
     }
-    include("navbar.php");
+
+    include ("navbar.php");
 
     include "../html-php-view/dbconnect.php";
     $con = new mysqli($servername, $username, $password, $dbname);
     if ($con->connect_error) {
-        die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
+        die ("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
     }
-    // Baue die WHERE-Bedingung basierend auf den eingereichten Formularwerten auf
-    $qryVorname = isset($_GET['Vorname']) ? $_GET['Vorname'] : "";
-    $qryNachname = isset($_GET['Nachname']) ? $_GET['Nachname'] : "";
-    $qryEmail = isset($_GET['Email']) ? $_GET['Email'] : "";
+    // Baue die WHERE-Bedingung basierend auf den eingereichten Filterwerten auf
+    $qryVorname = isset ($_GET['Vorname']) ? $_GET['Vorname'] : "";
+    $qryNachname = isset ($_GET['Nachname']) ? $_GET['Nachname'] : "";
+    $qryEmail = isset ($_GET['Email']) ? $_GET['Email'] : "";
     $whereClause = "WHERE 1"; // Initialisiere die WHERE-Klausel mit 1, um alle Datensätze zu erhalten
     
     // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
-    if (!empty($qryVorname)) {
+    if (!empty ($qryVorname)) {
         $whereClause .= " AND Vorname like '" . "%" . $qryVorname . "%" . "'";
     }
-    if (!empty($qryNachname)) {
+    if (!empty ($qryNachname)) {
         $whereClause .= " AND Nachname like '" . "%" . $qryNachname . "%" . "'";
     }
-    if (!empty($qryEmail)) {
+    if (!empty ($qryEmail)) {
         $whereClause .= " AND Email like '" . "%" . $qryEmail . "%" . "'";
     }
 
+    //Ermitteln der Anzahl aller Datensätze, wird zur Berechnung der Seiten benötigt
     $sql = "SELECT COUNT(*) AS total FROM benutzer $whereClause";
     $result = mysqli_query($con, $sql);
 
@@ -74,7 +78,7 @@
         echo "Fehler: " . mysqli_error($con);
     }
 
-    // Wenn das Formular gesendet wurde
+    //Folgender Code wird aufgerufen, wenn die Seite mit der POST Methode aufgerufen wird. Dies passiert nur, wenn Daten verändert werden
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Aktualisiere die Zugriffsrechte für jeden Benutzer
         foreach ($_POST['ZugriffsrechteID'] as $benutzerID => $zugriffsrechte) {
@@ -86,15 +90,15 @@
 
     // Setze die Standardwerte für die Suchfelder
     
-    $maxRecords = isset($_GET['MaxRecords']) ? $_GET['MaxRecords'] : 3;
-    $page = isset($_GET['Page']) ? $_GET['Page'] : 1;
-    $offset = $maxRecords * ($page - 1);
-    $lastPage = ceil($totalRecords / $maxRecords);
-    $nextPage = $page + 1;
-    $previousPage = $page - 1;
+    $maxRecords = isset ($_GET['MaxRecords']) ? $_GET['MaxRecords'] : 10;        //Anzahl der maximalen Anzahl von Datensätzen auf einer Seite
+    $page = isset ($_GET['Page']) ? $_GET['Page'] : 1;                          //Aktuelle Seite
+    $offset = $maxRecords * ($page - 1);                                        //Versatz für die SQL Abfrage
+    $lastPage = ceil($totalRecords / $maxRecords);                              //Seitenzahl der letzten Seiten
+    $nextPage = $page + 1;                                                      //Seitenzahl der nächsten Seite
+    $previousPage = $page - 1;                                                  //Seitenzahl der vorangegangenen Seite
+    
 
-
-    // Führe die SQL-Abfrage mit der WHERE-Klausel aus
+    //SQL Abfrage zur Ermittlung der auf einer Seite angezeigten Datensätze
     $sql = "SELECT * FROM benutzer $whereClause LIMIT $maxRecords OFFSET $offset";
     $result = $con->query($sql);
     ?>
@@ -104,14 +108,20 @@
             <div class="col-1"> </div>
             <div class="col-10">
                 <h1 class="mt-3">Benutzer</h1>
+                <!--Über dieses Formular kann die maximale Anzahl von Datensätzen geändert werden. Sichtbar ist nur ein Inputfeld + Button!-->
                 <form id="frmMaxRecords" action="userManagement.php" method="get">
-                    <input name="MaxRecords" value="<?php echo ($maxRecords) ?>"></input>
+                    <select name="MaxRecords">
+                        <option value="5" <?php if($maxRecords==5){echo("selected");} ?>>5</option>
+                        <option value="10" <?php if($maxRecords==10){echo("selected");} ?>>10</option>
+                        <option value="25" <?php if($maxRecords==25){echo("selected");} ?>>25</option>
+                    </select>
                     <input name="Page" value="1" type="hidden" />
                     <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
                     <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
                     <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
                     <button class="button-short" type="submit">Ok</button>
                 </form>
+                <!--Hauptformular mit Datensätzen und Comboboxen zur Änderung der Berechtigungen!-->
                 <form class="mt-3" method="post">
                     <button class="button-short" type="submit">Änderungen bestätigen</button>
 
@@ -147,35 +157,37 @@
                 <div class=container>
                     <div class="row">
                         <div class="col">
+                            <!--Formular für den "Weiter" Button!-->
                             <form action="userManagement.php" method="get">
                                 <input type="hidden" name="Page" value=<?php echo $nextPage ?>>
                                 <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
                                 <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
                                 <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
                                 <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
-                                <!-- Hier die Seitenzahl entsprechend aktualisieren -->
                                 <button class="button-short" type="submit" <?php if ($page == $lastPage) {
                                     echo "disabled";
                                 } ?>>Weiter</button>
                             </form>
                         </div>
                         <div class="col">
-
+                            <!--Formular für die Combobox mit Seitenauswahl!-->
                             <form id="pages" action="userManagement.php" method="get">
                                 <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
                                 <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
                                 <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
                                 <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
                                 <select name="Page" id="changePage">
+                                    <!--Eintragen der Optionen in das Select Feld: Zahlen von 1 bis "letzte Seite"!-->
                                     <?php for ($i = 1; $i <= $lastPage; $i++) {
                                         echo "<option value='" . $i . "'";
                                         if ($i == $page) {
-                                            echo " selected"; // Das selected-Attribut wird hinzugefügt, wenn $i gleich $page ist
+                                            echo " selected";
                                         }
                                         echo ">" . $i . "</option>";
                                     } ?>f
 
                                 </select>
+                                <!--Der Event-Listener schickt das Formular ab, sobald die Combobox verändert wurde!-->
                                 <script>
                                     document.getElementById("changePage").addEventListener("change", function () {
                                         document.getElementById("pages").submit();
@@ -185,6 +197,8 @@
                         </div>
 
                         <div class="col">
+                            <!--Formular für den "Zurück" Button!-->
+
                             <form action="userManagement.php" method="get">
                                 <input type="hidden" name="Page" value=<?php echo $previousPage ?>>
                                 <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />

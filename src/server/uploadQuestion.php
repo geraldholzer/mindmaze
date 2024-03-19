@@ -25,7 +25,7 @@ $fragentyp = $_POST['fragentyp'];
 $con->begin_transaction();
 
 // SQL-Statement vorbereiten und ausführen
-$sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID) VALUES ('$modul', '$frage', '$status', '$infotext', '$fragentyp')";
+$sql = "INSERT INTO fragen (KursID, FrageText, Status, InfoText, FragentypID, Änderungsdatum) VALUES ('$modul', '$frage', '$status', '$infotext', '$fragentyp', NOW() )";
 
 if ($con->query($sql) === TRUE) {
     $fragenID = $con->insert_id;

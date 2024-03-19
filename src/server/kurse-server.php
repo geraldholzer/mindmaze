@@ -9,6 +9,7 @@
   
         session_start();
         //Normaler User soll alle Kurse des Studiengangs sehen
+
         if ($_SESSION['ZugriffsrechteID'] == 1){ 
           $studiengang = $_POST['studiengangID'];
           // Durchführen der SQL Abfrage
@@ -32,6 +33,20 @@
                                           AND kurse.BenutzerID = :benID");
           $stmt->bindParam(':studiengangID', $studiengang);
           $stmt->bindParam(':benID', $userID);
+          $stmt->execute();
+    
+          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
+          }         
+        }
+        if ($_SESSION['ZugriffsrechteID'] == 3){ 
+          $studiengang = $_POST['studiengangID'];
+          $userID = $_SESSION['BenutzerID'];
+          // Durchführen der SQL Abfrage
+          $stmt = $conn->prepare("SELECT kurse.KursID AS KursID, kurse.Beschreibung AS Beschreibung FROM kurse 
+                                          LEFT JOIN studiengangkurse ON kurse.KursID = studiengangkurse.KursID
+                                          WHERE studiengangkurse.StudiengangID = :studiengangID");
+          $stmt->bindParam(':studiengangID', $studiengang);
           $stmt->execute();
     
           while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
