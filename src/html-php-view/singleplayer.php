@@ -10,9 +10,10 @@ if(isset($_SESSION['BenutzerID'])) {
 
 <html lang="en">
 <head>
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Singleplayer</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!--<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
@@ -167,6 +168,7 @@ if(isset($_SESSION['BenutzerID'])) {
                         <div class="d-none" id="result">
                             <h3>Ergebnis</h3>
                             <div id="resulttext"></div>
+                            <a href="home.php" class="btn button-long col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
                         </div>
                     </div>
                 </div>

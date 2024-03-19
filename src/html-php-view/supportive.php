@@ -1,17 +1,12 @@
-<?php 
-//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
-session_start();   
 
-if(isset($_SESSION['BenutzerID'])) {
-  include ("navbar.php");
-?>
 
 
 <html lang="en">
 <head>
+<link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Supportive</title>
   <link rel="stylesheet" type="text/css" href="../css/style.css">
   <link rel="stylesheet" href="../css/main.css">
   <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -24,7 +19,13 @@ if(isset($_SESSION['BenutzerID'])) {
     crossorigin="anonymous"></script> -->
 
 </head>
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
 
+if(isset($_SESSION['BenutzerID'])) {
+  include ("navbar.php");
+?>
 <body>
 <script>
         // Session variable für js speichern
@@ -48,7 +49,7 @@ if(isset($_SESSION['BenutzerID'])) {
             <div class="row mb-1">
               <!-- Meldebutton -->
                       <div class="col-1">
-                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
+                          <button type="button" class="btn button-long btn-block btn-sm d-none" id="Meldebutton">Melden</button>
                       </div>
             </div>
             <!-- Frage und Fragemelden button -->
@@ -93,9 +94,9 @@ if(isset($_SESSION['BenutzerID'])) {
               <p class="card-text d-none col-10 mx-auto" id="question">Wer bin ich</p>
               
                 <!-- Button zum Weiterschalten -->
-                <div class="row">
-                  <button  type="button" class="btn btn-outline-primary col-8 offset-1  mt-1"id="Next">Next</button>
-                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="Beenden">Beenden</button>
+                <div class="row justify-content-center">
+                  <button  type="button" class="btn button-long col-8  mt-1"id="Next">Next</button>
+                  <button  type="button" class="btn button-long col-2  mt-1"  data-bs-toggle="modal" data-bs-target="#exampleModal" id="Beenden">Beenden</button>
                 </div>
                 <!-- Meldung erscheint falls der Beenden button gedrückt wird -->
                 <!-- Modal -->
@@ -129,7 +130,8 @@ if(isset($_SESSION['BenutzerID'])) {
                   </div>
                   <input type="text" class="border border-primary rounded col-10 mt-2"
                     placeholder="Chatnachricht eingeben" id="messageInput">
-                  <button type="button" class="btn btn-primary btn-sm col-1 mt-2"
+                  
+                  <button type="button" class="btn button-long btn-sm col-1 mt-2"
                     id="sendbutton">Senden</button>
                 </div>
               </div>
@@ -137,7 +139,7 @@ if(isset($_SESSION['BenutzerID'])) {
               <div class="d-none" id="result">
                 <h3>Ergebnis</h3>
                 <div id="resulttext"></div>
-                <a href="home.php" class="btn btn-outline-primary col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
+                <a href="home.php" class="btn button-long col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
               </div>
               <!-- Warteanzeige -->
               <div class="d-none" id="wait">
