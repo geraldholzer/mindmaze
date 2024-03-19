@@ -166,9 +166,11 @@ if(isset($_SESSION['BenutzerID'])) {
 
                         <!-- Ergebnis class d-none wird entfernt, um sichtbar zu sein -->
                         <div class="d-none" id="result">
-                            <h3>Ergebnis</h3>
-                            <div id="resulttext"></div>
-                            <a href="home.php" class="btn button-long col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
+                            <h3 class="h-100 d-flex align-items-center justify-content-center">Ergebnis</h3>
+                            <div class="h-100 d-flex align-items-center justify-content-center" id="resulttext"></div>
+                            <div class="button-container">
+                                <a href="home.php" class="btn button-long mt-2 button-container button" id="Next">Zurück zur Startseite</a>
+                            </div>
                         </div>
                     </div>
                 </div>
