@@ -21,6 +21,7 @@
 
   //Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
   session_start();                                                        //Session starten
+  $_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
   $enterHome = false; //über diese Variable wird später geprüft, ob die Startseite aufgebaut wird. Zu Beginn ist sie false und kann im Verlauf der Prüfungen true werden
   $loginCheck = false; //über diese Variable wird geprüft, ob ein Abgleich von Passwort und E-Mail erfolgen soll (Login-Check)
   

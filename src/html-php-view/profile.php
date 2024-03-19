@@ -40,7 +40,11 @@
 <body>
     <!-- Einbinden der PHP-Seite für die Navbar -->
     <?php session_start();?>
-    <?php include ("navbar.php");?>
+    <?php 
+      $_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
+    include ("navbar.php");
+    ?>
+    
 
     <div class="container">
         <br>

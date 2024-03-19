@@ -21,6 +21,7 @@
 session_start();
 
 if (isset($_SESSION['BenutzerID'])) {
+  $_SESSION['inGame']=true;
   include("navbar.php");
 ?>
   <body>

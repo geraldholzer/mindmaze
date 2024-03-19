@@ -6,7 +6,7 @@
 
         function navbarReact(aSite){
           <?php 
-          // $_SESSION['inGame']=false;
+         // $_SESSION['inGame']=false;
           if ($_SESSION['inGame']==false){
             echo "document.location.href = aSite;";
           }else{
@@ -32,13 +32,13 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
           <li class="nav-item">
-            <a class="nav-link" href="./home.php">Home</a>
+            <a class="nav-link" href="javascript:navbarReact('./home.php')">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./singleplayer.php">Solo</a>
+            <a class="nav-link" href="javascript:navbarReact('./singleplayer.php')">Solo</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="./lobby.php">Multiplayer</a>
+            <a class="nav-link" href="javascript:navbarReact('./lobby.php')">Multiplayer</a>
           </li>
           <li class="nav-item dropdown">  
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
@@ -46,9 +46,9 @@
               Konto
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <li><a class="dropdown-item" href="profile.php">Profil</a></li>
-              <li><a class="dropdown-item" href="statistik.php">Statistik</a></li>
-              <li><a class="dropdown-item" href="questions.php">Fragen</a></li>
+              <li><a class="dropdown-item" href="javascript:navbarReact('./profile.php')">Profil</a></li>
+              <li><a class="dropdown-item" href="javascript:navbarReact('./statistik.php')">Statistik</a></li>
+              <li><a class="dropdown-item" href="javascript:navbarReact('./questions.php')">Fragen</a></li>
               <li><a class="dropdown-item" href="javascript:navbarReact('./profile.html')">TEST</a></li>
               <?php if ($_SESSION['ZugriffsrechteID'] == 3) {
                 echo '<li><a class="dropdown-item" href="userManagement.php">Benutzerverwaltung</a></li>';

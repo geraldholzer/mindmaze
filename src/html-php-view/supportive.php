@@ -24,7 +24,9 @@
 session_start();   
 
 if(isset($_SESSION['BenutzerID'])) {
+   $_SESSION['inGame']=true;//Wird benötigt um navbar zu aktivieren 
   include ("navbar.php");
+  $_SESSION['inGame']=true;//Wird benötigt um navbar zu aktivieren 
 ?>
 <body>
 <script>

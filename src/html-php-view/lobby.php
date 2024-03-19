@@ -21,7 +21,7 @@
 <?php 
 //Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
 session_start();   
-
+$_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
 if(isset($_SESSION['BenutzerID'])) {
   include ("navbar.php");
 ?>

@@ -23,6 +23,7 @@
 <?php
 
 session_start(); // Session starten (vor Aufruf der Navbar!)
+$_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
 include 'navbar.php';
 
 

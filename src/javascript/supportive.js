@@ -171,7 +171,7 @@ socket.onmessage = (event) => {
     }
         //Wenn zwei Spieler verbunden sind wird das Spiel gestartet der Server sendet hierzu "ready"
      else if (data.message == 'ready') {
-        //deletegame()
+        deletegame()
         opponent=data.opponent
     } else if (data.type === 'questions') {        
         console.log(typeof data)

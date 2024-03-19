@@ -30,6 +30,7 @@
 <body>
     <?php
     session_start();
+
     if ($_SESSION['ZugriffsrechteID'] != 3) {
         echo "<h3>Du scheinst nicht über die notwendigen Zugriffsrechte zu verfügen!</h3>";
         die();

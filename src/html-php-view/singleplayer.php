@@ -1,11 +1,4 @@
-<?php 
-// Prüfe, ob die POST-Variablen und SESSION-Variablen gesetzt sind
-session_start();   
 
-if(isset($_SESSION['BenutzerID'])) {
-    $_SESSION['inGame']=true;
-    include("navbar.php");
-?>
 
 
 <html lang="en">
@@ -26,7 +19,14 @@ if(isset($_SESSION['BenutzerID'])) {
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 </head>
+<?php 
+// Prüfe, ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
 
+if(isset($_SESSION['BenutzerID'])) {
+    $_SESSION['inGame']=false;
+    include("navbar.php");
+?>
 <body>
 
 <script>
