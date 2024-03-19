@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Statistik</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <script defer src="../javascript/lobby.js"></script>
@@ -18,26 +18,18 @@
 
 <body>
 
-
-
 <?php
 
 session_start(); // Session starten (vor Aufruf der Navbar!)
 $_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
 include 'navbar.php';
 
-
 // Datenbankverbindung
-// $servername = "localhost";
-// $username = "root";
-// $password = "";
-// $dbname = "mindmaze";
 include "../html-php-view/dbconnect.php";
 $con = new mysqli($servername, $username, $password, $dbname);
 if ($con->connect_error) {
     die("Es konnte keine Verbindung zur Datenbank hergestellt werden: " . $con->connect_error);
 }
-
 
 // Überprüfen, ob Benutzer eingeloggt ist
 if(isset($_SESSION['BenutzerID'])) {
@@ -45,62 +37,41 @@ if(isset($_SESSION['BenutzerID'])) {
     // Benutzer-ID abrufen
     $benutzerID = $_SESSION['BenutzerID'];
 
-    // SQL-Abfrage, um Sieg-Niederlage-Statistik nach Spielmodus abzufragen
-    $sql_statistics = "SELECT s.SpielmodiID, m.Beschreibung AS SpielmodusBeschreibung, 
-                            SUM(CASE WHEN s.BenutzerIDSieger = ? THEN 1 ELSE 0 END) AS Siege,
-                            SUM(CASE WHEN s.BenutzerIDVerlierer = ? THEN 1 ELSE 0 END) AS Niederlagen
+    // SQL-Abfrage, um Gesamtsumme der beantworteten Fragen und korrekten Antworten für jeden Spielmodus abzurufen
+    $sql_statistics = "SELECT m.Beschreibung AS Spielmodus, SUM(s.Fragenzahl) AS GesamtFragen, SUM(s.Punkte) AS GesamtPunkte
                         FROM statistik s
                         INNER JOIN spielmodi m ON s.SpielmodiID = m.SpielmodiID
-                        WHERE s.SpielmodiID IN (1, 2, 3) AND (s.BenutzerIDSieger = ? OR s.BenutzerIDVerlierer = ?)
+                        WHERE s.BenutzerID = ?
                         GROUP BY s.SpielmodiID";
     $stmt = $con->prepare($sql_statistics);
-    $stmt->bind_param("iiii", $benutzerID, $benutzerID, $benutzerID, $benutzerID);
+    $stmt->bind_param("i", $benutzerID);
     $stmt->execute();
     $result_statistics = $stmt->get_result();
 
     if ($result_statistics->num_rows > 0) {  // Ausgabe Statistik, falls Einträge in der DB vorhanden sind
-      echo "<div class='container text-center'>";
-      echo "<h1>Statistik für " . $_SESSION['Vorname'] . " " . $_SESSION['Nachname'] . "</h1>";
-      echo "</div>";
-      echo "<div class='tableLobby'>";
-      echo "<table>";
-      echo "<thead><tr><th>Spielmodus</th><th>Siege</th><th>Niederlagen</th><th>Gewinnrate (%)</th></tr></thead>";
-      echo "<tbody>";
-      while ($row_statistics = $result_statistics->fetch_assoc()) {
-          $siege = $row_statistics['Siege'];
-          $niederlagen = $row_statistics['Niederlagen'];
-          $gesamtspiele = $siege + $niederlagen;
-          $gewinnrate = ($gesamtspiele > 0) ? ($siege / $gesamtspiele) * 100 : 0; // Berechnung Gewinnrate
-          echo "<tr><td>" . $row_statistics['SpielmodusBeschreibung'] . "</td><td>" . $siege . "</td><td>" . $niederlagen . "</td><td>" . round($gewinnrate, 2) . "%</td></tr>";
-      }
-      echo "</tbody>";
-      echo "</table>";
-      echo "</div>";
-
-      // SQL-Abfrage, um das letzte Spiel abzurufen
-      $sql_last_game = "SELECT SpielDatum, IF(BenutzerIDSieger = ?, 'Sieg', 'Niederlage') AS Ergebnis, 
-                      m.Beschreibung AS Spielmodus
-                      FROM statistik s
-                      INNER JOIN spielmodi m ON s.SpielmodiID = m.SpielmodiID
-                      WHERE (s.BenutzerIDSieger = ? OR s.BenutzerIDVerlierer = ?)
-                      ORDER BY SpielDatum DESC
-                      LIMIT 1";
-      $stmt_last_game = $con->prepare($sql_last_game);
-      $stmt_last_game->bind_param("iii", $benutzerID, $benutzerID, $benutzerID);
-      $stmt_last_game->execute();
-      $result_last_game = $stmt_last_game->get_result();
-
-      if ($result_last_game->num_rows > 0) {
-          $row_last_game = $result_last_game->fetch_assoc();
-          echo "<div class='container text-center'>";
-          echo "<p>Zuletzt gespieltes Spiel: " . $row_last_game['Ergebnis'] . " in " . $row_last_game['Spielmodus'] . " am " . $row_last_game['SpielDatum'] . "</p>";
-          echo "</div>";
-      }
+        echo "<div class='container text-center'>";
+        echo "<h1 class='statistikheader'><span>Statistik für " . $_SESSION['Vorname'] . " " . $_SESSION['Nachname'] . "</span></h1>";
+        echo "</div>";
+        echo "<div class='tableLobby'>";
+        echo "<table>";
+        echo "<thead class='tableLobby'><tr><th>Spielmodus</th><th>Fragen Gesamt</th><th>Erreichte Punkte</th><th>Punkte in %</th></tr></thead>";
+        echo "<tbody class='tableLobby'>";
+        while ($row_statistics = $result_statistics->fetch_assoc()) {
+            echo "<tr>";
+            echo "<td>" . $row_statistics['Spielmodus'] . "</td>";
+            echo "<td>" . $row_statistics['GesamtFragen'] . "</td>";
+            echo "<td>" . $row_statistics['GesamtPunkte'] . "</td>";
+            $progress = ($row_statistics['GesamtPunkte'] / $row_statistics['GesamtFragen']) * 100;
+            echo "<td><div class='progress' style='height: 20px;'><div class='progress-bar' role='progressbar' style='width: " . $progress . "%;' aria-valuenow='" . $progress . "' aria-valuemin='0' aria-valuemax='100'>" . round($progress, 2) . "%</div></div></td>";
+            echo "</tr>";
+        }
+        echo "</tbody>";
+        echo "</table>";
+        echo "</div>";
     } else { // Anzeige falls keine Einträge vorhanden sind
-
-      echo "<div class='container text-center'>";
-      echo "<h1>Noch keine Spiele gespielt</h1>";
-      echo "</div>";
+        echo "<div class='container text-center'>";
+        echo "<h1>Noch keine Spiele gespielt</h1>";
+        echo "</div>";
     }
 } else {
     // Benutzer ist nicht eingeloggt
@@ -111,5 +82,6 @@ if(isset($_SESSION['BenutzerID'])) {
 
 $con->close();
 ?>
+
 </body>
 </html>
