@@ -95,7 +95,7 @@ class MyWebSocketServer implements MessageComponentInterface
             include __DIR__ . "/../html-php-view/dbconnect.php";
             $conn = new mysqli($servername,$username,$password,$dbname);
     
-            $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT * FROM fragen WHERE fragen.KursID=? AND FragentypID=? ORDER BY RAND() LIMIT ?");
+            $stmt1 = $conn->prepare("CREATE TEMPORARY TABLE temp_fragen AS SELECT fragen.FragenID,fragen.KursID,fragen.FrageText,fragen.InfoText,fragen.Status,fragen.MeldeGrund FROM fragen WHERE fragen.KursID=? AND FragentypID=? ORDER BY RAND() LIMIT ?");
             $stmt1->bind_param("sii", $kursID,$FragentypID,$fragenzahl);
             $stmt1->execute();
             //Nur wenn es sich um multiplechoice handelt wird mit antworten gejoint
