@@ -15,6 +15,7 @@
 <body>
     <?php
     session_start();
+    $_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
     include("navbar.php");
     ?>
     <div class="container">

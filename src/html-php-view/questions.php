@@ -38,6 +38,7 @@
 
 <?php
 session_start();
+$_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
 if (!(isset($_SESSION["Email"]))) {
   die("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>"); //Ausgeben einer Fehlermeldung
 }

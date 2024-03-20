@@ -1,17 +1,12 @@
 
-<?php 
-//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
-session_start();   
 
-if(isset($_SESSION['BenutzerID'])) {
-  include ("navbar.php");
-?>
 
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer-Lobby</title>
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
@@ -23,6 +18,15 @@ if(isset($_SESSION['BenutzerID'])) {
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 </head>
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
+$_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
+if(isset($_SESSION['BenutzerID'])) {
+  include ("navbar.php");
+?>
+
+
 
 <body>
 

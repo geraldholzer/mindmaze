@@ -192,7 +192,6 @@ function sendinterruptflag() {
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
     answercontainer.classList.add('d-none')
-    chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =
@@ -208,7 +207,6 @@ function interruptetbyopponent() {
     StartButton.classList.add('d-none')
     Question.classList.add('d-none')
     answercontainer.classList.add('d-none')
-    chatcontainer.classList.add('d-none')
     resultpage.classList.remove('d-none')
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =

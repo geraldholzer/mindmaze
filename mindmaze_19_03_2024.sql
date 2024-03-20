@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 15. Mrz 2024 um 00:37
+-- Erstellungszeit: 19. Mrz 2024 um 16:03
 -- Server-Version: 10.4.32-MariaDB
 -- PHP-Version: 8.2.12
 
@@ -297,30 +297,31 @@ CREATE TABLE `spielrunden` (
 --
 
 CREATE TABLE `statistik` (
-  `BenutzerIDSieger` int(12) DEFAULT NULL,
-  `BenutzerIDVerlierer` int(12) DEFAULT NULL,
-  `SpielmodiID` int(12) DEFAULT NULL,
-  `SpielDatum` date DEFAULT NULL,
-  `StatistikID` int(12) NOT NULL
+  `StatistikID` int(11) NOT NULL,
+  `BenutzerID` int(11) DEFAULT NULL,
+  `SpielmodiID` int(11) DEFAULT NULL,
+  `SpielDatum` datetime DEFAULT NULL,
+  `Fragenzahl` int(11) DEFAULT NULL,
+  `Punkte` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Daten für Tabelle `statistik`
 --
 
-INSERT INTO `statistik` (`BenutzerIDSieger`, `BenutzerIDVerlierer`, `SpielmodiID`, `SpielDatum`, `StatistikID`) VALUES
-(1, 2, 3, '2024-02-28', 31),
-(2, 1, 2, '2024-02-27', 32),
-(1, 2, 3, '2024-02-26', 33),
-(2, 1, 1, '2024-02-25', 34),
-(1, 2, 2, '2024-02-24', 35),
-(2, 1, 1, '2024-02-23', 36),
-(2, 1, 3, '2024-02-22', 37),
-(2, 1, 1, '2024-02-21', 38),
-(1, 2, 3, '2024-02-20', 39),
-(2, 1, 1, '2024-02-19', 40),
-(4, 2, 2, '2024-03-12', 41),
-(4, 2, 2, '2024-03-12', 42);
+INSERT INTO `statistik` (`StatistikID`, `BenutzerID`, `SpielmodiID`, `SpielDatum`, `Fragenzahl`, `Punkte`) VALUES
+(1, 2, 1, '2024-03-19 14:00:00', 10, 5),
+(2, 2, 2, '2024-03-19 14:15:00', 15, 7),
+(3, 2, 3, '2024-03-19 14:30:00', 20, 10),
+(4, 2, 4, '2024-03-19 14:45:00', 25, 12),
+(5, 2, 1, '2024-03-25 14:00:00', 10, 5),
+(6, 2, 2, '2024-03-29 14:15:00', 15, 7),
+(7, 2, 3, '2024-03-01 14:30:00', 20, 10),
+(8, 2, 4, '2024-03-02 14:45:00', 25, 12),
+(9, 2, 1, '2024-03-19 14:00:00', 10, 9),
+(10, 2, 2, '2024-03-19 14:15:00', 15, 14),
+(11, 2, 3, '2024-03-19 14:30:00', 20, 19),
+(12, 2, 4, '2024-03-19 14:45:00', 25, 18);
 
 -- --------------------------------------------------------
 
@@ -444,9 +445,8 @@ ALTER TABLE `spielrunden`
 --
 ALTER TABLE `statistik`
   ADD PRIMARY KEY (`StatistikID`),
-  ADD KEY `FK_statistik_spielmodi` (`SpielmodiID`),
-  ADD KEY `FK_BenutzerIDSieger` (`BenutzerIDSieger`),
-  ADD KEY `FK_BenutzerIDVerlierer` (`BenutzerIDVerlierer`);
+  ADD KEY `BenutzerID` (`BenutzerID`),
+  ADD KEY `SpielmodiID` (`SpielmodiID`);
 
 --
 -- Indizes für die Tabelle `studiengang`
@@ -524,7 +524,7 @@ ALTER TABLE `spielrunden`
 -- AUTO_INCREMENT für Tabelle `statistik`
 --
 ALTER TABLE `statistik`
-  MODIFY `StatistikID` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `StatistikID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT für Tabelle `studiengang`
@@ -597,9 +597,8 @@ ALTER TABLE `spielrunden`
 -- Constraints der Tabelle `statistik`
 --
 ALTER TABLE `statistik`
-  ADD CONSTRAINT `FK_BenutzerIDSieger` FOREIGN KEY (`BenutzerIDSieger`) REFERENCES `benutzer` (`BenutzerID`),
-  ADD CONSTRAINT `FK_BenutzerIDVerlierer` FOREIGN KEY (`BenutzerIDVerlierer`) REFERENCES `benutzer` (`BenutzerID`),
-  ADD CONSTRAINT `FK_statistik_spielmodi` FOREIGN KEY (`SpielmodiID`) REFERENCES `spielmodi` (`SpielmodiID`);
+  ADD CONSTRAINT `statistik_ibfk_1` FOREIGN KEY (`BenutzerID`) REFERENCES `benutzer` (`BenutzerID`),
+  ADD CONSTRAINT `statistik_ibfk_2` FOREIGN KEY (`SpielmodiID`) REFERENCES `spielmodi` (`SpielmodiID`);
 
 --
 -- Constraints der Tabelle `studiengangkurse`

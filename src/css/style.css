@@ -221,22 +221,22 @@ h1.heading-modus {
  /*TABLE FÜR LOBBY*/
  .tableLobby {
   overflow: auto;
-  width:80%;
-  margin: 0 auto;
+  width: 80%; /* Breite flexibel */
+  margin: 0 auto; /* Zentriert ausrichten */
   font-family: "Inter", sans-serif;
   font-size: 15px;
+  border-radius: 10px; /* Abgerundete Ecken hinzufügen */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Beispiel für einen Schatten */
 }
 
 .tableLobby table {
   border: 1px solid #dededf;
-  height: 100%;
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  border-spacing: 1px;
+  border-spacing: 0;
   text-align: left;
   font-family: "Inter";
-
 }
 
 .tableLobby caption {
@@ -248,20 +248,21 @@ h1.heading-modus {
   border: 1px solid #dededf;
   background-color: #9257DD;
   color: #FFFFFF;
-  padding: 5px;
+  padding: 10px; /* Beispiel für Innenabstand */
 }
 
 .tableLobby td {
   border: 1px solid #dededf;
   background-color: #ffffff;
   color: #000000;
-  padding: 5px;
+  padding: 10px; /* Beispiel für Innenabstand */
 }
+
 .tableLobby button {
   border: 1px solid #dededf;
-  background-color: #7749C1;;
+  background-color: #7749C1;
   color: #f2f4f7;
-  padding: 5px;
+  padding: 10px; /* Beispiel für Innenabstand */
 }
 
 .statistikheader {
@@ -274,14 +275,12 @@ h1.heading-modus {
   line-height: 1.5;
   letter-spacing: 1px;
   text-align: center;
+  color: #7e57c2; /* Mittlere Lila-Farbe */
+  border: 3px solid #9257DD; /* Rahmen am unteren Rand */
+  text-shadow: 1px 1px 2px rgba(65, 64, 64, 0.5); /* Hinzufügen eines Textschattens für bessere Lesbarkeit */
+  border-radius: 10px; /* Abrundung des Rahmens */
 }
 
-.statistikheader span {
-  background-color: #9257DD;
-  color: #FFFFFF !important;
-  padding: 10px 20px; 
-  border-radius: 20px;
-}
 
 .btn-custom {
   background-color: #9257DD !important; 
@@ -297,8 +296,9 @@ h1.heading-modus {
   background-color: #9257DD;
   text-align: left;
   padding-left: 5px;
-  color: black;
+  color: white;
   font-weight: bold;
+  font-family: "Inter", sans-serif;
 }
 
 .last-game-info {
@@ -336,8 +336,6 @@ h1.heading-modus {
 
 #BeendenButton {
   display: flex !important;  
-  margin-top: 20px !important; 
-  margin-right: 10px !important;
 }
 
 .answercontainer {
@@ -382,6 +380,22 @@ h1.heading-modus {
   margin-top: 10px;
 }
 
+.button-container {
+  width: 100%;
+  text-align: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.button-container button {
+  margin-top: 5px;
+  margin: 5px;
+  margin-right: 10px;
+  width: auto;
+  padding: 10px 20px;
+  margin-bottom: 10px;
+}
+
 
 @media only screen and (max-width: 600px) {
   .button-container {
@@ -410,5 +424,4 @@ h1.heading-modus {
     color: white;
   }
 }
-
 

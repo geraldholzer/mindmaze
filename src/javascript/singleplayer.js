@@ -25,7 +25,7 @@ let fragendropdown = document.getElementById('fragendropdown')
 let questionserver = '../server/question-server.php' // lokaler question server
 //let gameserver="http://13.53.246.106/../server/game-server.php" //gameserver ip von aws server
 let gameserver = '../server/game-server.php' // lokaler gameserver
-
+let questions=null;
 //Buttons in Array verwalten
 const Answerbuttons = [
     AnswerButton1,

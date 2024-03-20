@@ -1,18 +1,12 @@
-<?php 
-// Prüfe, ob die POST-Variablen und SESSION-Variablen gesetzt sind
-session_start();   
 
-if(isset($_SESSION['BenutzerID'])) {
-    $_SESSION['inGame']=true;
-    include("navbar.php");
-?>
 
 
 <html lang="en">
 <head>
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Singleplayer</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!--<script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
@@ -25,7 +19,14 @@ if(isset($_SESSION['BenutzerID'])) {
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 </head>
+<?php 
+// Prüfe, ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
 
+if(isset($_SESSION['BenutzerID'])) {
+    $_SESSION['inGame']=false;
+    include("navbar.php");
+?>
 <body>
 
 <script>
@@ -165,8 +166,11 @@ if(isset($_SESSION['BenutzerID'])) {
 
                         <!-- Ergebnis class d-none wird entfernt, um sichtbar zu sein -->
                         <div class="d-none" id="result">
-                            <h3>Ergebnis</h3>
-                            <div id="resulttext"></div>
+                            <h3 class="h-100 d-flex align-items-center justify-content-center">Ergebnis</h3>
+                            <div class="h-100 d-flex align-items-center justify-content-center" id="resulttext"></div>
+                            <div class="button-container">
+                                <a href="home.php" class="btn button-long mt-2 button-container button" id="Next">Zurück zur Startseite</a>
+                            </div>
                         </div>
                     </div>
                 </div>

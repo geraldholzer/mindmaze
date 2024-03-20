@@ -1,16 +1,11 @@
-<?php 
-//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
-session_start();   
 
-if(isset($_SESSION['BenutzerID'])) {
-  include ("navbar.php");
-?>
 
 <html lang="en">
 <head>
+    <link rel="icon" href="../../img/logo.svg" type="image/svg+xml">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Versus</title>
     <link rel="stylesheet" type="text/css" href="../css/style.css">
     <link rel="stylesheet" href="../css/main.css">
     <!-- <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> -->
@@ -22,6 +17,14 @@ if(isset($_SESSION['BenutzerID'])) {
     integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
     crossorigin="anonymous"></script>
 </head>
+<?php 
+//Prüfe ob die POST-Variablen und SESSION-Variablen gesetzt sind
+session_start();   
+
+if(isset($_SESSION['BenutzerID'])) {
+  $_SESSION['inGame']=true;//Wird benötigt um navbar zu aktivieren
+  include ("navbar.php");
+?>
 <body>
 <script>
         // Session variable für js speichern
@@ -45,7 +48,7 @@ if(isset($_SESSION['BenutzerID'])) {
             <div class="row mb-1">
               <!-- Meldebutton -->
                       <div class="col-1">
-                          <button type="button" class="btn btn-outline-primary btn-block btn-sm d-none" id="Meldebutton">Melden</button>
+                          <button type="button" class="btn button-long btn-block btn-sm d-none" id="Meldebutton">Melden</button>
                       </div>
             </div>
             <!-- Frage und Fragemelden button -->
@@ -89,19 +92,19 @@ if(isset($_SESSION['BenutzerID'])) {
               <!-- Antwortcontainer -->
               <div class="container-fluid d-none" id="answercontainer">
                 <!-- Obere Antwortbuttons -->
-                <div class="row"> 
-                  <button  type="button" class="btn btn-outline-primary col-5  offset-1" id="Answer1">Primary</button>
-                  <button type="button" class="btn btn-outline-primary col-5 offset-1 "id="Answer2">Primary</button>
+                <div class="row justify-content-center"> 
+                  <button  type="button" class="btn button-long col-5  mt-1" id="Answer1">Primary</button>
+                  <button type="button" class="btn button-long col-5 mt-1"id="Answer2">Primary</button>
                 </div>
                 <!-- Untere Antwortbuttons -->
-                <div class="row"> 
-                  <button  type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"id="Answer3">Primary</button>
-                  <button type="button" class="btn btn-outline-primary col-5 offset-1 mt-1"id="Answer4">Primary</button>
+                <div class="row justify-content-center"> 
+                  <button  type="button" class="btn button-long col-5  mt-1"id="Answer3">Primary</button>
+                  <button type="button" class="btn button-long col-5  mt-1"id="Answer4">Primary</button>
                 </div>
                 <!-- Button zum Weiterschalten -->
-                <div class="row"> 
-                  <button  type="button" class="btn btn-outline-primary col-8 offset-1  mt-1"id="Next">Next</button>
-                  <button  type="button" class="btn btn-outline-primary col-2 offset-1   mt-1">Beenden</button>
+                <div class="row justify-content-center"> 
+                  <button  type="button" class="btn button-long col-8 mt-1"id="Next">Next</button>
+                  <button  type="button" class="btn button-long col-2 mt-1"data-bs-toggle="modal" data-bs-target="#exampleModal">Beenden</button>
                 </div>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -136,7 +139,7 @@ if(isset($_SESSION['BenutzerID'])) {
               <div class="d-none" id="result">
                 <h3>Ergebnis</h3>
                 <div id="resulttext"></div>
-                <a href="home.php" class="btn btn-outline-primary col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
+                <a href="home.php" class="btn button-long col-8 offset-1 mt-1" id="Next">Zurück zur Startseite</a>
               </div>
               <!-- Warteanzeige -->
               <div class="d-none" id="wait">

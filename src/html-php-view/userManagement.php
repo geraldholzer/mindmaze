@@ -22,6 +22,16 @@
 
 </head>
 
+<style>
+    .button-short:disabled {
+        /* Übernehmen Sie alle Stile der vorhandenen Button-Klasse */
+        /* Fügen Sie hier Ihre eigenen benutzerdefinierten Stile hinzu */
+        /* Zum Beispiel eine andere Hintergrundfarbe für deaktivierte Buttons */
+        background-color: #f2f2f2;
+        border-color: #f2f2f2;
+        color: #ccc;
+    }
+</style>
 
 
 <body>
@@ -111,9 +121,15 @@
                 <!--Über dieses Formular kann die maximale Anzahl von Datensätzen geändert werden. Sichtbar ist nur ein Inputfeld + Button!-->
                 <form id="frmMaxRecords" action="userManagement.php" method="get">
                     <select name="MaxRecords">
-                        <option value="5" <?php if($maxRecords==5){echo("selected");} ?>>5</option>
-                        <option value="10" <?php if($maxRecords==10){echo("selected");} ?>>10</option>
-                        <option value="25" <?php if($maxRecords==25){echo("selected");} ?>>25</option>
+                        <option value="5" <?php if ($maxRecords == 5) {
+                            echo ("selected");
+                        } ?>>5</option>
+                        <option value="10" <?php if ($maxRecords == 10) {
+                            echo ("selected");
+                        } ?>>10</option>
+                        <option value="25" <?php if ($maxRecords == 25) {
+                            echo ("selected");
+                        } ?>>25</option>
                     </select>
                     <input name="Page" value="1" type="hidden" />
                     <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
@@ -132,6 +148,8 @@
                             <th>Nachname</th>
                             <th>E-mail</th>
                             <th>Zugriffsrechte</th>
+                            <th>Passwort zurücksetzen</th>
+                            <th></th>
                         </tr>
 
                         <?php
@@ -149,26 +167,66 @@
                             echo "<option value='3' " . ($row["ZugriffsrechteID"] == 3 ? "selected" : "") . ">Admin</option>";
                             echo "</select>";
                             echo "</td>";
+                            echo "<td><input id='password_" . $row["BenutzerID"] . "' name='password' type='password'></td>";
+                            echo "<td><button onclick='changePassword(" . $row["BenutzerID"] . "); event.preventDefault()'>Bestätigen</td>";
                             echo "</tr>";
                         }
                         ?>
                     </table>
                 </form>
+
+
+                <script>
+                    function changePassword(userID) {
+                        // Das Passwortfeld abrufen und den Wert extrahieren
+                        var password = document.getElementById("password_" + userID).value;
+                        var data = new FormData();
+                        data.append('BenutzerID', userID);
+                        data.append('newPassword', password);
+               
+                        // Fetch-Anfrage senden, um das Passwort zu ändern
+                        fetch('../server/change-password.php', {
+                            method: 'POST',
+                            body: data
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.text();
+                            })
+                            .then(data => {
+                                // Erfolgreiche Antwort verarbeiten
+                                console.log('Antwort vom Server:', data);
+                                // Hier kannst du weitere Aktionen durchführen, z. B. eine Erfolgsmeldung anzeigen
+                            })
+                            .catch(error => {
+                                // Fehler verarbeiten
+                                console.error('Fetch fehlgeschlagen:', error);
+                            });
+                    }
+                </script>
+
+
                 <div class=container>
                     <div class="row">
+
                         <div class="col">
-                            <!--Formular für den "Weiter" Button!-->
+                            <!--Formular für den "Zurück" Button!-->
+
                             <form action="userManagement.php" method="get">
-                                <input type="hidden" name="Page" value=<?php echo $nextPage ?>>
+                                <input type="hidden" name="Page" value="<?php echo $previousPage ?>">
                                 <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
                                 <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
                                 <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
                                 <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
-                                <button class="button-short" type="submit" <?php if ($page == $lastPage) {
+                                <!-- Hier die Seitenzahl entsprechend aktualisieren -->
+                                <button class="button-short" type="submit" <?php if ($page == 1) {
                                     echo "disabled";
-                                } ?>>Weiter</button>
+                                } ?>>Zurück</button>
                             </form>
                         </div>
+
                         <div class="col">
                             <!--Formular für die Combobox mit Seitenauswahl!-->
                             <form id="pages" action="userManagement.php" method="get">
@@ -195,26 +253,25 @@
                                 </script>
                             </form>
                         </div>
-
                         <div class="col">
-                            <!--Formular für den "Zurück" Button!-->
-
+                            <!--Formular für den "Weiter" Button!-->
                             <form action="userManagement.php" method="get">
-                                <input type="hidden" name="Page" value=<?php echo $previousPage ?>>
+                                <input type="hidden" name="Page" value=<?php echo $nextPage ?>>
                                 <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>" />
                                 <input name="Vorname" value="<?php echo ($qryVorname) ?>" type="hidden" />
                                 <input name="Nachname" value="<?php echo ($qryNachname) ?>" type="hidden" />
                                 <input name="Email" value="<?php echo ($qryEmail) ?>" type="hidden" />
-                                <!-- Hier die Seitenzahl entsprechend aktualisieren -->
-                                <button class="button-short" type="submit" <?php if ($page == 1) {
+                                <button class="button-short" type="submit" <?php if ($page == $lastPage) {
                                     echo "disabled";
-                                } ?>>Zurück</button>
+                                } ?>>Weiter</button>
                             </form>
                         </div>
+
                     </div>
                 </div>
 
                 <form action="userManagement.php" method="GET">
+                    <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>">
                     <label for="Vorname">Vorname:</label><br>
                     <input type="text" id="Vorname" name="Vorname" value="<?php echo ($qryVorname) ?>"><br><br>
 
@@ -224,7 +281,7 @@
                     <label for="Email">E-mail:</label><br>
                     <input type="text" id="Email" name="Email" value="<?php echo ($qryEmail) ?>"><br><br>
 
-                    <input class="button-short" accept="" type="submit" value="Absenden">
+                    <input class="button-short" accept="" type="submit" value="Filtern">
                 </form>
             </div>
             <div class="col-1"> </div>
