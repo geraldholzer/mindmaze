@@ -38,7 +38,7 @@ let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für 
 let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver = '../server/question-server.php' // lokaler question server
-//let websocketserver="ws://13.53.246.106:8081" //websocket server auf aws server
+//let websocketserver="wss://13.53.246.106" //websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let opponentpoints = 0
 let questions = null
@@ -172,7 +172,20 @@ function finish() {
         ' Dein Gegner hat ' +
         opponentpoints +
         ' Fragen richtig'
-    questioncounter = 0
+    questioncounter = 0;
+    writestatistic(BenutzerID,fragenzahl,pointscounter)
+
+}
+//Funktion zum schreiben der Statistik nach Spielende
+function writestatistic(BenutzerID,Fragenzahl,pointscounter){
+    fetch(gameserver,{
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=writestatistic&'+"BenutzerID="+BenutzerID+"&fragenzahl="+Fragenzahl+"&Punkte="+pointscounter+"&modus="+"Versus"
+    })
 }
 
 function sendfinishflag() {

@@ -31,7 +31,7 @@ let gamenameInput = document.getElementById('gamenameInput') //Eingabefeld für 
 let gameserver = '../server/game-server.php' // lokaler gameserver
 //let questionserver= "http://13.53.246.106/../server/question-server.php"//questionserver ip von aws server
 let questionserver = '../server/question-server.php' // lokaler question server
-//let websocketserver="ws://13.53.246.106:8081" //websocket server auf aws server
+//let websocketserver="wss://13.53.246.106" //websocket server auf aws server
 let websocketserver = 'ws://127.0.0.1:8081' // lokaler websocketserver
 let spielname=null
 let fragenzahl=null
@@ -126,7 +126,9 @@ function finish() {
     BeendenButton.classList.add("d-none")
     meldebutton.classList.add('d-none')
     resuttext.innerHTML =
-    "Das Spiel ist Beendet"
+    "Das Spiel ist Beendet";
+
+
 }
 
 

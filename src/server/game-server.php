@@ -23,6 +23,12 @@ if(isset ($_POST["action"])){
 if(isset ($_POST["fragenzahl"])){
     $fragenzahl = $_POST['fragenzahl'];
 }
+if(isset ($_POST["Punkte"])){
+    $punkte = $_POST['Punkte'];
+
+if(isset ($_POST["BenutzerID"])){
+    $benutzerid = $_POST['BenutzerID'];
+}}
 
 if(isset($_POST['gamename'])){
     $gamename=$_POST['gamename'];
@@ -67,6 +73,19 @@ if ($action === 'deleteGame') {
 else if ($action === 'getModusDropdown') {
     sendModusDropdown($conn);
 }
+else if ($action === 'writestatistic') {
+    writestatistic($conn,$benutzerid,$fragenzahl,$punkte,$modusID);
+}
+
+//Schreiben eines Statistik eintrags nach Spielende
+function writestatistic($conn,$benutzerid,$fragenzahl,$punkte,$modusID){
+$datum=date("Y-m-d H:i:s");
+$stmt=$conn->prepare("INSERT INTO statistik (BenutzerID,SpielmodiID,SpielDatum,Fragenzahl,Punkte) VALUES (?,?,?,?,?)");
+$stmt->bind_param("iisii",$benutzerid,$modusID,$datum,$fragenzahl,$punkte);
+$stmt->execute();
+$stmt->close();
+}
+
 //Hier wird ein neues Spiel erstellt und in die Tabelle spiele geschrieben
 function addGame($name,$kursID,$modusID,$fragenzahl, $conn) {
     $started = time();

@@ -27,6 +27,7 @@ if (isset($_SESSION['BenutzerID'])) {
   <body>
     <script>
       // Session variable für js speichern
+      var BenutzerID = <?php echo json_encode($_SESSION['BenutzerID']); ?>;
       var vorname = <?php echo json_encode($_SESSION['Vorname']); ?>;
       var nachname = <?php echo json_encode($_SESSION['Nachname']); ?>;
       var benutzername = vorname + " " + nachname;

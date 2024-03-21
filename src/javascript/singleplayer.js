@@ -69,6 +69,18 @@ async function loadKursDropdown() {
 
 loadKursDropdown()
 
+//Funktion zum schreiben der Statistik nach Spielende
+function writestatistic(BenutzerID,Fragenzahl,pointscounter){
+    fetch(gameserver,{
+        method:"POST",
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        //diese action wird im server abgefragt
+        body: 'action=writestatistic&'+"BenutzerID="+BenutzerID+"&fragenzahl="+Fragenzahl+"&Punkte="+pointscounter+"&modus="+"Einzelspieler"
+    })
+}
+
 //Wert auslesen aus dropdownfeld und in Variable speichern
 document
     .getElementById('kursliste')
@@ -203,6 +215,7 @@ function finish() {
         questioncounter +
         ' Fragen richtig beantwortet'
     questioncounter = 0
+    writestatistic(BenutzerID,fragenzahl,pointscounter)
 }
 
 // Funktion wird bei Antwortauswahl ausgeführt
