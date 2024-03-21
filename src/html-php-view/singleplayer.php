@@ -131,7 +131,7 @@ if(isset($_SESSION['BenutzerID'])) {
                             </div>
                             <!-- Next und Beenden Button -->
                             <div class="row justify-content-center">
-                                <button type="button" class="btn button-long col-8 mt-1" id="Next">Next</button>
+                                <button type="button" class="btn button-long col-8 mt-1" id="Next">Weiter</button>
                             </div>
                             <div class="row mb-1">
                                 <!-- Beenden Button -->
