@@ -88,15 +88,7 @@
         echo "Fehler: " . mysqli_error($con);
     }
 
-    //Folgender Code wird aufgerufen, wenn die Seite mit der POST Methode aufgerufen wird. Dies passiert nur, wenn Daten verändert werden
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Aktualisiere die Zugriffsrechte für jeden Benutzer
-        foreach ($_POST['ZugriffsrechteID'] as $benutzerID => $zugriffsrechte) {
-            $sql = "UPDATE benutzer SET ZugriffsrechteID = $zugriffsrechte WHERE BenutzerID = $benutzerID";
-            $con->query($sql);
-        }
-        echo "<p>Zugriffsrechte wurden erfolgreich aktualisiert!</p>";
-    }
+
 
     // Setze die Standardwerte für die Suchfelder
     
@@ -139,7 +131,6 @@
                 </form>
                 <!--Hauptformular mit Datensätzen und Comboboxen zur Änderung der Berechtigungen!-->
                 <form class="mt-3" method="post">
-                    <button class="button-short" type="submit">Änderungen bestätigen</button>
 
                     <table class='table table-striped'>
                         <tr>
@@ -148,7 +139,7 @@
                             <th>Nachname</th>
                             <th>E-mail</th>
                             <th>Zugriffsrechte</th>
-                            <th>Passwort zurücksetzen</th>
+                            <th>Passwort ändern</th>
                             <th></th>
                         </tr>
 
@@ -161,13 +152,13 @@
                             echo "<td>" . $row["Nachname"] . "</td>";
                             echo "<td>" . $row["Email"] . "</td>";
                             echo "<td>";
-                            echo "<select name='ZugriffsrechteID[" . $row["BenutzerID"] . "]'>";
+                            echo "<select id='rechte_" . $row["BenutzerID"] . "'>"; // name='ZugriffsrechteID[" . $row["BenutzerID"] . "]'
                             echo "<option value='1' " . ($row["ZugriffsrechteID"] == 1 ? "selected" : "") . ">Nutzer</option>";
                             echo "<option value='2' " . ($row["ZugriffsrechteID"] == 2 ? "selected" : "") . ">Tutor</option>";
                             echo "<option value='3' " . ($row["ZugriffsrechteID"] == 3 ? "selected" : "") . ">Admin</option>";
                             echo "</select>";
                             echo "</td>";
-                            echo "<td><input id='password_" . $row["BenutzerID"] . "' name='password' type='password'></td>";
+                            echo "<td><input id='password_" . $row["BenutzerID"] . "' name='password' type='text'></td>";
                             echo "<td><button onclick='changePassword(" . $row["BenutzerID"] . "); event.preventDefault()'>Bestätigen</td>";
                             echo "</tr>";
                         }
@@ -180,9 +171,11 @@
                     function changePassword(userID) {
                         // Das Passwortfeld abrufen und den Wert extrahieren
                         var password = document.getElementById("password_" + userID).value;
+                        var rechte = document.getElementById("rechte_" + userID).value;
                         var data = new FormData();
                         data.append('BenutzerID', userID);
                         data.append('newPassword', password);
+                        data.append('Zugriffsrechte', rechte);
                
                         // Fetch-Anfrage senden, um das Passwort zu ändern
                         fetch('../server/change-password.php', {
@@ -204,6 +197,7 @@
                                 // Fehler verarbeiten
                                 console.error('Fetch fehlgeschlagen:', error);
                             });
+                            document.getElementById("password_" + userID).innerHTML = empty;
                     }
                 </script>
 
