@@ -375,6 +375,10 @@ h1.heading-modus {
   color: white !important;
 }
 
+#next {
+  width: 30%;
+}
+
 #registrieren {
   color: white !important;
   margin-top: 10px;
