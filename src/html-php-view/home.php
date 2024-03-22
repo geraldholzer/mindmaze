@@ -129,7 +129,7 @@
           <div class="card-body">
             <h5 class="card-title">Einzelspieler</h5>
             <p class="card-text">Lerne für dich alleine</p>
-            <a href="#" class="btn btn-primary btn-custom">Los!</a>
+            <a href="./singleplayer.php" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -137,29 +137,19 @@
         <div class="card m-5" style="width: 300px; height: 400px;">
           <img class="card-img-top" src="../../img/people-2569234_1280.jpg" alt="Card image cap">
           <div class="card-body">
-            <h5 class="card-title">Supportive Mode</h5>
-            <p class="card-text">Lerne zusammen mit einem Partner und korrigiert euch gegenseitig</p>
-            <a href="#" class="btn btn-primary btn-custom">Los!</a>
+            <h5 class="card-title">Multiplayer Lobby</h5>
+            <p class="card-text">Lerne im Team oder trete gegen andere Studenten an</p>
+            <a href="./lobby.php" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
       <div class="col-md-4 col-sm-6">
         <div class="card m-5" style="width: 300px; height: 400px;">
-          <img class="card-img-top" src="../../img\checkmate-1511866_1280.jpg" alt="Card image cap">
+          <img class="card-img-top" src="../../img\question-mark-1872634_1920.jpg" alt="Card image cap">
           <div class="card-body">
-            <h5 class="card-title">Versus</h5>
-            <p class="card-text">Trete gegen einen Gegner an und vergleicht euer Wissen in einem Quiz</p>
-            <a href="#" class="btn btn-primary btn-custom">Los!</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 col-sm-6">
-        <div class="card m-5" style="width: 300px; height: 400px;">
-          <img class="card-img-top" src="../../img\sunset-1807524_1280.jpg" alt="Card image cap">
-          <div class="card-body">
-            <h5 class="card-title">Team</h5>
-            <p class="card-text">Testet euer Wissen als Team</p>
-            <a href="#" class="btn btn-primary btn-custom">Los!</a>
+            <h5 class="card-title">Fragen</h5>
+            <p class="card-text">Reiche deine eigenen Fragen ein</p>
+            <a href="./questions.php" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
@@ -169,7 +159,17 @@
           <div class="card-body">
             <h5 class="card-title">Profil</h5>
             <p class="card-text">Ändere deine Benutzereinstellungen</p>
-            <a href="#" class="btn btn-primary btn-custom">Los!</a>
+            <a href="./profile.php" class="btn btn-primary btn-custom">Los!</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 col-sm-6">
+        <div class="card m-5" style="width: 300px; height: 400px;">
+          <img class="card-img-top" src="../../img\graph-1019845_1280.jpg" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Statistik</h5>
+            <p class="card-text">Sieh dir die Statistik deiner bisherigen Spiele an</p>
+            <a href="./statistik.php" class="btn btn-primary btn-custom">Los!</a>
           </div>
         </div>
       </div>
