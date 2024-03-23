@@ -123,7 +123,7 @@
             function updateCountdown() {
                 document.getElementById("countdown").innerHTML = "Die Weiterleitung auf die Startseite erfolgt in " + seconds + " Sekunden...";
                 if (seconds === 0) {
-                    window.location.href = "index.php";
+                    window.location.href = "../../index.php";
                 } else {
                     seconds--;
                     setTimeout(updateCountdown, 1000);
