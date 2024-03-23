@@ -347,6 +347,7 @@ if (!(isset($_SESSION["Email"]))) {
         else if (elementName == 'questionAcceptStudiengang'){
           var acceptKurseDiv = document.getElementById('questionAcceptKurse');
           acceptKurseDiv.innerHTML = data.trim();
+          //Wenn sich der Kurs ändert, muss auch das aktualisieren der Tabelle angestoßen werden
           document.getElementById('questionAcceptKurse').dispatchEvent(new Event('change'));
         }             
       })
@@ -396,6 +397,34 @@ if (!(isset($_SESSION["Email"]))) {
         // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
       });
     });
+  </script>
+
+  <!-- AG: Script zum freigeben einer Frage (Status-Änderung der Frage) !-->
+  <script>
+    function acceptAnswer(fragenID){
+      var data = new FormData();
+      data.append('action'  , 'setFragenStatus');
+      data.append('fragenID', fragenID);
+      data.append('fragenStatus', '1');
+      console.error("accept answer");
+      // Anfrage senden
+      fetch('../server/loadData-questions.php', {
+        method: 'POST',
+        body: data
+      })
+      // Die Antwort als Text lesen und ins HTML setzen
+      .then(response => response.text())
+      .then(data => {   
+        if (data.trim() === "true") {
+          console.error("respone accept answer");
+          document.getElementById("tablequestion" + fragenID).style.display = "none";          
+        }
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+      });
+    }
   </script>
 
   <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
