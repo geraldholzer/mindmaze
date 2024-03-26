@@ -1,12 +1,8 @@
-
-  <!--Navbar Anfang-->
-  <!-- Sticky top damit navi immer oben bleibt -->
   <nav class="navbar navbar-expand-lg custom-navbar">
     <script>
 
         function navbarReact(aSite){
           <?php 
-         // $_SESSION['inGame']=false;
           if ($_SESSION['inGame']==false){
             echo "document.location.href = aSite;";
           }else{
