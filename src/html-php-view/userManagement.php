@@ -60,6 +60,12 @@
     $qryEmail = isset ($_GET['Email']) ? $_GET['Email'] : "";
     $whereClause = "WHERE 1"; // Initialisiere die WHERE-Klausel mit 1, um alle Datensätze zu erhalten
     
+
+    //Sanitize Funktion anwenden
+    $qryVorname = mysqli_real_escape_string($con, $qryVorname);
+    $qryNachname = mysqli_real_escape_string($con, $qryNachname);
+    $qryEmail = mysqli_real_escape_string($con, $qryEmail);
+
     // Füge die Bedingungen für Vorname, Nachname und E-Mail hinzu, wenn sie nicht leer sind
     if (!empty ($qryVorname)) {
         $whereClause .= " AND Vorname like '" . "%" . $qryVorname . "%" . "'";
@@ -103,6 +109,7 @@
     //SQL Abfrage zur Ermittlung der auf einer Seite angezeigten Datensätze
     $sql = "SELECT * FROM benutzer $whereClause LIMIT $maxRecords OFFSET $offset";
     $result = $con->query($sql);
+    $con->close();
     ?>
 
     <div class="container">
@@ -110,6 +117,9 @@
             <div class="col-1"> </div>
             <div class="col-10">
                 <h1 class="mt-3">Benutzer</h1>
+
+
+
                 <!--Über dieses Formular kann die maximale Anzahl von Datensätzen geändert werden. Sichtbar ist nur ein Inputfeld + Button!-->
                 <form id="frmMaxRecords" action="userManagement.php" method="get">
                     <select name="MaxRecords">
@@ -176,7 +186,7 @@
                         data.append('BenutzerID', userID);
                         data.append('newPassword', password);
                         data.append('Zugriffsrechte', rechte);
-               
+
                         // Fetch-Anfrage senden, um das Passwort zu ändern
                         fetch('../server/change-password.php', {
                             method: 'POST',
@@ -197,7 +207,7 @@
                                 // Fehler verarbeiten
                                 console.error('Fetch fehlgeschlagen:', error);
                             });
-                            document.getElementById("password_" + userID).innerHTML = empty;
+                        document.getElementById("password_" + userID).innerHTML = empty;
                     }
                 </script>
 
@@ -264,24 +274,40 @@
                     </div>
                 </div>
 
-                <form action="userManagement.php" method="GET">
-                    <input type="hidden" name="MaxRecords" value="<?php echo ($maxRecords) ?>">
-                    <label for="Vorname">Vorname:</label><br>
-                    <input type="text" id="Vorname" name="Vorname" value="<?php echo ($qryVorname) ?>"><br><br>
 
-                    <label for="Nachname">Nachname:</label><br>
-                    <input type="text" id="Nachname" name="Nachname" value="<?php echo ($qryNachname) ?>"><br><br>
-
-                    <label for="Email">E-mail:</label><br>
-                    <input type="text" id="Email" name="Email" value="<?php echo ($qryEmail) ?>"><br><br>
-
-                    <input class="button-short" accept="" type="submit" value="Filtern">
-                </form>
             </div>
             <div class="col-1"> </div>
         </div>
     </div>
-
+                                                <!--Filter-Formular!-->
+                <form class="mt-4" action="userManagement.php" method="GET">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <input type="hidden" name="MaxRecords"
+                                    value="<?php echo htmlspecialchars($maxRecords); ?>">
+                            </div>
+                            <div class="col">
+                                <label for="Vorname">Vorname:</label>
+                                <input type="text" id="Vorname" name="Vorname"
+                                    value="<?php echo htmlspecialchars($qryVorname); ?>"><br><br>
+                            </div>
+                            <div class="col">
+                                <label for="Nachname">Nachname:</label>
+                                <input type="text" id="Nachname" name="Nachname"
+                                    value="<?php echo htmlspecialchars($qryNachname); ?>"><br><br>
+                            </div>
+                            <div class="col">
+                                <label for="Email">E-mail:</label>
+                                <input type="text" id="Email" name="Email"
+                                    value="<?php echo htmlspecialchars($qryEmail); ?>"><br><br>
+                            </div>
+                            <div class="col">
+                                <input class="button-short" accept="" type="submit" value="Filtern">
+                            </div>
+                        </div>
+                    </div>
+                </form> 
 </body>
 
 </html>
