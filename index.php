@@ -20,7 +20,7 @@
   <div class="container mt-5">
     <div class="row">
       <div class="col text-center">
-        <img src="img/Logo.svg" width="15%" />
+        <img src="img/logo.svg" width="15%" />
         <h1 class="mt-4">Willkommen bei MindMaze</h1>
         <p class="lead">Gemeinsam lernen, spielen und gewinnen</p>
       </div>

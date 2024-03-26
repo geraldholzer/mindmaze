@@ -21,15 +21,12 @@
     align-items: center;
     margin-bottom: 10px;
   }
-
   .form-group label {
     flex: 0 0 160px;
   }
-
   .form-group input {
     flex: 0 0 250px;
   }
-
   .center-vertically {
     display: flex;
     align-items: center;
@@ -37,8 +34,8 @@
 </style>
 
 <?php
-session_start();
-$_SESSION['inGame']=false;//Wird benötigt um navbar zu aktivieren 
+session_start(); //wird benötigt um auf Session-Variablen zugreifen zu können
+$_SESSION['inGame']=false; //Wird benötigt um navbar zu aktivieren 
 if (!(isset($_SESSION["Email"]))) {
   die("<H1>Hoppla! Da scheint etwas schiefgelaufen zu sein!</H1>"); //Ausgeben einer Fehlermeldung
 }
@@ -46,35 +43,20 @@ if (!(isset($_SESSION["Email"]))) {
 
 <body>
   <!-- Einbinden der PHP-Seite für die Navbar -->
-
   <?php include("navbar.php"); ?>
 
   <?php
-  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
+  //lädt die vorhandenen Studiengänge aus der DB zum erstellen von Comboboxeinträgen-->
   function getStudiengangByUser()
   {
-    // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    // $servername = "localhost";
-    // $username = "root";
-    // $dbpassword = "";
-    // $dbname = "mindmaze";
     include "../html-php-view/dbconnect.php";
     try {
       $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
       $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       
-
-      if ($_SESSION['ZugriffsrechteID'] == 3){
-        $stmt = $conn->prepare("SELECT * FROM studiengang");
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
-        }
-      }
-      //Normaler User darf nur seinen eigenen Studiengang sehen
+      //Student: darf nur seinen eigenen Studiengang sehen
       if ($_SESSION['ZugriffsrechteID'] == 1) {
         $studiengangIDUser = $_SESSION['StudiengangID'];
-        // Durchführen der SQL Abfrage
         $stmt = $conn->prepare("SELECT * FROM studiengang WHERE StudiengangID = :studiengangID");
         $stmt->bindParam(':studiengangID', $studiengangIDUser);
         $stmt->execute();
@@ -82,11 +64,10 @@ if (!(isset($_SESSION["Email"]))) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
         }
-        // Tutor darf alle Studiengänge sehen, bei denen er in mindestens einem Kurs als Zuständiger Benutzer eingetragen ist
+      //Tutor: darf alle Studiengänge sehen, bei denen er in mindestens einem Kurs als Zuständiger Benutzer eingetragen ist
       } else if ($_SESSION['ZugriffsrechteID'] == 2) {
 
         $UserID = $_SESSION['BenutzerID'];
-        // Durchführen der SQL Abfrage
         $stmt = $conn->prepare("SELECT DISTINCT studiengang.StudiengangID AS Studiengang, studiengang.Beschreibung AS Beschreibung 
                                 FROM kurse
                                 INNER JOIN studiengangKurse ON kurse.KursID = studiengangKurse.KursID
@@ -98,19 +79,22 @@ if (!(isset($_SESSION["Email"]))) {
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
           echo "<option value='" . $row["Studiengang"] . "'>" . $row["Beschreibung"] . "</option>";
         }
+      //Admin: sieht alle vorhandenen Studiengänge
+      } else if ($_SESSION['ZugriffsrechteID'] == 3){
+        $stmt = $conn->prepare("SELECT * FROM studiengang");
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+        }
       }
     } catch (PDOException $e) {
       echo "Fehler: " . $e->getMessage();
     }
   }
 
+  //Lädt die Fragentypen aus der Datenbank zum Erstellen von Comboboxeinträgen
   function getFragentyp()
   {
-    // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    // $servername = "localhost";
-    // $username = "root";
-    // $dbpassword = "";
-    // $dbname = "mindmaze";
     include "../html-php-view/dbconnect.php";
 
     try {
@@ -122,61 +106,6 @@ if (!(isset($_SESSION["Email"]))) {
 
       while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
         echo "<option value='" . $row["FragentypID"] . "'>" . $row["Beschreibung"] . "</option>";
-      }
-    } catch (PDOException $e) {
-      echo "Fehler: " . $e->getMessage();
-    }
-  }
-
-  //lädt die vorhandenen Studiengänge aus der DB und erstelle Comboboxeinträge-->
-  function getKurse()
-  {
-    // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    // $servername = "localhost";
-    // $username = "root";
-    // $dbpassword = "";
-    // $dbname = "mindmaze";
-    include "../html-php-view/dbconnect.php";
-    try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      $UserID = $_SESSION['BenutzerID'];
-      // Durchführen der SQL Abfrage
-      $stmt = $conn->prepare("SELECT * FROM kurse WHERE BenutzerID = :benID");
-      $stmt->bindParam(':benID', $UserID);
-      $stmt->execute();
-
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        echo "<option value='" . $row["KursID"] . "'>" . $row["Beschreibung"] . "</option>";
-      }
-    } catch (PDOException $e) {
-      echo "Fehler: " . $e->getMessage();
-    }
-  }
-
-  //lädt die Fragen + Antworten eines Studiengangs aus der DB und erzeugt eine Tabelle
-  function getQuestionTable()
-  {
-    // Verbindung zur Datenbank herstellen und Abfrage ausführen
-    // $servername = "localhost";
-    // $username = "root";
-    // $dbpassword = "";
-    // $dbname = "mindmaze";
-    include "../html-php-view/dbconnect.php";
-    try {
-      $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      $kursID = 1;
-      // Durchführen der SQL Abfrage
-      $stmt = $conn->prepare("SELECT fragen.* FROM fragen LEFT JOIN antworten ON fragen.FragenID = antworten.FragenID
-                                                            WHERE fragen.KursID = :kurs");
-      $stmt->bindParam(':kurs', $kursID);
-      $stmt->execute();
-
-      while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-
       }
     } catch (PDOException $e) {
       echo "Fehler: " . $e->getMessage();
@@ -204,15 +133,15 @@ if (!(isset($_SESSION["Email"]))) {
             <div class="row">
               <form id=submitQuestion method="post">
                 <div class="form-group">
-                  <label for="selectStudiengang">Studiengang</label>
-                  <select id="selectStudiengang" name="selectStudiengang">
+                  <label for="questionSubmitStudiengang">Studiengang</label>
+                  <select id="questionSubmitStudiengang" name="questionSubmitStudiengang">
                     <?php getStudiengangByUser(); ?>
                   </select>
                 </div>
                 <div class="form-group">
                   <label for="questionSubmitKurse">Kurs</label>
                   <select id="questionSubmitKurse" name="questionSubmitKurse">
-                    <!-- AG: wird im Change befüllt) -->
+                    <!-- AG: wird im Change befüllt -->
                   </select>
                 </div>
                 <div class="form-group">
@@ -251,7 +180,7 @@ if (!(isset($_SESSION["Email"]))) {
       </div>
     </div>
     <!--"Frage freigeben"-->
-    <?php if ($_SESSION['ZugriffsrechteID'] == 2) {
+    <?php if ($_SESSION['ZugriffsrechteID'] == 2 or $_SESSION['ZugriffsrechteID'] == 3){
       echo '<div class="card">
               <div class="card-header" id="Question_Accept">
                 <h5 class="mb-0">
@@ -266,14 +195,20 @@ if (!(isset($_SESSION["Email"]))) {
                 <div class="card-body">
                   <form id=QuestionAcceptForm>
                     <div class="form-group">
-                      <label for="selectKurs">Kurs</label>
-                      <select id="selectKurs" name="selectKurs">';
-      echo getKurse();
-      echo '</select>
+                      <label for="questionAcceptStudiengang">Studiengang</label>
+                      <select id="questionAcceptStudiengang" name="questionAcceptStudiengang">';
+                        echo getStudiengangByUser();
+                echo '</select>
                     </div>
-                    <div class="form-group">';
-      echo getQuestionTable();
-      echo '</div>
+                    <div class="form-group">
+                      <label for="questionAcceptKurse">Kurs</label>
+                      <select id="questionAcceptKurse" name="questionAcceptKurse">';
+                echo '</select>
+                    </div>
+                    <div class="form-group">
+                      <table class="table table-striped" id="questionTable">
+                      </table>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -389,36 +324,114 @@ if (!(isset($_SESSION["Email"]))) {
     }); 
   </script>
 
+  <!-- AG: Script zum Laden der Kurse abhängig des ausgewählten Studiengangs (Change-Event)!-->
   <script>
-    //Wenn sich der Studiengang ändert, müssen die Kurse aktualisiert werden
-    document.getElementById('selectStudiengang').addEventListener('change', function () {
+    //Funktion welche für beide Bereiche aufgerufen wird beim Change-Event
+    function getKurseByStudiengangAndUser(elementName){
       var data = new FormData();
       data.append('action', 'getKurseByStudiengang');
-      data.append('studiengangID', document.getElementById("selectStudiengang").value);
+      data.append('studiengangID', document.getElementById(elementName).value);
 
       // Anfrage senden
-      fetch('../server/kurse-server.php', {
+      fetch('../server/loadData-questions.php', {
         method: 'POST',
         body: data
       })
-        // Die Antwort als Text lesen und ins HTML setzen
-        .then(response => response.text())
-        .then(data => {
-          console.error(data);
-          var questionSubmitKurseDiv = document.getElementById('questionSubmitKurse');
-          questionSubmitKurseDiv.innerHTML = data.trim();
-        })
-        .catch(error => {
-          console.error('Fehler:', error);
-          // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
-        });
-    }); 
+      // Die Antwort als Text lesen und ins HTML setzen
+      .then(response => response.text())
+      .then(data => {
+        if (elementName == 'questionSubmitStudiengang'){
+          var submitKurseDiv = document.getElementById('questionSubmitKurse');
+          submitKurseDiv.innerHTML = data.trim();
+        }
+        else if (elementName == 'questionAcceptStudiengang'){
+          var acceptKurseDiv = document.getElementById('questionAcceptKurse');
+          acceptKurseDiv.innerHTML = data.trim();
+          //Wenn sich der Kurs ändert, muss auch das aktualisieren der Tabelle angestoßen werden
+          document.getElementById('questionAcceptKurse').dispatchEvent(new Event('change'));
+        }             
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+      });
+    }
+
+    //Wenn sich der Studiengang ändert, müssen die Kurse aktualisiert werden
+    document.getElementById('questionSubmitStudiengang').addEventListener('change', function () { getKurseByStudiengangAndUser('questionSubmitStudiengang')});
+    document.getElementById('questionAcceptStudiengang').addEventListener('change', function () { getKurseByStudiengangAndUser('questionAcceptStudiengang')});  
+  </script>
+
+   <!-- AG: Script zum erstellen der Fragentabelle abhängig vom Kurs (Change-Event) !-->
+  <script>
+    //Wenn sich der Kurs ändert, muss die Tabelle aktualisiert werden
+    document.getElementById('questionAcceptKurse').addEventListener('change', function () { 
+      var data = new FormData();
+      data.append('action', 'getFragenByKurs');
+      data.append('kursID', document.getElementById('questionAcceptKurse').value);
+
+      // Anfrage senden
+      fetch('../server/loadData-questions.php', {
+        method: 'POST',
+        body: data
+      })
+      // Die Antwort als Text lesen und ins HTML setzen
+      .then(response => response.text())
+      .then(data => {   
+        var questionTableDiv = document.getElementById('questionTable');
+        questionTableDiv.innerHTML = `<tr>
+                                        <th>ID</th>
+                                        <th>Typ</th>
+                                        <th>Frage</th>
+                                        <th>Hinweis</th>
+                                        <th>Antwort - Freitext</th>
+                                        <th>A</th>
+                                        <th>B</th>
+                                        <th>C</th>
+                                        <th>D</th>
+                                      </tr>`;
+        questionTableDiv.innerHTML = questionTableDiv.innerHTML + data.trim();        
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+      });
+    });
+  </script>
+
+  <!-- AG: Script zum freigeben einer Frage (Status-Änderung der Frage) !-->
+  <script>
+    function acceptAnswer(fragenID){
+      var data = new FormData();
+      data.append('action'  , 'setFragenStatus');
+      data.append('fragenID', fragenID);
+      data.append('fragenStatus', '1');
+      console.error("accept answer");
+      // Anfrage senden
+      fetch('../server/loadData-questions.php', {
+        method: 'POST',
+        body: data
+      })
+      // Die Antwort als Text lesen und ins HTML setzen
+      .then(response => response.text())
+      .then(data => {   
+        if (data.trim() === "true") {
+          console.error("respone accept answer");
+          document.getElementById("tablequestion" + fragenID).style.display = "none";          
+        }
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        // Hier kannst du Fehlerbehandlung durchführen, z.B. eine Fehlermeldung anzeigen
+      });
+    }
   </script>
 
   <!-- SH: Hiermit wird der eventlistener einmal aufgerufen und überprüft, welcher Fragentyp ausgewählt wurde und passt dann die Auswahlfelder an !-->
   <script> document.getElementById('answertype').dispatchEvent(new Event('change')); </script>
-  <script> document.getElementById('selectStudiengang').dispatchEvent(new Event('change')); </script>
-
+  <script> document.getElementById('questionSubmitStudiengang').dispatchEvent(new Event('change')); </script>
+  <script> document.getElementById('questionAcceptStudiengang').dispatchEvent(new Event('change')); </script>
+  <script> document.getElementById('questionAcceptKurse').dispatchEvent(new Event('change')); </script>
 </body>
 
 </html>
