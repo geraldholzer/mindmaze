@@ -6,8 +6,7 @@
     <title>Statistik</title>
     <link rel="stylesheet" href="../css/main.css">
     <link rel="stylesheet" type="text/css" href="../css/style.css">
-    <script defer src="../javascript/lobby.js"></script>
-    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Popper.js and Bootstrap JS CDN links -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
     crossorigin="anonymous"></script>
