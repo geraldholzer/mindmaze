@@ -26,6 +26,12 @@
     }
   </style>
 </head>
+<?php
+session_start();
+if (!isset($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
 
 <body>
 
@@ -38,11 +44,13 @@
     </div>
     <div class="row justify-content-center">
       <div class="col-6">
-        
+
         <!--Register Formular!-->
-        <button onclick="showSection('frmRegister')" class="button-long col-12 mt-3" id="registrieren">Jetzt Registrieren</button>
+        <button onclick="showSection('frmRegister')" class="button-long col-12 mt-3" id="registrieren">Jetzt
+          Registrieren</button>
         <br>
         <form class="hidden mb-3" id="frmRegister" action="register.php" method="post">
+          <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token'] ?>">
           <div class="row justify-content-center">
             <div class="col-8">
               <div class="row">
@@ -73,17 +81,17 @@
                   include "../html-php-view/dbconnect.php";
                   $con = new mysqli($servername, $username, $password, $dbname);
                   if ($con->connect_error) {
-                      die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
+                    die("Es konnte keine Verbindung zur Datenbank hergestellt werden" . $con->connect_error);
                   }
                   // Durchführen der SQL Abfrage
                   $sql = "SELECT * FROM studiengang";
                   $result = $con->query($sql);
                   if ($result->num_rows > 0) {
-                      while ($row = $result->fetch_assoc()) {
-                          echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
-                      }
+                    while ($row = $result->fetch_assoc()) {
+                      echo "<option value='" . $row["StudiengangID"] . "'>" . $row["Beschreibung"] . "</option>";
+                    }
                   } else {
-                      echo "Keine Studiengänge gefunden";
+                    echo "Keine Studiengänge gefunden";
                   }
                   $con->close();
                   ?>

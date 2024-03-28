@@ -15,6 +15,7 @@
 
 </head>
 
+
 <body>
 
   <div class="container mt-5">
@@ -49,7 +50,8 @@
         </form>
 
         <div class="text-center pt-5 standard-text-input">
-          Noch nicht dabei? <span style="color: #9257DD;"><a href="src\html-php-view\signIn.php">Hier</a></span> registrieren
+          Noch nicht dabei? <span style="color: #9257DD;"><a href="src\html-php-view\signIn.php">Hier</a></span>
+          registrieren
         </div>
 
       </div>
@@ -66,17 +68,7 @@
   </div>
 
 
-  <!--
-  <script>
-    function showSection(sectionID) {
-      if (document.getElementById(sectionID).style.display == "block") {
-        document.getElementById(sectionID).style.display = "none";
-      } else {
-        document.getElementById(sectionID).style.display = "block";
-      }
-    }
-  </script>
-  !-->
+
 
 </body>
 
